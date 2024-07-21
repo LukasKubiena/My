@@ -944,30 +944,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }, 120);
         }
+
         async function generateAIResponse(userInput) {
-    messages.push({ "role": "user", "content": userInput });
+  messages.push({ "role": "user", "content": userInput });
 
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ messages }),
-        });
+  try {
+    const response = await fetch('/.netlify/functions/generate-response', {
+      method: 'POST',
+      body: JSON.stringify({ userInput, messages })
+    });
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        messages.push({ "role": "assistant", "content": data.content });
-        return data.content;
-    } catch (error) {
-        console.error('Error:', error);
-        return "I'm sorry, I couldn't generate a response at this time.";
-    }
+    const data = await response.json();
+    const aiResponse = data.response;
+    messages.push({ "role": "assistant", "content": aiResponse });
+    return aiResponse;
+  } catch (error) {
+    console.error('Error:', error);
+    return "I'm sorry, I couldn't generate a response at this time.";
+  }
 }
+
         function resetPage() {
             inChatMode = false;
             
