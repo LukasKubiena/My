@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lukas Kubiena</title>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Thin';
+            src: url('NeueHaasDisplay-XThin.woff2') format('woff2');
+        }
+        :root {
+        --box-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.05),
+            0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+        }
+        body, body * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: grid;
+            --row-gap: 2rem;
+            row-gap: var(--row-gap);
+            grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto auto; /* Added an extra row */
+            column-gap: 1.5rem;
+            padding-top: 24vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .right-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%; /* Start with full width */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            background: transparent;
+            transition: background 0.3s, backdrop-filter 0.3s;
+            z-index: 10;
+            top: 5vh;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -5vh; /* Extend the glass effect upwards */
+            left: 0; /* Extend the glass effect to the left edge of the page */
+            right: 0; /* Extend the glass effect to the right edge of the page */
+            bottom: -5vh; /* Extend the glass effect downwards */
+            z-index: -1;
+            transition: background 0.3s, backdrop-filter 0.3s;
+        }
+
+        header.glass-effect::before {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(1.2px);
+        }
+
+        .logo {
+            display: inline-block;
+            width: 36px; /* Adjust size as needed */
+            height: auto;
+            transition: color 0.3s ease;
+        }
+
+        .logo img {
+            filter: brightness(0) invert(1); /* Default to black */
+            transition: filter 0.3s ease;
+        }
+
+        .contact {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .hey {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 40px;
+            font-weight: 600;
+            grid-column: 4 / 6;
+            margin-left: 2rem;
+            grid-row: 2 / 3;
+            align-self: start;
+            margin-top: -0.2em;
+            cursor: pointer;
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        @keyframes popOut {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bellJingle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-8deg); }
+            75% { transform: rotate(6deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .comma-container {
+            display: inline-block;
+            padding-left: 2px; /* Adjust as needed for spacing */
+        }
+
+        .hey-text {
+            display: inline-block; /* Added to allow independent animation */
+        }
+
+        .comma {
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        .hey.animate {
+            animation: popOut 0.3s ease-out;
+        }
+
+        .hey.animate .comma {
+            animation: bellJingle 0.8s ease-in-out 0.3s;
+        }
+
+        .content-1 {
+            grid-column: 7 / 9;
+            grid-row: 2 / 4;
+            align-self: start;
+            text-align: justify;
+        }
+
+        .content-2 {
+            grid-column: 7 / 9;
+            grid-row: 4 / 6;
+            text-align: justify;
+            margin-bottom: 12rem; /* Increase the margin here */
+        }
+
+        .content-group {
+            grid-column: 10 / 12;
+            grid-row: 2 / 6;
+            display: flex;
+            flex-direction: column;
+            gap: var(--row-gap);
+        }
+
+        .content-3 {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            text-align: justify;
+        }
+
+        .send-mail {
+            color: #000000;
+            font-size: 16px;
+            font-weight: 400;
+            text-decoration: underline;
+        }
+
+
+        /* General link styles */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Style for the "send email" link */
+        .send-mail a {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        .at-link {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+
+        .at-link::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #BFD4EA;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .at-link:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .side-group {
+            grid-column: 3 / 4;
+            grid-row: 2 / 4;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: var(--row-gap);
+        }
+
+        ._24 {
+            color: #000000;
+            text-align: left;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        .personal-website {
+            color: #000000;
+            text-align: left;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            transform-origin: top left;
+            transform: rotate(-90deg) translateX(-100%);
+            white-space: nowrap;
+        }
+
+
+        /* Projects overview section */
+        .project-row {
+            grid-column: 3 / span 11;
+            grid-row: 6;
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            align-items: start;
+        }
+
+        .project-info {
+            grid-column: 1 / span 1;
+        }
+
+        .project-paragraph {
+            grid-column: 2 / span 10;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            text-align: justify;
+            column-count: 4;
+            column-gap: 1.5rem;
+        }
+
+        .project-paragraph-2 {
+            grid-column: 3 / span 11;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            text-align: justify;
+            column-count: 4;
+            column-gap: 1.5rem;
+        }
+
+        .project-row-right {
+            grid-column: 3 / span 11;
+            grid-row: 9; /* Correct grid placement */
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            align-items: start;
+        }
+
+        .project-info-right {
+            grid-column: 1 / span 2;
+        }
+
+        .project-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .project-date {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .project-image-container {
+            position: relative; /* Change from absolute to relative */
+            grid-column: 3 / 14;
+            grid-row: 8; /* Explicitly place it in row 8 */
+            height: 700px; /* Fixed height */
+            box-shadow: var(--box-box-shadow);
+            overflow: hidden;
+            margin-bottom: 12rem; /* Increase the margin here */
+        }
+
+        .project-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-image-container-2 {
+            position: relative; /* Change from absolute to relative */
+            grid-column: 3 / 14;
+            grid-row: 11; /* Explicitly place it in row 11 */
+            height: 1200px; /* Fixed height */
+            margin-bottom: 2rem;
+            box-shadow: var(--box-box-shadow);
+            overflow: hidden;
+        }
+
+        .project-image-2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .copyright {
+            grid-column: 3 / 14;
+            grid-row: 12; /* Place it in the next available row */
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            color: #000000;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        
+        @media screen and (max-width: 1024px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+        margin-top: 12vh;
+        box-sizing: border-box;
+    }
+
+    .hey, .content, .send-mail {
+        width: 100%;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .hey-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .prompt {
+        color: #888;
+        font-size: 16px;
+        margin-bottom: 24px;
+        align-self: flex-start;
+    }
+
+    .hey {
+        font-size: 36px;
+        text-align: left;
+        opacity: 1;
+        transition: transform 0.5s ease-out;
+    }
+
+    .typing-cursor {
+        display: inline-block;
+        width: 1px;
+        height: 0.7em; /* Adjust to match text height */
+        background-color: #000;
+        animation: blink 0.7s infinite;
+        margin-left: 2px;
+        vertical-align: baseline; /* Align with text baseline */
+    }
+
+
+    /* Adjust the space between user input and AI output */
+    .user-input,
+    .ai-output {
+        margin-top: 4px; /* Reduce the space */
+        margin-bottom: 4px; /* Reduce the space */
+    }
+
+    .content, .send-mail {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        text-align: left;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+    }
+
+
+    .content.visible, .send-mail.visible {
+        opacity: 1;
+    }
+
+
+    @keyframes blink {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
+    /* Hide elements not needed on mobile */
+    header, .side-group, ._24, .personal-website, .project-row, .project-image-container, .project-row-right, .project-image-container-2, .project-info, .project-paragraph-2, .copyright {
+        display: none;
+    }
+}
+    </style>
+</head>
+<body>
+    <header id="header">
+        <a href="index2.html"><img src="logo1.svg" alt="Logo" class="logo" id="logo"></a>
+        <div class="right-links">
+            <a href="mailto:lukasmariakubiena@gmail.com" class="contact" id="contact">Contact</a>
+            <a href="#projects" class="contact">Projects</a>
+        </div>
+    </header>
+    <div class="hey-container">
+        <div class="hey">
+            <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
+        </div>
+    </div>
+    <div class="content content-1">
+        I'm Lukas. I work on building useful interactions between Humans and AI <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. We streamline the process of capturing insights from multiple conversations and transforming them into a structured, interactive, and evolving knowledge base.
+    </div>
+    <div class="content content-2">
+        Apart from work you can find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
+    </div>
+    <div class="content-group">
+        <div class="content content-3">
+            Outside my studies I sometimes write about what comes to mind in these so exciting times <span>@cognitoergosum</span>. Reach out if we care about the same things!
+        </div>
+        <div class="send-mail">
+            <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
+        </div>
+    </div>
+    <div class="side-group">
+        <div class="_24">24</div>
+        <div class="personal-website">Personal Website</div>
+    </div>
+    <div class="project-row">
+        <div class="project-info">
+            <p class="project-title">Dembrane</p>
+            <p class="project-date">2024</p>
+        </div>
+        <div class="project-paragraph">
+            Dembrane is a platform designed to enhance democratic processes by making them accessible to all types of organizations at various levels. Our goal is to elevate participation by creating a dynamic data environment that reflects community concerns and solutions. Whether you're a housing corporation, municipality, or any organization seeking meaningful dialogue at scale, our tools ensure that every voice is heard and no good idea is lost. Last year, Dembrane received a grant from OpenAI as part of their initiative to explore democratic inputs to AI. Additionally, Dembrane recently was honoured with the Gerard & Anton Award.
+        </div>
+    </div>
+
+    <div class="project-image-container">
+        <img src="image.webp" alt="Dembrane project image" class="project-image">
+    </div>
+
+    <!-- New Aarhus University project row -->
+    <div class="project-row-right">
+        <div class="project-info-right">
+            <p class="project-title">Aarhus University</p>
+            <p class="project-date">2024</p>
+        </div>
+        <div class="project-paragraph-2">
+            Aarhus University is a leading research institution dedicated to advancing knowledge and education in a variety of fields. Our focus is on creating an environment that fosters intellectual growth and innovation. Whether you're a student, researcher, or faculty member, our university provides the resources and support needed to achieve your goals. Last year, Aarhus University was recognized for its contributions to cognitive science and received several prestigious awards.
+        </div>
+    </div>
+
+    <div class="project-image-container-2">
+        <img src="image2.jpeg" alt="Aarhus University" class="project-image-2">
+    </div>
+
+
+    <div class="copyright">
+        © Lukas Maria Kubiena 2024
+    </div>
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('glass-effect');
+            } else {
+                header.classList.remove('glass-effect');
+            }
+        });
+    
+        function adjustHeaderWidth() {
+            const header = document.getElementById('header');
+            const projectImageContainer = document.querySelector('.project-image-container');
+            const projectImage = projectImageContainer.querySelector('.project-image');
+    
+            function setHeaderWidth() {
+                const imageWidth = projectImage.clientWidth;
+                const headerWidth = imageWidth * 1; // 90% of image width
+                header.style.width = `${headerWidth}px`;
+            }
+    
+            if (projectImage.complete) {
+                setHeaderWidth();
+            } else {
+                projectImage.onload = setHeaderWidth;
+            }
+        }
+    
+        window.addEventListener('resize', adjustHeaderWidth);
+        window.addEventListener('load', adjustHeaderWidth);
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const logo = document.getElementById('logo');
+            const contact = document.getElementById('contact');
+            const projects = document.querySelector('a[href="#projects"]');
+            const projectImages = document.querySelectorAll('.project-image, .project-image-2');
+    
+            function checkIntersection() {
+                let logoRect = logo.getBoundingClientRect();
+                let contactRect = contact.getBoundingClientRect();
+                let projectsRect = projects.getBoundingClientRect();
+                let logoIntersecting = false;
+                let contactIntersecting = false;
+                let projectsIntersecting = false;
+    
+                projectImages.forEach(image => {
+                    let imageRect = image.getBoundingClientRect();
+    
+                    if (logoRect.bottom > imageRect.top && logoRect.top < imageRect.bottom) {
+                        logoIntersecting = true;
+                    }
+    
+                    if (contactRect.bottom > imageRect.top && contactRect.top < imageRect.bottom) {
+                        contactIntersecting = true;
+                    }
+    
+                    if (projectsRect.bottom > imageRect.top && projectsRect.top < imageRect.bottom) {
+                        projectsIntersecting = true;
+                    }
+                });
+    
+                if (logoIntersecting) {
+                    logo.style.filter = 'brightness(0) invert(1)';
+                } else {
+                    logo.style.filter = 'brightness(0) invert(0)';
+                }
+    
+                if (contactIntersecting || projectsIntersecting) {
+                    contact.style.color = '#FFFFFF'; // Turn white
+                    projects.style.color = '#FFFFFF'; // Turn white
+                } else {
+                    contact.style.color = '#000000'; // Turn black
+                    projects.style.color = '#000000'; // Turn black
+                }
+            }
+    
+            window.addEventListener('scroll', checkIntersection);
+            window.addEventListener('resize', checkIntersection);
+            checkIntersection(); // Initial check
+        });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const hey = document.querySelector('.hey');
+    
+            function playAnimation() {
+                hey.classList.remove('animate');
+                void hey.offsetWidth; // Trigger reflow
+                hey.classList.add('animate');
+            }
+    
+            // Play animation on page load
+            playAnimation();
+    
+            // Play animation on hover
+            hey.addEventListener('mouseenter', playAnimation);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+    function alignProjectParagraph() {
+        const hey = document.querySelector('.hey');
+        const projectParagraph = document.querySelector('.project-paragraph');
+        const heyRect = hey.getBoundingClientRect();
+        const paragraphRect = projectParagraph.getBoundingClientRect();
+        
+        const difference = heyRect.left - paragraphRect.left;
+        projectParagraph.style.paddingLeft = `${difference}px`;
+    }
+
+    // Run on load and resize
+    window.addEventListener('load', alignProjectParagraph);
+    window.addEventListener('resize', alignProjectParagraph);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const hey = document.querySelector('.hey');
+
+    function playAnimation() {
+        hey.classList.remove('animate');
+        void hey.offsetWidth; // Trigger reflow
+        hey.classList.add('animate');
+    }
+
+    // Play animation on page load
+    playAnimation();
+
+    // Play animation on tap (for mobile)
+    hey.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Prevent default touch behavior
+        playAnimation();
+    });
+
+    // For desktop, keep the hover functionality
+    if (window.matchMedia("(min-width: 1025px)").matches) {
+        hey.addEventListener('mouseenter', playAnimation);
+    }
+
+    // Shake detection
+    let lastTime = new Date().getTime();
+    let lastX = 0;
+    let lastY = 0;
+    let lastZ = 0;
+    const shakeThreshold = 15; // Adjust this value to change sensitivity
+
+    function handleShake(event) {
+        const currentTime = new Date().getTime();
+        if ((currentTime - lastTime) > 100) { // Limit shake checks to every 100ms
+            const diffTime = currentTime - lastTime;
+            const x = event.accelerationIncludingGravity.x;
+            const y = event.accelerationIncludingGravity.y;
+            const z = event.accelerationIncludingGravity.z;
+            const speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 10000;
+
+            if (speed > shakeThreshold) {
+                playAnimation();
+            }
+
+            lastTime = currentTime;
+            lastX = x;
+            lastY = y;
+            lastZ = z;
+        }
+    }
+
+    // Check if DeviceMotion is supported and request permission if needed
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        document.body.addEventListener('click', function() {
+            DeviceMotionEvent.requestPermission()
+                .then(response => {
+                    if (response == 'granted') {
+                        window.addEventListener('devicemotion', handleShake);
+                    }
+                })
+                .catch(console.error);
+        }, {once: true});
+    } else if ('DeviceMotionEvent' in window) {
+        window.addEventListener('devicemotion', handleShake);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 1024) {
+        const hey = document.querySelector('.hey');
+        const heyText = hey.querySelector('.hey-text');
+        const comma = hey.querySelector('.comma');
+        const cursor = hey.querySelector('.typing-cursor');
+        const content = document.querySelectorAll('.content, .send-mail');
+
+        // Hide content initially
+        content.forEach(el => el.style.opacity = '0');
+        
+        function typeText(text, element, callback) {
+            let i = 0;
+            element.textContent = ''; // Clear existing text
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 150);
+                } else {
+                    callback();
+                }
+            }
+            type();
+        }
+
+        function showComma() {
+            comma.style.visibility = 'visible';
+            setTimeout(playAnimation, 500);
+        }
+
+        function playAnimation() {
+            hey.classList.add('animate');
+            setTimeout(showContent, 1000);
+        }
+
+        function showContent() {
+            cursor.style.display = 'none';
+            content.forEach(el => {
+                el.style.opacity = '1';
+                el.style.transition = 'opacity 1s ease-in';
+            });
+        }
+
+        // Start the sequence
+        typeText('Hey', heyText, showComma);
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 1024) {
+        let hey = document.querySelector('.hey');
+        let heyText = hey.querySelector('.hey-text');
+        let comma = hey.querySelector('.comma');
+        const content = document.querySelectorAll('.content, .send-mail');
+        let longPressTimer;
+        let isLongPress = false;
+        let messages = [];
+        let promptShown = false;
+        let inChatMode = false;
+        let promptTimer;
+        let blinkInterval;
+
+        function showPrompt(text) {
+            clearTimeout(promptTimer);
+            if (!promptShown) {
+                const promptContainer = document.createElement('div');
+                promptContainer.className = 'prompt';
+                promptContainer.textContent = text;
+                promptContainer.style.opacity = '0';
+                promptContainer.style.transition = 'opacity 0.5s ease-in';
+                
+                const heyContainer = document.querySelector('.hey-container');
+                heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
+                
+                setTimeout(() => {
+                    promptContainer.style.opacity = '1';
+                }, 10);
+                
+                promptShown = true;
+            } else {
+                const promptContainer = document.querySelector('.prompt');
+                if (promptContainer) {
+                    promptContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        promptContainer.textContent = text;
+                        promptContainer.style.opacity = '1';
+                    }, 500);
+                }
+            }
+        }
+        
+        function hidePrompt() {
+            const promptContainer = document.querySelector('.prompt');
+            if (promptContainer) {
+                promptContainer.style.opacity = '0';
+                promptContainer.style.transition = 'opacity 0.3s ease-out';
+                setTimeout(() => {
+                    promptContainer.remove();
+                    promptShown = false;
+                }, 300);
+            }
+        }
+
+        function resetPromptTimer() {
+            clearTimeout(promptTimer);
+            promptTimer = setTimeout(() => {
+                if (!inChatMode) showPrompt('Press this to ask about me');
+            }, 10000);
+        }
+
+        resetPromptTimer();
+
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                handleLongPress();
+            }, 250);
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress) {
+                playAnimation();
+            }
+        });
+
+        function handleLongPress() {
+            inChatMode = true;
+            playAnimation();
+            
+            clearPreviousContent(true);
+            
+            setTimeout(() => {
+                heyText.textContent = '';
+                comma.style.display = 'none';
+                const input = document.createElement('textarea');
+                input.style.font = window.getComputedStyle(heyText).font;
+                input.style.border = 'none';
+                input.style.background = 'transparent';
+                input.style.outline = 'none';
+                input.style.width = '100%';
+                input.style.resize = 'none';
+                input.style.overflow = 'hidden';
+                input.style.caretColor = 'black'; // Make the cursor visible
+                heyText.appendChild(input);
+                input.focus();
+
+                // Add blinking cursor style
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes blink-caret {
+                        from, to { caret-color: black; }
+                        50% { caret-color: transparent; }
+                    }
+                    textarea {
+                        animation: blink-caret 0.75s step-end infinite;
+                    }
+                `;
+                document.head.appendChild(style);
+
+                showPrompt('Tap enter to send');
+
+                input.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+
+                content.forEach(el => el.style.display = 'none');
+
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        const userInput = input.value;
+                        handleUserInput(userInput);
+                    }
+                });
+
+                addBackButton();
+            }, 500);
+        }
+
+        function clearPreviousContent(keepPrompt = false) {
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
+            if (previousResponse) previousResponse.remove();
+            const existingBackButton = contentContainer.querySelector('a[style*="text-decoration: underline"]');
+            if (existingBackButton) existingBackButton.remove();
+            if (!keepPrompt) {
+                hidePrompt();
+            }
+        }
+
+        function addBackButton() {
+            const existingBackButton = document.querySelector('a[style*="text-decoration: underline"]');
+            if (existingBackButton) existingBackButton.remove();
+
+            const backButton = document.createElement('a');
+            backButton.textContent = 'back';
+            backButton.style.textDecoration = 'underline';
+            backButton.style.display = 'block';
+            backButton.style.marginTop = '20px';
+            backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+            backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+            
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                resetPage();
+            });
+            
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            contentContainer.appendChild(backButton);
+        }
+
+        async function handleUserInput(userInput) {
+            heyText.textContent = userInput;
+            heyText.style.whiteSpace = 'pre-wrap';
+            heyText.style.wordBreak = 'break-word';
+            
+            showPrompt('Tap again for new question');
+
+            const aiResponse = await generateAIResponse(userInput);
+            
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            
+            // Remove previous response and back button if they exist, but keep the prompt
+            clearPreviousContent(true);
+
+            const responseElement = document.createElement('div');
+            responseElement.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+            responseElement.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+            responseElement.style.marginTop = '10px';
+            responseElement.style.textAlign = 'justify';
+            
+            contentContainer.appendChild(responseElement);
+
+            const words = aiResponse.split(' ');
+            let i = 0;
+            const intervalId = setInterval(() => {
+                if (i < words.length) {
+                    responseElement.textContent += words[i] + ' ';
+                    i++;
+                } else {
+                    clearInterval(intervalId);
+                    addBackButton(); // Add back button after response is fully displayed
+                }
+            }, 120);
+        }
+
+        async function generateAIResponse(userInput) {
+            messages.push({ "role": "user", "content": userInput });
+
+            try {
+                const response = await fetch('https://vercel.com/lukaskubienas-projects/weather-backend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            {
+                                "role": "system",
+                                "content": `You are an AI that represents Lukas Kubiena neutrally in a nice and calm tone. You have the following context about Lukas Kubiena:
+
+                                Lukas Kubiena
+
+                                Education
+
+                                Albertus Magnus Private School
+                                - Austrian high-school diploma: "Excellent Success"
+                                - Graduated with 1.0 average in Mathematics, English, German, and Descriptive Geometry
+                                - Pre-scientific thesis: "Autonomous driving with a special focus on the car manufacturer Tesla"
+
+                                Aarhus University
+                                - Cognitive Science, BA (2023 - Now)
+                                - Comprehensive program encompassing linguistics, biology, anthropology, computational neuroscience, and artificial intelligence
+                                - Practical skills in programming (R and Python), statistical modeling, and empirical research design
+                                - Courses: "Introduction to Experimental Methods, Statistics, and Programming"
+                                - Focus on Data Analysis and applied cognitive science
+
+                                Experience
+
+                                Leading Student Representative (11.2020 - 05.2021)
+                                - Initiated a school-wide tutoring system, benefiting 900+ students
+                                - Served as liaison between students and the SGA during Covid
+                                - Led surveys on students' workload and well-being, presented findings to school leaders
+                                - Championed a vertical greening system for classrooms
+
+                                Paramedic for St. Johns Accident Assistance (10.2021 - 05.2022)
+                                - Passed the emergency paramedic exam with honors
+                                - Worked in ambulance services, city-wide vaccination and covid test centers, and a refugee daycare for Ukrainian refugees
+
+                                Kwizda Agro GmbH (07.2018 - 08.2018)
+                                - Intern in engineering and maintenance
+                                - Tasks included restoring complex pipe nozzles and general repairs in storage facilities
+
+                                Dembrane Design Internship (01.2024 - Now)
+                                - Turning requirements analysis and process diagrams into intuitive UX flows and functional UI patterns
+                                - Part of OpenAI democratic inputs into AI grant winner - Dembrane
+                                - Building digital deliberation systems for AI alignment
+
+                                Concept Feature Designs (08.2022 - 08.2023)
+                                - Benefited from ADPList mentor sessions with Takahiro Kawaguchi, Director of UX Design at Reddit
+                                - Developed high-fidelity designs and prototypes
+                                - Case study concepts include a mixed reality note-taking software, daily tasks structuring application, and online service booking tool
+
+                                Skills
+
+                                Languages
+                                - German - native
+                                - English - fluent, professional working proficiency (TOEFL iBT 119/120)
+
+                                Technical Skills
+                                - R Studio, Python, Figma, MicroStation CAD Software, Pixelmator, Adobe Suite, HTML & CSS, JavaScript & basic R3f, Autodesk Fusion 360
+
+                                Contact
+                                - Email: lukasmariakubiena@gmail.com
+                                - LinkedIn: www.linkedin.com/in/lukas-kubiena
+                                - Phone: +43 681 10599780`
+                            },
+                            ...messages
+                        ],
+                        max_tokens: 150,
+                        temperature: 0.7
+                    })
+                });
+
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content.trim();
+                messages.push({ "role": "assistant", "content": aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                return "I'm sorry, I couldn't generate a response at this time.";
+            }
+        }
+
+        function resetPage() {
+            inChatMode = false;
+            
+            // Immediately hide the prompt and system message
+            hidePrompt();
+            const systemMessage = document.querySelector('.system-message');
+            if (systemMessage) systemMessage.remove();
+
+            // Clear previous content
+            clearPreviousContent();
+
+            // Reset the Hey container
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
+
+            content.forEach(el => {
+                el.style.display = 'block';
+                el.style.opacity = '1';
+            });
+
+            // Ensure animations play after content is updated
+            setTimeout(() => {
+                playAnimation();
+                playCommaAnimation();
+            }, 10);
+
+            resetPromptTimer();
+
+            messages = [];
+        }
+
+
+        function playAnimation() {
+            hey.classList.remove('animate');
+            void hey.offsetWidth;
+            hey.classList.add('animate');
+        }
+
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth; // Trigger reflow
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+        }
+
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                handleLongPress();
+            }, 250);
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress && !inChatMode) {
+                playAnimation();
+                playCommaAnimation();
+            }
+        });
+    }
+});
+
+    </script>
+</body>
+</html>
