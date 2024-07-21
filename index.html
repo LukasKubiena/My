@@ -750,6 +750,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let heyText = hey.querySelector('.hey-text');
         let comma = hey.querySelector('.comma');
         const content = document.querySelectorAll('.content, .send-mail');
+        const apiKey = process.env.OPENAI_API_KEY;
         let longPressTimer;
         let isLongPress = false;
         let messages = [];
@@ -949,12 +950,14 @@ document.addEventListener('DOMContentLoaded', function() {
             messages.push({ "role": "user", "content": userInput });
 
             try {
-                const response = await fetch('https://vercel.com/lukaskubienas-projects/weather-backend', {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
                         messages: [
                             {
                                 "role": "system",
