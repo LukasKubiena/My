@@ -1,2 +1,11 @@
 [build]
   publish = "."
+
+[functions]
+  directory = "functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/functions/*"
+  to = "./functions/:splat"
+  status = 200
