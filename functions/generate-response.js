@@ -34,6 +34,10 @@ exports.handler = async function(event, context) {
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*", // Or your Netlify domain
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
       body: JSON.stringify({ error: "Failed to generate response" })
     };
   }

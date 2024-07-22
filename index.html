@@ -950,9 +950,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   try {
     const response = await fetch('/.netlify/functions/generate-response', {
-      method: 'POST',
-      body: JSON.stringify({ userInput, messages })
-    });
+  method: 'POST',
+  body: JSON.stringify({ userInput, messages })
+})
 
     const data = await response.json();
     const aiResponse = data.response;
