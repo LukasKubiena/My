@@ -17,29 +17,28 @@ exports.handler = async function(event, context) {
       model: "gpt-3.5-turbo",
       messages: [
         {
-          role: "system",
-          content: "You are an AI that represents Lukas Kubiena neutrally in a nice and calm tone...",
+          "role": "system",
+          "content": "You are an AI that represents Lukas Kubiena neutrally in a nice and calm tone..."
         },
         ...messages,
-        { role: "user", content: userInput },
+        { "role": "user", "content": userInput }
       ],
       max_tokens: 150,
-      temperature: 0.7,
+      temperature: 0.7
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ response: response.data.choices[0].message.content.trim() }),
+      body: JSON.stringify({ response: response.data.choices[0].message.content.trim() })
     };
   } catch (error) {
-    console.error(error);
     return {
       statusCode: 500,
       headers: {
         "Access-Control-Allow-Origin": "*", // Or your Netlify domain
         "Access-Control-Allow-Headers": "Content-Type",
       },
-      body: JSON.stringify({ error: "Failed to generate response" }),
+      body: JSON.stringify({ error: "Failed to generate response" })
     };
   }
 };
