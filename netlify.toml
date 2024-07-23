@@ -1,9 +1,8 @@
 [build]
-  publish = "."
+  publish = "My"
 
 [functions]
   directory = "My/functions"
-  node_bundler = "esbuild"
 
 [[redirects]]
   from = "/functions/*"
