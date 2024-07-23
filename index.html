@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-
+        
         function hidePrompt() {
             const promptContainer = document.querySelector('.prompt');
             if (promptContainer) {
@@ -769,6 +769,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         resetPromptTimer();
+
+                // Add scroll event listener to hide/show prompt
+                window.addEventListener('scroll', function() {
+            const promptContainer = document.querySelector('.prompt');
+            if (promptContainer) {
+                const heyRect = hey.getBoundingClientRect();
+                if (heyRect.top < 0) {
+                    promptContainer.style.opacity = '0';
+                } else {
+                    promptContainer.style.opacity = '1';
+                }
+            }
+        });
 
         hey.addEventListener('touchstart', function(e) {
             isLongPress = false;
@@ -805,10 +818,9 @@ document.addEventListener('DOMContentLoaded', function() {
             heyText.appendChild(input);
 
             // Force the keyboard to appear
-            setTimeout(() => {
-                input.focus();
-                input.click();
-            }, 100);
+            input.readOnly = false;
+            input.focus();
+            input.click();
 
             showPrompt('Tap enter to send');
 
@@ -837,7 +849,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-
 
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
@@ -977,16 +988,19 @@ document.addEventListener('DOMContentLoaded', function() {
             comma.style.animation = 'bellJingle 0.8s ease-in-out';
         }
 
-        // Add scroll event listener to hide/show prompt
-        window.addEventListener('scroll', function() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                const heyRect = hey.getBoundingClientRect();
-                if (heyRect.top < 0) {
-                    promptContainer.style.opacity = '0';
-                } else {
-                    promptContainer.style.opacity = '1';
-                }
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                handleLongPress();
+            }, 250);
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress && !inChatMode) {
+                playAnimation();
+                playCommaAnimation();
             }
         });
     }
