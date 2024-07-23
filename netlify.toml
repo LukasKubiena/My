@@ -1,11 +1,7 @@
-[build]
-  publish = "."
-
 [functions]
-  directory = "My"
-  node_bundler = "esbuild"
+  directory = "My/functions"
 
 [[redirects]]
-  from = "/My/*"
+  from = "/functions/*"
   to = "/.netlify/functions/:splat"
   status = 200
