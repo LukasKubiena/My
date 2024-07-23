@@ -782,59 +782,63 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function handleLongPress() {
-            inChatMode = true;
-            playAnimation();
-            
-            clearPreviousContent(true);
-            
-            setTimeout(() => {
-                heyText.textContent = '';
-                comma.style.display = 'none';
-                const input = document.createElement('textarea');
-                input.style.font = window.getComputedStyle(heyText).font;
-                input.style.border = 'none';
-                input.style.background = 'transparent';
-                input.style.outline = 'none';
-                input.style.width = '100%';
-                input.style.resize = 'none';
-                input.style.overflow = 'hidden';
-                input.style.caretColor = 'black'; // Make the cursor visible
-                heyText.appendChild(input);
-                input.focus();
+    inChatMode = true;
+    playAnimation();
+    
+    clearPreviousContent(true);
+    
+    heyText.textContent = '';
+    comma.style.display = 'none';
+    const input = document.createElement('textarea');
+    input.style.font = window.getComputedStyle(heyText).font;
+    input.style.border = 'none';
+    input.style.background = 'transparent';
+    input.style.outline = 'none';
+    input.style.width = '100%';
+    input.style.resize = 'none';
+    input.style.overflow = 'hidden';
+    input.style.caretColor = 'black';
+    heyText.appendChild(input);
 
-                // Add blinking cursor style
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes blink-caret {
-                        from, to { caret-color: black; }
-                        50% { caret-color: transparent; }
-                    }
-                    textarea {
-                        animation: blink-caret 0.75s step-end infinite;
-                    }
-                `;
-                document.head.appendChild(style);
-
-                showPrompt('Tap enter to send');
-
-                input.addEventListener('input', function() {
-                    this.style.height = 'auto';
-                    this.style.height = this.scrollHeight + 'px';
-                });
-
-                content.forEach(el => el.style.display = 'none');
-
-                input.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        const userInput = input.value;
-                        handleUserInput(userInput);
-                    }
-                });
-
-                addBackButton();
-            }, 500);
+    // Add blinking cursor style
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes blink-caret {
+            from, to { caret-color: black; }
+            50% { caret-color: transparent; }
         }
+        textarea {
+            animation: blink-caret 0.75s step-end infinite;
+        }
+    `;
+    document.head.appendChild(style);
+
+    showPrompt('Tap enter to send');
+
+    input.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
+
+    content.forEach(el => el.style.display = 'none');
+
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            const userInput = input.value;
+            handleUserInput(userInput);
+        }
+    });
+
+    addBackButton();
+
+    // Use setTimeout to ensure the input is focused and the keyboard appears
+    setTimeout(() => {
+        input.focus();
+        // Scroll to the input to ensure it's visible
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+}
 
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
