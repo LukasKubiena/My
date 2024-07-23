@@ -789,44 +789,53 @@ document.addEventListener('DOMContentLoaded', function() {
             
             heyText.textContent = '';
             comma.style.display = 'none';
-            const input = document.createElement('textarea');
+            
+            const input = document.createElement('div');
+            input.contentEditable = true;
             input.style.font = window.getComputedStyle(heyText).font;
             input.style.border = 'none';
             input.style.background = 'transparent';
             input.style.outline = 'none';
             input.style.width = '100%';
-            input.style.resize = 'none';
-            input.style.overflow = 'hidden';
+            input.style.minHeight = '1em';
             input.style.caretColor = 'black';
-            input.placeholder = ' '; // Add a space as placeholder to keep cursor visible
+            input.style.whiteSpace = 'pre-wrap';
+            input.style.wordBreak = 'break-word';
+            input.innerHTML = '<br>'; // This ensures the cursor is visible
             heyText.appendChild(input);
 
             // Force the keyboard to appear
-            input.readOnly = false;
-            input.focus();
             setTimeout(() => {
-                input.click();
                 input.focus();
-                // Trigger a fake input event to force keyboard on some devices
-                input.dispatchEvent(new Event('input', { bubbles: true }));
+                if (typeof window.getSelection != "undefined"
+                    && typeof document.createRange != "undefined") {
+                    var range = document.createRange();
+                    range.selectNodeContents(input);
+                    range.collapse(false);
+                    var sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
             }, 100);
 
             showPrompt('Tap enter to send');
 
             input.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = this.scrollHeight + 'px';
-                // Keep the placeholder (and thus the cursor) if empty
-                this.placeholder = this.value.length === 0 ? ' ' : '';
+                if (this.innerHTML === '<br>') {
+                    this.innerHTML = '&#8203;'; // Zero-width space
+                }
             });
 
             content.forEach(el => el.style.display = 'none');
 
-            input.addEventListener('keypress', function(e) {
+            input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    const userInput = input.value;
-                    handleUserInput(userInput);
+                    const userInput = this.innerText.trim();
+                    if (userInput) {
+                        handleUserInput(userInput);
+                        this.innerHTML = '<br>';
+                    }
                 }
             });
 
@@ -837,12 +846,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (inChatMode) {
                     e.preventDefault();
                     input.focus();
-                    // Attempt to force keyboard show on touch
-                    setTimeout(() => {
-                        input.click();
-                        input.focus();
-                        input.dispatchEvent(new Event('input', { bubbles: true }));
-                    }, 100);
                 }
             });
         }
