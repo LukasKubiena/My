@@ -782,6 +782,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        function showCursor() {
+            const cursor = document.querySelector('.typing-cursor');
+            if (cursor) {
+                cursor.style.display = 'inline-block';
+                clearInterval(blinkInterval);
+                blinkInterval = setInterval(() => {
+                    cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
+                }, 500);
+            }
+        }
+
+        function hideCursor() {
+            const cursor = document.querySelector('.typing-cursor');
+            if (cursor) {
+                cursor.style.display = 'none';
+                clearInterval(blinkInterval);
+            }
+        }
+
         function handleLongPress() {
             inChatMode = true;
             
@@ -942,19 +961,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-        function resetPage() {
+function resetPage() {
             inChatMode = false;
             
-            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
-            // Clear previous content
             clearPreviousContent();
 
-            // Reset the Hey container
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span><span class="typing-cursor"></span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
 
@@ -963,7 +979,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.opacity = '1';
             });
 
-            // Ensure animations play after content is updated
             setTimeout(() => {
                 playAnimation();
                 playCommaAnimation();
@@ -972,7 +987,9 @@ document.addEventListener('DOMContentLoaded', function() {
             resetPromptTimer();
 
             messages = [];
+            showCursor();
         }
+
 
 
         function playAnimation() {
@@ -1002,6 +1019,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 playCommaAnimation();
             }
         });
+        showCursor();
     }
 });
 
