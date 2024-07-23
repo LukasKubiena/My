@@ -766,14 +766,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 promptContainer.textContent = text;
                 promptContainer.style.opacity = '0';
                 promptContainer.style.transition = 'opacity 0.5s ease-in';
-                promptContainer.style.position = 'absolute';
-                promptContainer.style.top = '-30px';
-                promptContainer.style.left = '0';
-                promptContainer.style.width = '100%';
-                promptContainer.style.textAlign = 'center';
                 
                 const heyContainer = document.querySelector('.hey-container');
-                heyContainer.style.position = 'relative';
                 heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
                 
                 setTimeout(() => {
@@ -819,21 +813,19 @@ document.addEventListener('DOMContentLoaded', function() {
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
                 handleLongPress();
-                if (navigator.vibrate) {
-                    navigator.vibrate(100);
-                }
             }, 250);
         });
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
-                // Remove single tap animation
+            if (!isLongPress) {
+                playAnimation();
             }
         });
 
         function handleLongPress() {
             inChatMode = true;
+            playAnimation();
             
             clearPreviousContent(true);
             
@@ -848,13 +840,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.style.width = '100%';
                 input.style.resize = 'none';
                 input.style.overflow = 'hidden';
-                input.style.caretColor = 'black';
+                input.style.caretColor = 'black'; // Make the cursor visible
                 heyText.appendChild(input);
                 input.focus();
 
-                // Show keyboard on mobile
-                input.click();
-
+                // Add blinking cursor style
                 const style = document.createElement('style');
                 style.textContent = `
                     @keyframes blink-caret {
@@ -931,6 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const contentContainer = document.querySelector('.content-1').parentNode;
             
+            // Remove previous response and back button if they exist, but keep the prompt
             clearPreviousContent(true);
 
             const responseElement = document.createElement('div');
@@ -949,46 +940,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     i++;
                 } else {
                     clearInterval(intervalId);
-                    addBackButton();
+                    addBackButton(); // Add back button after response is fully displayed
                 }
             }, 120);
         }
 
         async function generateAIResponse(userInput) {
-            messages.push({ "role": "user", "content": userInput });
+    messages.push({ "role": "user", "content": userInput });
 
-            try {
-                const response = await fetch('/.netlify/functions/generate-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput, messages })
-                });
+    try {
+        const response = await fetch('/.netlify/functions/generate-response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userInput, messages })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const aiResponse = data.response;
-                messages.push({ "role": "assistant", "content": aiResponse });
-                return aiResponse;
-            } catch (error) {
-                console.error('Error:', error);
-                return "I'm sorry, I couldn't generate a response at this time.";
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        const aiResponse = data.response;
+        messages.push({ "role": "assistant", "content": aiResponse });
+        return aiResponse;
+    } catch (error) {
+        console.error('Error:', error);
+        return "I'm sorry, I couldn't generate a response at this time.";
+    }
+}
 
         function resetPage() {
             inChatMode = false;
             
+            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
+            // Clear previous content
             clearPreviousContent();
 
+            // Reset the Hey container
             hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
@@ -998,56 +992,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.opacity = '1';
             });
 
+            // Ensure animations play after content is updated
+            setTimeout(() => {
+                playAnimation();
+                playCommaAnimation();
+            }, 10);
+
             resetPromptTimer();
 
             messages = [];
         }
 
-        // Swipe effect for system message
-        let startY;
-        let systemMessage;
 
-        function createSystemMessage() {
-            systemMessage = document.createElement('div');
-            systemMessage.className = 'system-message';
-            systemMessage.textContent = 'Swipe up to hide, down to show';
-            systemMessage.style.position = 'fixed';
-            systemMessage.style.top = '0';
-            systemMessage.style.left = '0';
-            systemMessage.style.width = '100%';
-            systemMessage.style.padding = '10px';
-            systemMessage.style.background = '#f0f0f0';
-            systemMessage.style.textAlign = 'center';
-            systemMessage.style.transition = 'transform 0.3s ease-out';
-            document.body.insertBefore(systemMessage, document.body.firstChild);
+        function playAnimation() {
+            hey.classList.remove('animate');
+            void hey.offsetWidth;
+            hey.classList.add('animate');
         }
 
-        createSystemMessage();
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth; // Trigger reflow
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+        }
 
-        document.addEventListener('touchstart', function(e) {
-            startY = e.touches[0].clientY;
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                handleLongPress();
+            }, 250);
         });
 
-        document.addEventListener('touchmove', function(e) {
-            if (!startY) return;
-
-            const currentY = e.touches[0].clientY;
-            const diff = startY - currentY;
-
-            if (diff > 0) { // Swiping up
-                systemMessage.style.transform = `translateY(-${Math.min(diff, systemMessage.offsetHeight)}px)`;
-            } else if (diff < 0 && window.scrollY === 0) { // Swiping down and at top of page
-                systemMessage.style.transform = `translateY(${Math.min(Math.abs(diff), systemMessage.offsetHeight)}px)`;
-            }
-        });
-
-        document.addEventListener('touchend', function() {
-            startY = null;
-            systemMessage.style.transition = 'transform 0.3s ease-out';
-            if (parseFloat(systemMessage.style.transform.replace('translateY(', '')) > systemMessage.offsetHeight / 2) {
-                systemMessage.style.transform = 'translateY(0)';
-            } else {
-                systemMessage.style.transform = `translateY(-${systemMessage.offsetHeight}px)`;
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress && !inChatMode) {
+                playAnimation();
+                playCommaAnimation();
             }
         });
     }
