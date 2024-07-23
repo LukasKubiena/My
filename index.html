@@ -650,48 +650,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.matchMedia("(min-width: 1025px)").matches) {
         hey.addEventListener('mouseenter', playAnimation);
     }
-
-    // Shake detection
-    let lastTime = new Date().getTime();
-    let lastX = 0;
-    let lastY = 0;
-    let lastZ = 0;
-    const shakeThreshold = 15; // Adjust this value to change sensitivity
-
-    function handleShake(event) {
-        const currentTime = new Date().getTime();
-        if ((currentTime - lastTime) > 100) { // Limit shake checks to every 100ms
-            const diffTime = currentTime - lastTime;
-            const x = event.accelerationIncludingGravity.x;
-            const y = event.accelerationIncludingGravity.y;
-            const z = event.accelerationIncludingGravity.z;
-            const speed = Math.abs(x + y + z - lastX - lastY - lastZ) / diffTime * 10000;
-
-            if (speed > shakeThreshold) {
-                playAnimation();
-            }
-
-            lastTime = currentTime;
-            lastX = x;
-            lastY = y;
-            lastZ = z;
-        }
-    }
-
-    // Check if DeviceMotion is supported and request permission if needed
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        document.body.addEventListener('click', function() {
-            DeviceMotionEvent.requestPermission()
-                .then(response => {
-                    if (response == 'granted') {
-                        window.addEventListener('devicemotion', handleShake);
-                    }
-                })
-                .catch(console.error);
-        }, {once: true});
-    } else if ('DeviceMotionEvent' in window) {
-        window.addEventListener('devicemotion', handleShake);
-    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -818,13 +776,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
-            if (!isLongPress) {
+            if (!isLongPress && !inChatMode) {
                 playAnimation();
+                playCommaAnimation();
             }
         });
 
         function handleLongPress() {
             inChatMode = true;
+            playAnimation();
             
             clearPreviousContent(true);
             
@@ -841,11 +801,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.style.overflow = 'hidden';
                 input.style.caretColor = 'black';
                 heyText.appendChild(input);
-                input.focus();
 
-                // Show keyboard on mobile
-                input.click();
-
+                // Add blinking cursor style
                 const style = document.createElement('style');
                 style.textContent = `
                     @keyframes blink-caret {
@@ -876,6 +833,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 addBackButton();
+
+                // Ensure focus with a slight delay
+                setTimeout(() => {
+                    input.focus();
+                }, 300);
             }, 500);
         }
 
@@ -972,18 +934,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-        function resetPage() {
+function resetPage() {
             inChatMode = false;
             
-            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
-            // Clear previous content
             clearPreviousContent();
 
-            // Reset the Hey container
             hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
@@ -993,7 +952,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.opacity = '1';
             });
 
-            // Ensure animations play after content is updated
             setTimeout(() => {
                 playAnimation();
                 playCommaAnimation();
