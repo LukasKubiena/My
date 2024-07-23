@@ -805,9 +805,10 @@ document.addEventListener('DOMContentLoaded', function() {
             heyText.appendChild(input);
 
             // Force the keyboard to appear
-            input.readOnly = false;
-            input.focus();
-            input.click();
+            setTimeout(() => {
+                input.focus();
+                input.click();
+            }, 100);
 
             showPrompt('Tap enter to send');
 
@@ -835,17 +836,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.focus();
                 }
             });
-
-            // Add blinking cursor when input is empty
-            setInterval(() => {
-                if (input.value === '') {
-                    input.style.borderRight = '1px solid black';
-                    setTimeout(() => {
-                        input.style.borderRight = 'none';
-                    }, 500);
-                }
-            }, 1000);
         }
+
 
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
