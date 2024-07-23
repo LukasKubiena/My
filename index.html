@@ -715,7 +715,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let promptTimer;
         let blinkInterval;
-        let input;
 
         function showPrompt(text) {
             clearTimeout(promptTimer);
@@ -725,8 +724,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 promptContainer.textContent = text;
                 promptContainer.style.opacity = '0';
                 promptContainer.style.transition = 'opacity 0.5s ease-in';
+                promptContainer.style.position = 'absolute';
+                promptContainer.style.top = '-30px'; // Adjust as needed
+                promptContainer.style.left = '0';
+                promptContainer.style.width = '100%';
                 
-                const heyContainer = document.querySelector('.hey-container');
+                heyContainer.style.position = 'relative';
                 heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
                 
                 setTimeout(() => {
@@ -745,7 +748,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-        
+
         function hidePrompt() {
             const promptContainer = document.querySelector('.prompt');
             if (promptContainer) {
@@ -790,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             heyText.textContent = '';
             comma.style.display = 'none';
-            input = document.createElement('textarea');
+            const input = document.createElement('textarea');
             input.style.font = window.getComputedStyle(heyText).font;
             input.style.border = 'none';
             input.style.background = 'transparent';
@@ -801,18 +804,16 @@ document.addEventListener('DOMContentLoaded', function() {
             input.style.caretColor = 'black';
             heyText.appendChild(input);
 
-            addBlinkingCursor();
+            // Force the keyboard to appear
+            input.readOnly = false;
+            input.focus();
+            input.click();
 
             showPrompt('Tap enter to send');
 
             input.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
-                if (this.value.length > 0) {
-                    removeBlinkingCursor();
-                } else {
-                    addBlinkingCursor();
-                }
             });
 
             content.forEach(el => el.style.display = 'none');
@@ -827,36 +828,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
             addBackButton();
 
-            // Force keyboard to appear
-            setTimeout(() => {
-                input.focus();
-                input.click();
-            }, 100);
-        }
+            // Allow tapping on the hey area to refocus the input
+            hey.addEventListener('touchstart', function(e) {
+                if (inChatMode) {
+                    e.preventDefault();
+                    input.focus();
+                }
+            });
 
-        function addBlinkingCursor() {
-            heyText.style.position = 'relative';
-            let cursor = heyText.querySelector('.blinking-cursor');
-            if (!cursor) {
-                cursor = document.createElement('span');
-                cursor.className = 'blinking-cursor';
-                cursor.style.position = 'absolute';
-                cursor.style.right = '-2px';
-                cursor.style.top = '0';
-                cursor.style.height = '1.2em';
-                cursor.style.width = '2px';
-                cursor.style.backgroundColor = 'black';
-                cursor.style.animation = 'blink 0.7s infinite';
-                heyText.appendChild(cursor);
-            }
-            cursor.style.display = 'block';
-        }
-
-        function removeBlinkingCursor() {
-            let cursor = heyText.querySelector('.blinking-cursor');
-            if (cursor) {
-                cursor.style.display = 'none';
-            }
+            // Add blinking cursor when input is empty
+            setInterval(() => {
+                if (input.value === '') {
+                    input.style.borderRight = '1px solid black';
+                    setTimeout(() => {
+                        input.style.borderRight = 'none';
+                    }, 500);
+                }
+            }, 1000);
         }
 
         function clearPreviousContent(keepPrompt = false) {
@@ -892,7 +880,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         async function handleUserInput(userInput) {
-            removeBlinkingCursor();
             heyText.textContent = userInput;
             heyText.style.whiteSpace = 'pre-wrap';
             heyText.style.wordBreak = 'break-word';
@@ -903,6 +890,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const contentContainer = document.querySelector('.content-1').parentNode;
             
+            // Remove previous response and back button if they exist, but keep the prompt
             clearPreviousContent(true);
 
             const responseElement = document.createElement('div');
@@ -921,8 +909,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     i++;
                 } else {
                     clearInterval(intervalId);
-                    addBackButton();
-                    addBlinkingCursor(); // Add blinking cursor after response
+                    addBackButton(); // Add back button after response is fully displayed
                 }
             }, 120);
         }
@@ -998,19 +985,16 @@ document.addEventListener('DOMContentLoaded', function() {
             comma.style.animation = 'bellJingle 0.8s ease-in-out';
         }
 
-        hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                handleLongPress();
-            }, 250);
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
-                playAnimation();
-                playCommaAnimation();
+        // Add scroll event listener to hide/show prompt
+        window.addEventListener('scroll', function() {
+            const promptContainer = document.querySelector('.prompt');
+            if (promptContainer) {
+                const heyRect = hey.getBoundingClientRect();
+                if (heyRect.top < 0) {
+                    promptContainer.style.opacity = '0';
+                } else {
+                    promptContainer.style.opacity = '1';
+                }
             }
         });
     }
