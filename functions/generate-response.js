@@ -29,16 +29,21 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({ response: response.data.choices[0].message.content.trim() })
     };
   } catch (error) {
+    console.error('OpenAI API Error:', error);
     return {
       statusCode: 500,
       headers: {
-        "Access-Control-Allow-Origin": "*", // Or your Netlify domain
-        "Access-Control-Allow-Headers": "Content-Type",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
-      body: JSON.stringify({ error: "Failed to generate response" })
+      body: JSON.stringify({ error: "Failed to generate response", details: error.message })
     };
   }
 };

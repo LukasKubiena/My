@@ -2,10 +2,10 @@
   publish = "."
 
 [functions]
-  directory = "functions"
+  directory = "My"
   node_bundler = "esbuild"
 
 [[redirects]]
-  from = "/functions/*"
+  from = "/My/*"
   to = "/.netlify/functions/:splat"
   status = 200
