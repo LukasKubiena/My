@@ -782,25 +782,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        function showCursor() {
-            const cursor = document.querySelector('.typing-cursor');
-            if (cursor) {
-                cursor.style.display = 'inline-block';
-                clearInterval(blinkInterval);
-                blinkInterval = setInterval(() => {
-                    cursor.style.visibility = cursor.style.visibility === 'hidden' ? 'visible' : 'hidden';
-                }, 500);
-            }
-        }
-
-        function hideCursor() {
-            const cursor = document.querySelector('.typing-cursor');
-            if (cursor) {
-                cursor.style.display = 'none';
-                clearInterval(blinkInterval);
-            }
-        }
-
         function handleLongPress() {
             inChatMode = true;
             
@@ -817,6 +798,7 @@ document.addEventListener('DOMContentLoaded', function() {
             input.style.resize = 'none';
             input.style.overflow = 'hidden';
             input.style.caretColor = 'black';
+            input.placeholder = ' '; // Add a space as placeholder to keep cursor visible
             heyText.appendChild(input);
 
             // Force the keyboard to appear
@@ -824,6 +806,9 @@ document.addEventListener('DOMContentLoaded', function() {
             input.focus();
             setTimeout(() => {
                 input.click();
+                input.focus();
+                // Trigger a fake input event to force keyboard on some devices
+                input.dispatchEvent(new Event('input', { bubbles: true }));
             }, 100);
 
             showPrompt('Tap enter to send');
@@ -831,18 +816,8 @@ document.addEventListener('DOMContentLoaded', function() {
             input.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
-                if (this.value.length === 0) {
-                    showCursor();
-                } else {
-                    hideCursor();
-                }
-            });
-
-            input.addEventListener('focus', hideCursor);
-            input.addEventListener('blur', function() {
-                if (this.value.length === 0) {
-                    showCursor();
-                }
+                // Keep the placeholder (and thus the cursor) if empty
+                this.placeholder = this.value.length === 0 ? ' ' : '';
             });
 
             content.forEach(el => el.style.display = 'none');
@@ -862,10 +837,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (inChatMode) {
                     e.preventDefault();
                     input.focus();
+                    // Attempt to force keyboard show on touch
+                    setTimeout(() => {
+                        input.click();
+                        input.focus();
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    }, 100);
                 }
             });
-
-            showCursor();
         }
 
         function clearPreviousContent(keepPrompt = false) {
@@ -961,16 +940,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-function resetPage() {
+        function resetPage() {
             inChatMode = false;
             
+            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
+            // Clear previous content
             clearPreviousContent();
 
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span><span class="typing-cursor"></span>';
+            // Reset the Hey container
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
 
@@ -979,6 +961,7 @@ function resetPage() {
                 el.style.opacity = '1';
             });
 
+            // Ensure animations play after content is updated
             setTimeout(() => {
                 playAnimation();
                 playCommaAnimation();
@@ -987,9 +970,7 @@ function resetPage() {
             resetPromptTimer();
 
             messages = [];
-            showCursor();
         }
-
 
 
         function playAnimation() {
@@ -1019,7 +1000,6 @@ function resetPage() {
                 playCommaAnimation();
             }
         });
-        showCursor();
     }
 });
 
