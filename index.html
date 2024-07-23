@@ -832,12 +832,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     addBackButton();
 
-    // Use setTimeout to ensure the input is focused and the keyboard appears
+    // Use a combination of methods to ensure the keyboard appears
     setTimeout(() => {
         input.focus();
-        // Scroll to the input to ensure it's visible
+        input.click();
         input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 100);
+        
+        // Create a temporary button to trigger keyboard
+        const tempButton = document.createElement('button');
+        tempButton.style.position = 'absolute';
+        tempButton.style.opacity = '0';
+        document.body.appendChild(tempButton);
+        tempButton.focus();
+        tempButton.click();
+        document.body.removeChild(tempButton);
+        
+        input.focus();
+    }, 300);
 }
 
         function clearPreviousContent(keepPrompt = false) {
