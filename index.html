@@ -825,7 +825,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function handleLongPress() {
             inChatMode = true;
-            playAnimation();
             
             clearPreviousContent(true);
             
@@ -840,11 +839,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.style.width = '100%';
                 input.style.resize = 'none';
                 input.style.overflow = 'hidden';
-                input.style.caretColor = 'black'; // Make the cursor visible
+                input.style.caretColor = 'black';
                 heyText.appendChild(input);
                 input.focus();
 
-                // Add blinking cursor style
+                // Show keyboard on mobile
+                input.click();
+
                 const style = document.createElement('style');
                 style.textContent = `
                     @keyframes blink-caret {
@@ -921,6 +922,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const contentContainer = document.querySelector('.content-1').parentNode;
             
+            // Remove previous response and back button if they exist, but keep the prompt
             clearPreviousContent(true);
 
             const responseElement = document.createElement('div');
@@ -939,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     i++;
                 } else {
                     clearInterval(intervalId);
-                    addBackButton();
+                    addBackButton(); // Add back button after response is fully displayed
                 }
             }, 120);
         }
