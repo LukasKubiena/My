@@ -453,9 +453,8 @@
     </header>
     <div class="hey-container">
         <div class="hey">
-            <span class="hey-text"></span><span class="comma">,</span>
+            <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
         </div>
-        <button id="activate-input" style="opacity: 0; position: absolute; width: 1px; height: 1px;"></button>
     </div>
     <div class="content content-1">
         I'm Lukas. I work on building useful interactions between Humans and AI <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. We streamline the process of capturing insights from multiple conversations and transforming them into a structured, interactive, and evolving knowledge base.
@@ -709,14 +708,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let heyText = hey.querySelector('.hey-text');
         let comma = hey.querySelector('.comma');
         const content = document.querySelectorAll('.content, .send-mail');
-        let longPressTimer;
-        let isLongPress = false;
-        let messages = [];
-        let promptShown = false;
         let inChatMode = false;
         let promptTimer;
-        let blinkInterval;
-        const activateInputButton = document.getElementById('activate-input');
+        let messages = [];
 
         function showPrompt(text) {
             clearTimeout(promptTimer);
@@ -768,46 +762,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         resetPromptTimer();
 
-        let touchStartTime;
-        const LONG_PRESS_DURATION = 500; // ms
-
         hey.addEventListener('touchstart', function(e) {
-            touchStartTime = Date.now();
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            const touchDuration = Date.now() - touchStartTime;
-            if (touchDuration >= LONG_PRESS_DURATION) {
+            if (!inChatMode) {
+                e.preventDefault(); // Prevent default touch behavior
                 handleLongPress();
-            } else if (!inChatMode) {
-                playAnimation();
-                playCommaAnimation();
             }
         });
 
         function handleLongPress() {
             inChatMode = true;
-            playAnimation();
-            
             clearPreviousContent(true);
             
             heyText.textContent = '';
             comma.style.display = 'none';
-
-            showPrompt('Tap to start typing');
-
-            content.forEach(el => el.style.display = 'none');
-
-            // Show the activate input button
-            activateInputButton.style.opacity = '1';
-            activateInputButton.style.width = '100%';
-            activateInputButton.style.height = '100%';
-            activateInputButton.style.top = '0';
-            activateInputButton.style.left = '0';
-        }
-
-        activateInputButton.addEventListener('click', function() {
-            this.style.display = 'none';
             const input = document.createElement('textarea');
             input.style.font = window.getComputedStyle(heyText).font;
             input.style.border = 'none';
@@ -819,13 +786,19 @@ document.addEventListener('DOMContentLoaded', function() {
             input.style.caretColor = 'black';
             heyText.appendChild(input);
 
-            input.focus();
+            // Delay focus to ensure it works on mobile
+            setTimeout(() => {
+                input.focus();
+            }, 100);
+
             showPrompt('Tap enter to send');
 
             input.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
             });
+
+            content.forEach(el => el.style.display = 'none');
 
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -836,7 +809,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             addBackButton();
-        });
+
+            // Add touch event to re-focus input
+            hey.addEventListener('touchstart', function(e) {
+                if (inChatMode) {
+                    e.preventDefault();
+                    input.focus();
+                }
+            });
+        }
 
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
@@ -881,7 +862,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const contentContainer = document.querySelector('.content-1').parentNode;
             
-            // Remove previous response and back button if they exist, but keep the prompt
             clearPreviousContent(true);
 
             const responseElement = document.createElement('div');
@@ -900,49 +880,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     i++;
                 } else {
                     clearInterval(intervalId);
-                    addBackButton(); // Add back button after response is fully displayed
+                    addBackButton();
                 }
             }, 120);
         }
 
         async function generateAIResponse(userInput) {
-    messages.push({ "role": "user", "content": userInput });
+            messages.push({ "role": "user", "content": userInput });
 
-    try {
-        const response = await fetch('/.netlify/functions/generate-response', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userInput, messages })
-        });
+            try {
+                const response = await fetch('/.netlify/functions/generate-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userInput, messages })
+                });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.response;
+                messages.push({ "role": "assistant", "content": aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                return "I'm sorry, I couldn't generate a response at this time.";
+            }
         }
-
-        const data = await response.json();
-        const aiResponse = data.response;
-        messages.push({ "role": "assistant", "content": aiResponse });
-        return aiResponse;
-    } catch (error) {
-        console.error('Error:', error);
-        return "I'm sorry, I couldn't generate a response at this time.";
-    }
-}
 
         function resetPage() {
             inChatMode = false;
             
-            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
-            // Clear previous content
             clearPreviousContent();
 
-            // Reset the Hey container
             hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
@@ -952,48 +929,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.opacity = '1';
             });
 
-            // Ensure animations play after content is updated
-            setTimeout(() => {
-                playAnimation();
-                playCommaAnimation();
-            }, 10);
-
             resetPromptTimer();
 
             messages = [];
         }
-
-
-        function playAnimation() {
-            hey.classList.remove('animate');
-            void hey.offsetWidth;
-            hey.classList.add('animate');
-        }
-
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth; // Trigger reflow
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-        }
-
-        hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                handleLongPress();
-            }, 250);
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
-                playAnimation();
-                playCommaAnimation();
-            }
-        });
     }
 });
-
     </script>
 </body>
 </html>
