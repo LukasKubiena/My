@@ -776,9 +776,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
+            if (!isLongPress) {
                 playAnimation();
-                playCommaAnimation();
             }
         });
 
@@ -799,8 +798,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.style.width = '100%';
                 input.style.resize = 'none';
                 input.style.overflow = 'hidden';
-                input.style.caretColor = 'black';
+                input.style.caretColor = 'black'; // Make the cursor visible
                 heyText.appendChild(input);
+                input.focus();
 
                 // Add blinking cursor style
                 const style = document.createElement('style');
@@ -833,11 +833,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 addBackButton();
-
-                // Ensure focus with a slight delay
-                setTimeout(() => {
-                    input.focus();
-                }, 300);
             }, 500);
         }
 
@@ -934,15 +929,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-function resetPage() {
+        function resetPage() {
             inChatMode = false;
             
+            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
+            // Clear previous content
             clearPreviousContent();
 
+            // Reset the Hey container
             hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
@@ -952,6 +950,7 @@ function resetPage() {
                 el.style.opacity = '1';
             });
 
+            // Ensure animations play after content is updated
             setTimeout(() => {
                 playAnimation();
                 playCommaAnimation();
