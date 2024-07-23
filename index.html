@@ -715,6 +715,8 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let promptTimer;
         let blinkInterval;
+        let touchStartTime;
+        const LONG_PRESS_DURATION = 500; // ms
 
         function showPrompt(text) {
             clearTimeout(promptTimer);
@@ -767,19 +769,18 @@ document.addEventListener('DOMContentLoaded', function() {
         resetPromptTimer();
 
         hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                handleLongPress();
-            }, 250);
-        });
+        touchStartTime = Date.now();
+    });
 
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress) {
-                playAnimation();
-            }
-        });
+    hey.addEventListener('touchend', function(e) {
+        const touchDuration = Date.now() - touchStartTime;
+        if (touchDuration >= LONG_PRESS_DURATION) {
+            handleLongPress();
+        } else if (!inChatMode) {
+            playAnimation();
+            playCommaAnimation();
+        }
+    });
 
         function handleLongPress() {
     inChatMode = true;
