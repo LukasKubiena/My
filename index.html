@@ -377,18 +377,9 @@
         padding-left: 0;
     }
 
-    .hey-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
 
-    .prompt {
-        color: #888;
-        font-size: 16px;
-        margin-bottom: 24px;
-        align-self: flex-start;
-    }
+
+
 
     .hey {
         font-size: 36px;
@@ -423,6 +414,30 @@
         opacity: 0;
         transition: opacity 1s ease-in;
     }
+
+    .hey-container {
+    position: relative;
+    z-index: 2;
+}
+
+
+
+.prompt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: transform 0.3s ease-out;
+    z-index: 1;
+    color: #888;
+        font-size: 16px;
+        margin-bottom: 24px;
+        align-self: flex-start;
+}
+
+textarea::placeholder {
+    color: var(--placeholder-color);
+}
 
 
     .content.visible, .send-mail.visible {
@@ -724,8 +739,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 promptContainer.textContent = text;
                 promptContainer.style.opacity = '0';
                 promptContainer.style.transition = 'opacity 0.5s ease-in';
+                promptContainer.style.position = 'absolute';
+                promptContainer.style.top = '0';
+                promptContainer.style.left = '0';
+                promptContainer.style.width = '100%';
+                promptContainer.style.zIndex = '1';
                 
                 const heyContainer = document.querySelector('.hey-container');
+                heyContainer.style.position = 'relative';
                 heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
                 
                 setTimeout(() => {
@@ -789,53 +810,39 @@ document.addEventListener('DOMContentLoaded', function() {
             
             heyText.textContent = '';
             comma.style.display = 'none';
-            
-            const input = document.createElement('div');
-            input.contentEditable = true;
+            const input = document.createElement('textarea');
             input.style.font = window.getComputedStyle(heyText).font;
             input.style.border = 'none';
             input.style.background = 'transparent';
             input.style.outline = 'none';
             input.style.width = '100%';
-            input.style.minHeight = '1em';
+            input.style.resize = 'none';
+            input.style.overflow = 'hidden';
             input.style.caretColor = 'black';
-            input.style.whiteSpace = 'pre-wrap';
-            input.style.wordBreak = 'break-word';
-            input.innerHTML = '<br>'; // This ensures the cursor is visible
+            input.style.color = 'black';
+            input.placeholder = 'Ask...';
+            input.style.setProperty('--placeholder-color', '#888');
             heyText.appendChild(input);
 
             // Force the keyboard to appear
-            setTimeout(() => {
-                input.focus();
-                if (typeof window.getSelection != "undefined"
-                    && typeof document.createRange != "undefined") {
-                    var range = document.createRange();
-                    range.selectNodeContents(input);
-                    range.collapse(false);
-                    var sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-            }, 100);
+            input.readOnly = false;
+            input.focus();
+            input.click();
 
             showPrompt('Tap enter to send');
 
             input.addEventListener('input', function() {
-                if (this.innerHTML === '<br>') {
-                    this.innerHTML = '&#8203;'; // Zero-width space
-                }
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
             });
 
             content.forEach(el => el.style.display = 'none');
 
-            input.addEventListener('keydown', function(e) {
+            input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    const userInput = this.innerText.trim();
-                    if (userInput) {
-                        handleUserInput(userInput);
-                        this.innerHTML = '<br>';
-                    }
+                    const userInput = input.value;
+                    handleUserInput(userInput);
                 }
             });
 
@@ -918,30 +925,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         async function generateAIResponse(userInput) {
-    messages.push({ "role": "user", "content": userInput });
+            messages.push({ "role": "user", "content": userInput });
 
-    try {
-        const response = await fetch('/.netlify/functions/generate-response', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userInput, messages })
-        });
+            try {
+                const response = await fetch('/.netlify/functions/generate-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userInput, messages })
+                });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.response;
+                messages.push({ "role": "assistant", "content": aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                return "I'm sorry, I couldn't generate a response at this time.";
+            }
         }
-
-        const data = await response.json();
-        const aiResponse = data.response;
-        messages.push({ "role": "assistant", "content": aiResponse });
-        return aiResponse;
-    } catch (error) {
-        console.error('Error:', error);
-        return "I'm sorry, I couldn't generate a response at this time.";
-    }
-}
 
         function resetPage() {
             inChatMode = false;
@@ -975,7 +982,6 @@ document.addEventListener('DOMContentLoaded', function() {
             messages = [];
         }
 
-
         function playAnimation() {
             hey.classList.remove('animate');
             void hey.offsetWidth;
@@ -1003,6 +1009,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 playCommaAnimation();
             }
         });
+
+        // Add slide-over effect for home page
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let st = window.pageYOffset || document.documentElement.scrollTop;
+            if (st > lastScrollTop) {
+                // Scrolling down
+                document.querySelector('.prompt').style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                document.querySelector('.prompt').style.transform = 'translateY(0)';
+            }
+            lastScrollTop = st <= 0 ? 0 : st;
+        }, false);
     }
 });
 
