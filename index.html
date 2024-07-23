@@ -369,7 +369,6 @@
         padding: 40px;
         margin-top: 12vh;
         box-sizing: border-box;
-        padding-top: 40px;
     }
 
     .hey, .content, .send-mail {
@@ -378,9 +377,18 @@
         padding-left: 0;
     }
 
+    .hey-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-
-
+    .prompt {
+        color: #888;
+        font-size: 16px;
+        margin-bottom: 24px;
+        align-self: flex-start;
+    }
 
     .hey {
         font-size: 36px;
@@ -416,40 +424,10 @@
         transition: opacity 1s ease-in;
     }
 
-    .hey-container {
-    position: relative;
-    z-index: 1;
-}
-
-
-
-.prompt {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #f0f0f0;
-    color: #888;
-    padding: 10px;
-    text-align: center;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    z-index: 1000;
-}
-
-textarea::placeholder {
-    color: #888;
-}
-
 
     .content.visible, .send-mail.visible {
         opacity: 1;
     }
-
-    .content, .send-mail {
-    position: relative;
-    z-index: 1;
-    background-color: #ffffff;
-}
 
 
     @keyframes blink {
@@ -737,24 +715,45 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let promptTimer;
         let blinkInterval;
-        let promptContainer;
-        let lastScrollTop = 0;
 
         function showPrompt(text) {
-            if (!promptContainer) {
-                promptContainer = document.createElement('div');
+            clearTimeout(promptTimer);
+            if (!promptShown) {
+                const promptContainer = document.createElement('div');
                 promptContainer.className = 'prompt';
-                document.body.insertBefore(promptContainer, document.body.firstChild);
+                promptContainer.textContent = text;
+                promptContainer.style.opacity = '0';
+                promptContainer.style.transition = 'opacity 0.5s ease-in';
+                
+                const heyContainer = document.querySelector('.hey-container');
+                heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
+                
+                setTimeout(() => {
+                    promptContainer.style.opacity = '1';
+                }, 10);
+                
+                promptShown = true;
+            } else {
+                const promptContainer = document.querySelector('.prompt');
+                if (promptContainer) {
+                    promptContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        promptContainer.textContent = text;
+                        promptContainer.style.opacity = '1';
+                    }, 500);
+                }
             }
-            promptContainer.textContent = text;
-            promptContainer.style.opacity = '1';
-            promptContainer.style.transform = 'translateY(0)';
         }
-
+        
         function hidePrompt() {
+            const promptContainer = document.querySelector('.prompt');
             if (promptContainer) {
                 promptContainer.style.opacity = '0';
-                promptContainer.style.transform = 'translateY(-100%)';
+                promptContainer.style.transition = 'opacity 0.3s ease-out';
+                setTimeout(() => {
+                    promptContainer.remove();
+                    promptShown = false;
+                }, 300);
             }
         }
 
@@ -791,17 +790,15 @@ document.addEventListener('DOMContentLoaded', function() {
             heyText.textContent = '';
             comma.style.display = 'none';
             const input = document.createElement('textarea');
-            input.placeholder = 'Ask...';
-            input.style.width = '100%';
-            input.style.background = 'transparent';
+            input.style.font = window.getComputedStyle(heyText).font;
             input.style.border = 'none';
+            input.style.background = 'transparent';
             input.style.outline = 'none';
-            input.style.fontSize = '40px'; // Match the size of 'Hey'
-            input.style.fontWeight = '600'; // Match the weight of 'Hey'
-            input.style.fontFamily = window.getComputedStyle(hey).fontFamily;
-            input.style.color = '#000000';
-            heyContainer.innerHTML = '';
-            heyContainer.appendChild(input);
+            input.style.width = '100%';
+            input.style.resize = 'none';
+            input.style.overflow = 'hidden';
+            input.style.caretColor = 'black';
+            heyText.appendChild(input);
 
             // Force the keyboard to appear
             input.readOnly = false;
@@ -904,30 +901,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         async function generateAIResponse(userInput) {
-            messages.push({ "role": "user", "content": userInput });
+    messages.push({ "role": "user", "content": userInput });
 
-            try {
-                const response = await fetch('/.netlify/functions/generate-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput, messages })
-                });
+    try {
+        const response = await fetch('/.netlify/functions/generate-response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userInput, messages })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const aiResponse = data.response;
-                messages.push({ "role": "assistant", "content": aiResponse });
-                return aiResponse;
-            } catch (error) {
-                console.error('Error:', error);
-                return "I'm sorry, I couldn't generate a response at this time.";
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        const aiResponse = data.response;
+        messages.push({ "role": "assistant", "content": aiResponse });
+        return aiResponse;
+    } catch (error) {
+        console.error('Error:', error);
+        return "I'm sorry, I couldn't generate a response at this time.";
+    }
+}
 
         function resetPage() {
             inChatMode = false;
@@ -961,6 +958,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messages = [];
         }
 
+
         function playAnimation() {
             hey.classList.remove('animate');
             void hey.offsetWidth;
@@ -988,20 +986,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 playCommaAnimation();
             }
         });
-
-        // Add slide-over effect for home page
-        // Scroll handling
-        window.addEventListener('scroll', function() {
-            let st = window.pageYOffset || document.documentElement.scrollTop;
-            if (st > lastScrollTop) {
-                // Scrolling down
-                if (promptContainer) promptContainer.style.transform = 'translateY(-100%)';
-            } else {
-                // Scrolling up
-                if (promptContainer) promptContainer.style.transform = 'translateY(0)';
-            }
-            lastScrollTop = st <= 0 ? 0 : st;
-        }, false);
     }
 });
 
