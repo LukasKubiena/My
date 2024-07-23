@@ -803,13 +803,27 @@ document.addEventListener('DOMContentLoaded', function() {
             // Force the keyboard to appear
             input.readOnly = false;
             input.focus();
-            input.click();
+            setTimeout(() => {
+                input.click();
+            }, 100);
 
             showPrompt('Tap enter to send');
 
             input.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
+                if (this.value.length === 0) {
+                    showCursor();
+                } else {
+                    hideCursor();
+                }
+            });
+
+            input.addEventListener('focus', hideCursor);
+            input.addEventListener('blur', function() {
+                if (this.value.length === 0) {
+                    showCursor();
+                }
             });
 
             content.forEach(el => el.style.display = 'none');
@@ -831,6 +845,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.focus();
                 }
             });
+
+            showCursor();
         }
 
         function clearPreviousContent(keepPrompt = false) {
