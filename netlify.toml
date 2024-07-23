@@ -1,8 +1,8 @@
 [build]
-  publish = "My"
+  publish = "."  # or the correct path to your built files
 
 [functions]
-  directory = "My/functions"
+  directory = "functions"
 
 [[redirects]]
   from = "/functions/*"
