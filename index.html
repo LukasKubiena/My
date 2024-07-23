@@ -785,6 +785,8 @@ document.addEventListener('DOMContentLoaded', function() {
             inChatMode = true;
             playAnimation();
             
+            clearPreviousContent(true);
+            
             setTimeout(() => {
                 heyText.textContent = '';
                 comma.style.display = 'none';
@@ -800,12 +802,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 heyText.appendChild(input);
                 input.focus();
 
-                content.forEach(el => el.style.display = 'none');
+                // Add blinking cursor style
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes blink-caret {
+                        from, to { caret-color: black; }
+                        50% { caret-color: transparent; }
+                    }
+                    textarea {
+                        animation: blink-caret 0.75s step-end infinite;
+                    }
+                `;
+                document.head.appendChild(style);
+
+                showPrompt('Tap enter to send');
 
                 input.addEventListener('input', function() {
                     this.style.height = 'auto';
                     this.style.height = this.scrollHeight + 'px';
                 });
+
+                content.forEach(el => el.style.display = 'none');
 
                 input.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -818,7 +835,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 addBackButton();
             }, 500);
         }
-        
+
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
             const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
