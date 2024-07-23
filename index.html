@@ -369,6 +369,7 @@
         padding: 40px;
         margin-top: 12vh;
         box-sizing: border-box;
+        padding-top: 40px;
     }
 
     .hey, .content, .send-mail {
@@ -417,32 +418,38 @@
 
     .hey-container {
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 
 
 .prompt {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    transition: transform 0.3s ease-out;
-    z-index: 1;
+    background-color: #f0f0f0;
     color: #888;
-        font-size: 16px;
-        margin-bottom: 24px;
-        align-self: flex-start;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: 1000;
 }
 
 textarea::placeholder {
-    color: var(--placeholder-color);
+    color: #888;
 }
 
 
     .content.visible, .send-mail.visible {
         opacity: 1;
     }
+
+    .content, .send-mail {
+    position: relative;
+    z-index: 1;
+    background-color: #ffffff;
+}
 
 
     @keyframes blink {
@@ -730,51 +737,24 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let promptTimer;
         let blinkInterval;
+        let promptContainer;
+        let lastScrollTop = 0;
 
         function showPrompt(text) {
-            clearTimeout(promptTimer);
-            if (!promptShown) {
-                const promptContainer = document.createElement('div');
+            if (!promptContainer) {
+                promptContainer = document.createElement('div');
                 promptContainer.className = 'prompt';
-                promptContainer.textContent = text;
-                promptContainer.style.opacity = '0';
-                promptContainer.style.transition = 'opacity 0.5s ease-in';
-                promptContainer.style.position = 'absolute';
-                promptContainer.style.top = '0';
-                promptContainer.style.left = '0';
-                promptContainer.style.width = '100%';
-                promptContainer.style.zIndex = '1';
-                
-                const heyContainer = document.querySelector('.hey-container');
-                heyContainer.style.position = 'relative';
-                heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
-                
-                setTimeout(() => {
-                    promptContainer.style.opacity = '1';
-                }, 10);
-                
-                promptShown = true;
-            } else {
-                const promptContainer = document.querySelector('.prompt');
-                if (promptContainer) {
-                    promptContainer.style.opacity = '0';
-                    setTimeout(() => {
-                        promptContainer.textContent = text;
-                        promptContainer.style.opacity = '1';
-                    }, 500);
-                }
+                document.body.insertBefore(promptContainer, document.body.firstChild);
             }
+            promptContainer.textContent = text;
+            promptContainer.style.opacity = '1';
+            promptContainer.style.transform = 'translateY(0)';
         }
-        
+
         function hidePrompt() {
-            const promptContainer = document.querySelector('.prompt');
             if (promptContainer) {
                 promptContainer.style.opacity = '0';
-                promptContainer.style.transition = 'opacity 0.3s ease-out';
-                setTimeout(() => {
-                    promptContainer.remove();
-                    promptShown = false;
-                }, 300);
+                promptContainer.style.transform = 'translateY(-100%)';
             }
         }
 
@@ -811,18 +791,17 @@ document.addEventListener('DOMContentLoaded', function() {
             heyText.textContent = '';
             comma.style.display = 'none';
             const input = document.createElement('textarea');
-            input.style.font = window.getComputedStyle(heyText).font;
-            input.style.border = 'none';
-            input.style.background = 'transparent';
-            input.style.outline = 'none';
-            input.style.width = '100%';
-            input.style.resize = 'none';
-            input.style.overflow = 'hidden';
-            input.style.caretColor = 'black';
-            input.style.color = 'black';
             input.placeholder = 'Ask...';
-            input.style.setProperty('--placeholder-color', '#888');
-            heyText.appendChild(input);
+            input.style.width = '100%';
+            input.style.background = 'transparent';
+            input.style.border = 'none';
+            input.style.outline = 'none';
+            input.style.fontSize = '40px'; // Match the size of 'Hey'
+            input.style.fontWeight = '600'; // Match the weight of 'Hey'
+            input.style.fontFamily = window.getComputedStyle(hey).fontFamily;
+            input.style.color = '#000000';
+            heyContainer.innerHTML = '';
+            heyContainer.appendChild(input);
 
             // Force the keyboard to appear
             input.readOnly = false;
@@ -1011,15 +990,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Add slide-over effect for home page
-        let lastScrollTop = 0;
+        // Scroll handling
         window.addEventListener('scroll', function() {
             let st = window.pageYOffset || document.documentElement.scrollTop;
             if (st > lastScrollTop) {
                 // Scrolling down
-                document.querySelector('.prompt').style.transform = 'translateY(-100%)';
+                if (promptContainer) promptContainer.style.transform = 'translateY(-100%)';
             } else {
                 // Scrolling up
-                document.querySelector('.prompt').style.transform = 'translateY(0)';
+                if (promptContainer) promptContainer.style.transform = 'translateY(0)';
             }
             lastScrollTop = st <= 0 ? 0 : st;
         }, false);
