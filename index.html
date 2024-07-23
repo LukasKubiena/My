@@ -921,7 +921,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const contentContainer = document.querySelector('.content-1').parentNode;
             
-            // Remove previous response and back button if they exist, but keep the prompt
             clearPreviousContent(true);
 
             const responseElement = document.createElement('div');
@@ -940,7 +939,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     i++;
                 } else {
                     clearInterval(intervalId);
-                    addBackButton(); // Add back button after response is fully displayed
+                    addBackButton();
                 }
             }, 120);
         }
