@@ -453,8 +453,9 @@
     </header>
     <div class="hey-container">
         <div class="hey">
-            <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
+            <span class="hey-text"></span><span class="comma">,</span>
         </div>
+        <button id="activate-input" style="opacity: 0; position: absolute; width: 1px; height: 1px;"></button>
     </div>
     <div class="content content-1">
         I'm Lukas. I work on building useful interactions between Humans and AI <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. We streamline the process of capturing insights from multiple conversations and transforming them into a structured, interactive, and evolving knowledge base.
@@ -715,8 +716,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let promptTimer;
         let blinkInterval;
-        let touchStartTime;
-        const LONG_PRESS_DURATION = 500; // ms
+        const activateInputButton = document.getElementById('activate-input');
 
         function showPrompt(text) {
             clearTimeout(promptTimer);
@@ -768,89 +768,75 @@ document.addEventListener('DOMContentLoaded', function() {
 
         resetPromptTimer();
 
-        hey.addEventListener('touchstart', function(e) {
-        touchStartTime = Date.now();
-    });
+        let touchStartTime;
+        const LONG_PRESS_DURATION = 500; // ms
 
-    hey.addEventListener('touchend', function(e) {
-        const touchDuration = Date.now() - touchStartTime;
-        if (touchDuration >= LONG_PRESS_DURATION) {
-            handleLongPress();
-        } else if (!inChatMode) {
-            playAnimation();
-            playCommaAnimation();
-        }
-    });
+        hey.addEventListener('touchstart', function(e) {
+            touchStartTime = Date.now();
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            const touchDuration = Date.now() - touchStartTime;
+            if (touchDuration >= LONG_PRESS_DURATION) {
+                handleLongPress();
+            } else if (!inChatMode) {
+                playAnimation();
+                playCommaAnimation();
+            }
+        });
 
         function handleLongPress() {
-    inChatMode = true;
-    playAnimation();
-    
-    clearPreviousContent(true);
-    
-    heyText.textContent = '';
-    comma.style.display = 'none';
-    const input = document.createElement('textarea');
-    input.style.font = window.getComputedStyle(heyText).font;
-    input.style.border = 'none';
-    input.style.background = 'transparent';
-    input.style.outline = 'none';
-    input.style.width = '100%';
-    input.style.resize = 'none';
-    input.style.overflow = 'hidden';
-    input.style.caretColor = 'black';
-    heyText.appendChild(input);
+            inChatMode = true;
+            playAnimation();
+            
+            clearPreviousContent(true);
+            
+            heyText.textContent = '';
+            comma.style.display = 'none';
 
-    // Add blinking cursor style
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes blink-caret {
-            from, to { caret-color: black; }
-            50% { caret-color: transparent; }
+            showPrompt('Tap to start typing');
+
+            content.forEach(el => el.style.display = 'none');
+
+            // Show the activate input button
+            activateInputButton.style.opacity = '1';
+            activateInputButton.style.width = '100%';
+            activateInputButton.style.height = '100%';
+            activateInputButton.style.top = '0';
+            activateInputButton.style.left = '0';
         }
-        textarea {
-            animation: blink-caret 0.75s step-end infinite;
-        }
-    `;
-    document.head.appendChild(style);
 
-    showPrompt('Tap enter to send');
+        activateInputButton.addEventListener('click', function() {
+            this.style.display = 'none';
+            const input = document.createElement('textarea');
+            input.style.font = window.getComputedStyle(heyText).font;
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            input.style.outline = 'none';
+            input.style.width = '100%';
+            input.style.resize = 'none';
+            input.style.overflow = 'hidden';
+            input.style.caretColor = 'black';
+            heyText.appendChild(input);
 
-    input.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    });
+            input.focus();
+            showPrompt('Tap enter to send');
 
-    content.forEach(el => el.style.display = 'none');
+            input.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
 
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            const userInput = input.value;
-            handleUserInput(userInput);
-        }
-    });
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const userInput = input.value;
+                    handleUserInput(userInput);
+                }
+            });
 
-    addBackButton();
-
-    // Use a combination of methods to ensure the keyboard appears
-    setTimeout(() => {
-        input.focus();
-        input.click();
-        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Create a temporary button to trigger keyboard
-        const tempButton = document.createElement('button');
-        tempButton.style.position = 'absolute';
-        tempButton.style.opacity = '0';
-        document.body.appendChild(tempButton);
-        tempButton.focus();
-        tempButton.click();
-        document.body.removeChild(tempButton);
-        
-        input.focus();
-    }, 300);
-}
+            addBackButton();
+        });
 
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
