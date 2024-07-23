@@ -724,12 +724,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 promptContainer.textContent = text;
                 promptContainer.style.opacity = '0';
                 promptContainer.style.transition = 'opacity 0.5s ease-in';
-                promptContainer.style.position = 'absolute';
-                promptContainer.style.top = '-30px'; // Adjust as needed
-                promptContainer.style.left = '0';
-                promptContainer.style.width = '100%';
                 
-                heyContainer.style.position = 'relative';
+                const heyContainer = document.querySelector('.hey-container');
                 heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
                 
                 setTimeout(() => {
@@ -769,19 +765,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         resetPromptTimer();
-
-                // Add scroll event listener to hide/show prompt
-                window.addEventListener('scroll', function() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                const heyRect = hey.getBoundingClientRect();
-                if (heyRect.top < 0) {
-                    promptContainer.style.opacity = '0';
-                } else {
-                    promptContainer.style.opacity = '1';
-                }
-            }
-        });
 
         hey.addEventListener('touchstart', function(e) {
             isLongPress = false;
