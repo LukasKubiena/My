@@ -708,9 +708,13 @@ document.addEventListener('DOMContentLoaded', function() {
         let heyText = hey.querySelector('.hey-text');
         let comma = hey.querySelector('.comma');
         const content = document.querySelectorAll('.content, .send-mail');
+        let longPressTimer;
+        let isLongPress = false;
+        let messages = [];
+        let promptShown = false;
         let inChatMode = false;
         let promptTimer;
-        let messages = [];
+        let blinkInterval;
 
         function showPrompt(text) {
             clearTimeout(promptTimer);
@@ -763,14 +767,24 @@ document.addEventListener('DOMContentLoaded', function() {
         resetPromptTimer();
 
         hey.addEventListener('touchstart', function(e) {
-            if (!inChatMode) {
-                e.preventDefault(); // Prevent default touch behavior
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
                 handleLongPress();
+            }, 250);
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress && !inChatMode) {
+                playAnimation();
+                playCommaAnimation();
             }
         });
 
         function handleLongPress() {
             inChatMode = true;
+            
             clearPreviousContent(true);
             
             heyText.textContent = '';
@@ -786,10 +800,10 @@ document.addEventListener('DOMContentLoaded', function() {
             input.style.caretColor = 'black';
             heyText.appendChild(input);
 
-            // Delay focus to ensure it works on mobile
-            setTimeout(() => {
-                input.focus();
-            }, 100);
+            // Force the keyboard to appear
+            input.readOnly = false;
+            input.focus();
+            input.click();
 
             showPrompt('Tap enter to send');
 
@@ -810,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             addBackButton();
 
-            // Add touch event to re-focus input
+            // Allow tapping on the hey area to refocus the input
             hey.addEventListener('touchstart', function(e) {
                 if (inChatMode) {
                     e.preventDefault();
@@ -862,6 +876,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const contentContainer = document.querySelector('.content-1').parentNode;
             
+            // Remove previous response and back button if they exist, but keep the prompt
             clearPreviousContent(true);
 
             const responseElement = document.createElement('div');
@@ -880,46 +895,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     i++;
                 } else {
                     clearInterval(intervalId);
-                    addBackButton();
+                    addBackButton(); // Add back button after response is fully displayed
                 }
             }, 120);
         }
 
         async function generateAIResponse(userInput) {
-            messages.push({ "role": "user", "content": userInput });
+    messages.push({ "role": "user", "content": userInput });
 
-            try {
-                const response = await fetch('/.netlify/functions/generate-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput, messages })
-                });
+    try {
+        const response = await fetch('/.netlify/functions/generate-response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userInput, messages })
+        });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const aiResponse = data.response;
-                messages.push({ "role": "assistant", "content": aiResponse });
-                return aiResponse;
-            } catch (error) {
-                console.error('Error:', error);
-                return "I'm sorry, I couldn't generate a response at this time.";
-            }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        const aiResponse = data.response;
+        messages.push({ "role": "assistant", "content": aiResponse });
+        return aiResponse;
+    } catch (error) {
+        console.error('Error:', error);
+        return "I'm sorry, I couldn't generate a response at this time.";
+    }
+}
 
         function resetPage() {
             inChatMode = false;
             
+            // Immediately hide the prompt and system message
             hidePrompt();
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
+            // Clear previous content
             clearPreviousContent();
 
+            // Reset the Hey container
             hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
@@ -929,12 +947,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.opacity = '1';
             });
 
+            // Ensure animations play after content is updated
+            setTimeout(() => {
+                playAnimation();
+                playCommaAnimation();
+            }, 10);
+
             resetPromptTimer();
 
             messages = [];
         }
+
+
+        function playAnimation() {
+            hey.classList.remove('animate');
+            void hey.offsetWidth;
+            hey.classList.add('animate');
+        }
+
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth; // Trigger reflow
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+        }
+
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                handleLongPress();
+            }, 250);
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress && !inChatMode) {
+                playAnimation();
+                playCommaAnimation();
+            }
+        });
     }
 });
+
     </script>
 </body>
 </html>
