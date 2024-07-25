@@ -788,6 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
             inChatMode = true;
     
             clearPreviousContent(true);
+            console.log('Long press detected');
             
             heyText.textContent = '';
             comma.style.display = 'none';
@@ -980,14 +981,14 @@ document.addEventListener('DOMContentLoaded', function() {
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
                 handleLongPress();
-            }, 250);
+            }, 500); // Adjusted delay for long press detection
         });
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
-                playAnimation();
-                playCommaAnimation();
+            if (!isLongPress) {
+                // Ignore quick taps
+                e.preventDefault();
             }
         });
     }
