@@ -381,13 +381,27 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        position: relative;
     }
 
+    .typing-cursor {
+    display: inline-block;
+    width: 1px;
+    height: 0.7em; /* Adjust to match text height */
+    background-color: #000;
+    animation: blink 0.7s infinite;
+    margin-left: 2px;
+    vertical-align: baseline; /* Align with text baseline */
+}
+
     .prompt {
+        position: absolute;
+        top: -44px; /* Adjust this value as needed */
+        left: 0;
         color: #888;
         font-size: 16px;
-        margin-bottom: 24px;
-        align-self: flex-start;
+        opacity: 0;
+        transition: opacity 0.5s ease-in;
     }
 
     .hey {
@@ -396,16 +410,7 @@
         opacity: 1;
         transition: transform 0.5s ease-out;
     }
-
-    .typing-cursor {
-        display: inline-block;
-        width: 1px;
-        height: 0.7em; /* Adjust to match text height */
-        background-color: #000;
-        animation: blink 0.7s infinite;
-        margin-left: 2px;
-        vertical-align: baseline; /* Align with text baseline */
-    }
+    
 
 
     /* Adjust the space between user input and AI output */
@@ -718,37 +723,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function showPrompt(text) {
             clearTimeout(promptTimer);
-            if (!promptShown) {
-                const promptContainer = document.createElement('div');
+            let promptContainer = document.querySelector('.prompt');
+            
+            if (!promptContainer) {
+                promptContainer = document.createElement('div');
                 promptContainer.className = 'prompt';
-                promptContainer.textContent = text;
-                promptContainer.style.opacity = '0';
-                promptContainer.style.transition = 'opacity 0.5s ease-in';
-                
                 const heyContainer = document.querySelector('.hey-container');
                 heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
-                
-                setTimeout(() => {
-                    promptContainer.style.opacity = '1';
-                }, 10);
-                
-                promptShown = true;
-            } else {
-                const promptContainer = document.querySelector('.prompt');
-                if (promptContainer) {
-                    promptContainer.style.opacity = '0';
-                    setTimeout(() => {
-                        promptContainer.textContent = text;
-                        promptContainer.style.opacity = '1';
-                    }, 500);
-                }
             }
+            
+            promptContainer.textContent = text;
+            promptContainer.style.opacity = '0';
+            promptContainer.style.transition = 'opacity 0.5s ease-in';
+            
+            setTimeout(() => {
+                promptContainer.style.opacity = '1';
+            }, 10);
+            
+            promptShown = true;
         }
-        
+
         function hidePrompt() {
             const promptContainer = document.querySelector('.prompt');
             if (promptContainer) {
-                promptContainer.style.opacity = '0';
                 promptContainer.style.transition = 'opacity 0.3s ease-out';
                 setTimeout(() => {
                     promptContainer.remove();
@@ -784,7 +781,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function handleLongPress() {
             inChatMode = true;
-            
+    
             clearPreviousContent(true);
             
             heyText.textContent = '';
@@ -845,60 +842,60 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function addBackButton() {
-            const existingBackButton = document.querySelector('a[style*="text-decoration: underline"]');
-            if (existingBackButton) existingBackButton.remove();
-
-            const backButton = document.createElement('a');
-            backButton.textContent = 'back';
-            backButton.style.textDecoration = 'underline';
-            backButton.style.display = 'block';
-            backButton.style.marginTop = '20px';
-            backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
-            backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
-            
-            backButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                resetPage();
-            });
-            
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            contentContainer.appendChild(backButton);
+            let backButton = document.querySelector('a[style*="text-decoration: underline"]');
+            if (!backButton) {
+                backButton = document.createElement('a');
+                backButton.textContent = 'back';
+                backButton.style.textDecoration = 'underline';
+                backButton.style.display = 'block';
+                backButton.style.marginTop = '20px';
+                backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+                backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+                
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    resetPage();
+                });
+                
+                const contentContainer = document.querySelector('.content-1').parentNode;
+                contentContainer.appendChild(backButton);
+            }
         }
 
         async function handleUserInput(userInput) {
-            heyText.textContent = userInput;
-            heyText.style.whiteSpace = 'pre-wrap';
-            heyText.style.wordBreak = 'break-word';
-            
-            showPrompt('Tap again for new question');
+        heyText.textContent = userInput;
+        heyText.style.whiteSpace = 'pre-wrap';
+        heyText.style.wordBreak = 'break-word';
+        
+        showPrompt('Tap again for new question');
 
-            const aiResponse = await generateAIResponse(userInput);
-            
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            
-            // Remove previous response and back button if they exist, but keep the prompt
-            clearPreviousContent(true);
+        const aiResponse = await generateAIResponse(userInput);
+        
+        const contentContainer = document.querySelector('.content-1').parentNode;
+        
+        // Remove previous response if it exists, but keep the prompt and back button
+        const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
+        if (previousResponse) previousResponse.remove();
 
-            const responseElement = document.createElement('div');
-            responseElement.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
-            responseElement.style.fontSize = window.getComputedStyle(content[0]).fontSize;
-            responseElement.style.marginTop = '10px';
-            responseElement.style.textAlign = 'justify';
-            
-            contentContainer.appendChild(responseElement);
+        const responseElement = document.createElement('div');
+        responseElement.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+        responseElement.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+        responseElement.style.marginTop = '10px';
+        responseElement.style.textAlign = 'justify';
+        
+        contentContainer.insertBefore(responseElement, contentContainer.lastElementChild); // Insert before the back button
 
-            const words = aiResponse.split(' ');
-            let i = 0;
-            const intervalId = setInterval(() => {
-                if (i < words.length) {
-                    responseElement.textContent += words[i] + ' ';
-                    i++;
-                } else {
-                    clearInterval(intervalId);
-                    addBackButton(); // Add back button after response is fully displayed
-                }
-            }, 120);
-        }
+        const words = aiResponse.split(' ');
+        let i = 0;
+        const intervalId = setInterval(() => {
+            if (i < words.length) {
+                responseElement.textContent += words[i] + ' ';
+                i++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 120);
+    }
 
         async function generateAIResponse(userInput) {
     messages.push({ "role": "user", "content": userInput });
@@ -934,8 +931,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const systemMessage = document.querySelector('.system-message');
             if (systemMessage) systemMessage.remove();
 
-            // Clear previous content
+            // Clear previous content and remove back button
             clearPreviousContent();
+            const backButton = document.querySelector('a[style*="text-decoration: underline"]');
+            if (backButton) backButton.remove();
 
             // Reset the Hey container
             hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
