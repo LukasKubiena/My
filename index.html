@@ -401,7 +401,7 @@
         color: #888;
         font-size: 16px;
         opacity: 0;
-        transition: opacity 0.5s ease-in;
+        transition: opacity 0.5s ease-in-out;
     }
 
     .hey {
@@ -746,13 +746,18 @@ document.addEventListener('DOMContentLoaded', function() {
         function hidePrompt() {
             const promptContainer = document.querySelector('.prompt');
             if (promptContainer) {
+                // Set the opacity to 0 to start the fade-out effect
                 promptContainer.style.transition = 'opacity 0.3s ease-out';
+                promptContainer.style.opacity = '0';
+
+                // Remove the element after the transition ends
                 setTimeout(() => {
                     promptContainer.remove();
                     promptShown = false;
-                }, 300);
+                }, 500); // Match the timeout with the duration of the opacity transition
             }
         }
+
 
         function resetPromptTimer() {
             clearTimeout(promptTimer);
