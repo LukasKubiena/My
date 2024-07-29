@@ -788,8 +788,12 @@ document.addEventListener('DOMContentLoaded', function() {
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
                 if ('vibrate' in navigator) {
-                    navigator.vibrate(50); // Vibrate for 50ms
-                }
+    console.log('Attempting to vibrate');
+    navigator.vibrate(50);
+    console.log('Vibrate function called');
+} else {
+    console.log('Vibration not supported on this device');
+}
                 handleLongPress();
             }, 800); // Increased to 800ms (0.8 seconds) for a longer press
         });
