@@ -207,6 +207,8 @@
             z-index: 1;
         }
 
+    /* Hover effects for larger screens only */
+    @media screen and (min-width: 1025px) {
         .at-link::before {
             content: "";
             position: absolute;
@@ -225,6 +227,7 @@
             transform: scaleX(1);
             transform-origin: bottom left;
         }
+    }
 
         .side-group {
             grid-column: 3 / 4;
@@ -435,12 +438,12 @@
     }
 
     .chat-input::placeholder {
-    color: #CCCCCC;
-    font-family: 'NeueHaasDisplay-Medium', sans-serif;
-    font-size: 36px;
-    font-weight: 600;
-    opacity: 1; /* Firefox */
-}
+        color: #CCCCCC;
+        font-family: 'NeueHaasDisplay-Medium', sans-serif;
+        font-size: 36px;
+        font-weight: 600;
+        opacity: 1; /* Firefox */
+    }
 
 
     @keyframes blink {
