@@ -533,13 +533,6 @@
                 });
             });
         });
-
-        function delayedAnimation() {
-            setTimeout(() => {
-                // Your existing animation code here
-                typeText('Hey', heyText, showComma);
-            }, 2000); // 2000 milliseconds = 2 seconds
-        }
     
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
@@ -549,6 +542,7 @@
                 header.classList.remove('glass-effect');
             }
         });
+        
     
         function adjustHeaderWidth() {
             const header = document.getElementById('header');
@@ -676,6 +670,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
     if (window.innerWidth <= 1024) {
         const hey = document.querySelector('.hey');
@@ -786,18 +783,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         resetPromptTimer();
-
         hey.addEventListener('touchstart', function(e) {
             isLongPress = false;
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(50); // Vibrate for 50ms
+                }
                 handleLongPress();
-            }, 250);
+            }, 800); // Increased to 800ms (0.8 seconds) for a longer press
         });
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
             if (!isLongPress && !inChatMode) {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(25); // Short vibration for tap
+                }
                 playAnimation();
                 playCommaAnimation();
             }
@@ -1013,14 +1015,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-            // Check if this is a fresh load or reload
-            if (performance.navigation.type === performance.navigation.TYPE_RELOAD ||
-            !document.referrer) {
-            delayedAnimation();
-        } else {
-            // If it's not a reload or fresh visit, start animation immediately
-            typeText('Hey', heyText, showComma);
-        }
 });
 
     </script>
