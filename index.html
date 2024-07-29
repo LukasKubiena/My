@@ -434,6 +434,14 @@
         opacity: 1;
     }
 
+    .chat-input::placeholder {
+    color: #CCCCCC;
+    font-family: 'NeueHaasDisplay-Medium', sans-serif;
+    font-size: 36px;
+    font-weight: 600;
+    opacity: 1; /* Firefox */
+}
+
 
     @keyframes blink {
         0% { opacity: 0; }
@@ -785,56 +793,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         function handleLongPress() {
-            inChatMode = true;
+    inChatMode = true;
+
+    clearPreviousContent(true);
+    console.log('Long press detected');
     
-            clearPreviousContent(true);
-            console.log('Long press detected');
-            
-            heyText.textContent = '';
-            comma.style.display = 'none';
-            const input = document.createElement('textarea');
-            input.style.font = window.getComputedStyle(heyText).font;
-            input.style.border = 'none';
-            input.style.background = 'transparent';
-            input.style.outline = 'none';
-            input.style.width = '100%';
-            input.style.resize = 'none';
-            input.style.overflow = 'hidden';
-            input.style.caretColor = 'black';
-            heyText.appendChild(input);
+    heyText.textContent = '';
+    comma.style.display = 'none';
+    const input = document.createElement('textarea');
+    input.className = 'chat-input';
+    input.placeholder = 'Ask...';
+    input.style.font = window.getComputedStyle(heyText).font;
+    input.style.border = 'none';
+    input.style.background = 'transparent';
+    input.style.outline = 'none';
+    input.style.width = '100%';
+    input.style.resize = 'none';
+    input.style.overflow = 'hidden';
+    input.style.caretColor = 'black';
+    heyText.appendChild(input);
 
-            // Force the keyboard to appear
-            input.readOnly = false;
-            input.focus();
-            input.click();
+    // Force the keyboard to appear
+    input.readOnly = false;
+    input.focus();
+    input.click();
 
-            showPrompt('Tap enter to send');
+    showPrompt('Tap enter to send');
 
-            input.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = this.scrollHeight + 'px';
-            });
+    input.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
 
-            content.forEach(el => el.style.display = 'none');
+    content.forEach(el => el.style.display = 'none');
 
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const userInput = input.value;
-                    handleUserInput(userInput);
-                }
-            });
-
-            addBackButton();
-
-            // Allow tapping on the hey area to refocus the input
-            hey.addEventListener('touchstart', function(e) {
-                if (inChatMode) {
-                    e.preventDefault();
-                    input.focus();
-                }
-            });
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            const userInput = input.value;
+            handleUserInput(userInput);
         }
+    });
+
+    addBackButton();
+
+    // Allow tapping on the hey area to refocus the input
+    hey.addEventListener('touchstart', function(e) {
+        if (inChatMode) {
+            e.preventDefault();
+            input.focus();
+        }
+    });
+}
 
         function clearPreviousContent(keepPrompt = false) {
             const contentContainer = document.querySelector('.content-1').parentNode;
