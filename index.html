@@ -375,6 +375,11 @@
         box-sizing: border-box;
     }
 
+    .initial-load .comma {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
     .hey, .content, .send-mail {
         width: 100%;
         margin-left: 0;
@@ -389,14 +394,14 @@
     }
 
     .typing-cursor {
-    display: inline-block;
-    width: 1px;
-    height: 0.7em; /* Adjust to match text height */
-    background-color: #000;
-    animation: blink 0.7s infinite;
-    margin-left: 2px;
-    vertical-align: baseline; /* Align with text baseline */
-}
+        display: inline-block;
+        width: 1px;
+        height: 0.8em; /* Adjust to match text height */
+        background-color: #000;
+        animation: blink 0.7s infinite;
+        margin-left: 2px;
+        vertical-align: baseline; /* Align with text baseline */
+    }
 
     .prompt {
         position: absolute;
@@ -460,7 +465,7 @@
 }
     </style>
 </head>
-<body>
+<body class="initial-load">
     <header id="header">
         <a href="index2.html"><img src="logo1.svg" alt="Logo" class="logo" id="logo"></a>
         <div class="right-links">
@@ -672,21 +677,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
 document.addEventListener('DOMContentLoaded', function() {
     if (window.innerWidth <= 1024) {
+        const body = document.body;
         const hey = document.querySelector('.hey');
         const heyText = hey.querySelector('.hey-text');
         const comma = hey.querySelector('.comma');
         const cursor = hey.querySelector('.typing-cursor');
         const content = document.querySelectorAll('.content, .send-mail');
 
-        // Hide content initially
+        // Disable the bounce animation initially
+        hey.style.animation = 'none';
+
+        // Hide content and hey text initially, but keep cursor visible
         content.forEach(el => el.style.opacity = '0');
+        heyText.style.opacity = '0';
+        comma.style.opacity = '0';
         
         function typeText(text, element, callback) {
             let i = 0;
             element.textContent = ''; // Clear existing text
+            element.style.opacity = '1'; // Make text visible before typing
             function type() {
                 if (i < text.length) {
                     element.textContent += text.charAt(i);
@@ -700,25 +711,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function showComma() {
-            comma.style.visibility = 'visible';
-            setTimeout(playAnimation, 500);
+            comma.style.opacity = '1';
+            playPopOutAnimation();
         }
 
-        function playAnimation() {
+        function playPopOutAnimation() {
+            hey.style.animation = '';
             hey.classList.add('animate');
-            setTimeout(showContent, 1000);
+            setTimeout(playCommaAnimation, 300); // Delay comma animation to match pop-out
+        }
+
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth; // Trigger reflow
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+            setTimeout(showContent, 800); // Wait for comma animation to finish
         }
 
         function showContent() {
-            cursor.style.display = 'none';
+            cursor.style.display = 'none'; // Hide cursor after animations
             content.forEach(el => {
                 el.style.opacity = '1';
                 el.style.transition = 'opacity 1s ease-in';
             });
         }
 
-        // Start the sequence
-        typeText('Hey', heyText, showComma);
+        // Delay the entire animation sequence by 2 seconds
+        setTimeout(() => {
+            // Remove the initial-load class
+            body.classList.remove('initial-load');
+            // Start the sequence
+            typeText('Hey', heyText, showComma);
+        }, 2000);
     }
 });
 
@@ -788,12 +812,12 @@ document.addEventListener('DOMContentLoaded', function() {
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
                 if ('vibrate' in navigator) {
-    console.log('Attempting to vibrate');
-    navigator.vibrate(50);
-    console.log('Vibrate function called');
-} else {
-    console.log('Vibration not supported on this device');
-}
+                console.log('Attempting to vibrate');
+                navigator.vibrate(50);
+                console.log('Vibrate function called');
+            } else {
+                console.log('Vibration not supported on this device');
+            }
                 handleLongPress();
             }, 800); // Increased to 800ms (0.8 seconds) for a longer press
         });
