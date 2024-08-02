@@ -813,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 isLongPress = true;
                 if ('vibrate' in navigator) {
                 console.log('Attempting to vibrate');
-                navigator.vibrate(50);
+                navigator.vibrate([100, 30, 100]);
                 console.log('Vibrate function called');
             } else {
                 console.log('Vibration not supported on this device');
@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(longPressTimer);
             if (!isLongPress && !inChatMode) {
                 if ('vibrate' in navigator) {
-                    navigator.vibrate(25); // Short vibration for tap
+                    navigator.vibrate([100, 30, 100]); // Short vibration for tap
                 }
                 playAnimation();
                 playCommaAnimation();

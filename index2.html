@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lukas Kubiena</title>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+        }
+        body {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 1.5rem;
+            padding: 24vh 1.5rem 0;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .system-message {
+            grid-column: 4 / 12;
+            grid-row: 1;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .hey-container {
+            grid-column: 4 / 6;
+            grid-row: 2;
+            position: relative;
+        }
+        .hey {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .hey-text, .comma {
+            display: inline-block;
+        }
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 0.7em;
+            background-color: #000;
+            margin-left: 2px;
+            animation: blink 0.7s infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        .content-1 {
+            grid-column: 7 / 9;
+            grid-row: 2 / 3;
+        }
+        .content-2 {
+            grid-column: 7 / 9;
+            grid-row: 3 / 4;
+        }
+        .content-3 {
+            grid-column: 10 / 12;
+            grid-row: 2 / 3;
+        }
+        .send-mail {
+            grid-column: 10 / 12;
+            grid-row: 3;
+        }
+        .content, .send-mail {
+            font-size: 16px;
+            line-height: 1.5;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        .chat-input {
+            width: 100%;
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 40px;
+            border: none;
+            background: transparent;
+            outline: none;
+            display: none;
+            resize: none;
+            overflow: hidden;
+        }
+        .back-button {
+            grid-column: 4 / 6;
+            grid-row: 3;
+            text-decoration: underline;
+            cursor: pointer;
+            display: none;
+        }
+        .ai-response {
+            grid-column: 7 / 12;
+            grid-row: 2 / 4;
+            font-size: 16px;
+            line-height: 1.5;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        @keyframes popOut {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bellJingle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-8deg); }
+            75% { transform: rotate(6deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .hey.animate {
+            animation: popOut 0.3s ease-out;
+        }
+        .hey.animate .comma {
+            animation: bellJingle 0.8s ease-in-out 0.3s;
+        }
+        @media (max-width: 1024px) {
+            .container {
+                display: flex;
+                flex-direction: column;
+                padding: 40px;
+                margin-top: 12vh;
+            }
+            .hey-container, .content, .send-mail {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="system-message"></div>
+        <div class="hey-container">
+            <div class="hey">
+                <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
+            </div>
+        </div>
+        <div class="content content-1">
+            I'm Lukas. I work on building useful interactions between Humans and AI @Dembrane. We streamline the process of capturing insights from multiple conversations and transforming them into a structured, interactive, and evolving knowledge base.
+        </div>
+        <div class="content content-2">
+            Apart from work you can find me studying the Brain @AarhusUniversity in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
+        </div>
+        <div class="content content-3">
+            Outside my studies I sometimes write about what comes to mind in these so exciting times @cognitoergosum. Reach out if we care about the same things!
+        </div>
+        <div class="send-mail">
+            <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
+        </div>
+        <div class="back-button">back</div>
+        <div class="ai-response"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const heyContainer = document.querySelector('.hey-container');
+    const hey = document.querySelector('.hey');
+    const heyText = hey.querySelector('.hey-text');
+    const comma = hey.querySelector('.comma');
+    const typingCursor = document.querySelector('.typing-cursor');
+    const content = document.querySelectorAll('.content, .send-mail');
+    const backButton = document.querySelector('.back-button');
+    const aiResponse = document.querySelector('.ai-response');
+    const systemMessage = document.querySelector('.system-message');
+    let messages = [];
+    let inChatMode = false;
+
+    function typeText(element, text, callback) {
+        let i = 0;
+        element.textContent = '';
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(type, 150);
+            } else if (callback) {
+                callback();
+            }
+        }
+        type();
+    }
+
+    function showContent() {
+        content.forEach(el => {
+            el.style.opacity = '1';
+        });
+    }
+
+    function showSystemMessage(text) {
+        systemMessage.textContent = text;
+        systemMessage.style.opacity = '1';
+        setTimeout(() => {
+            systemMessage.style.opacity = '0';
+        }, 5000);
+    }
+
+    function playAnimation() {
+        hey.classList.remove('animate');
+        void hey.offsetWidth; // Trigger reflow
+        hey.classList.add('animate');
+    }
+
+    function enterChatMode() {
+        inChatMode = true;
+        content.forEach(el => el.style.display = 'none'); // Change opacity to display
+        backButton.style.display = 'block';
+        heyText.contentEditable = true;
+        heyText.textContent = '';
+        heyText.focus();
+        comma.style.display = 'none';
+        typingCursor.style.display = 'none';
+        if (window.innerWidth <= 1024) {
+            showSystemMessage('Tap enter to send');
+        }
+    }
+
+    function exitChatMode() {
+        inChatMode = false;
+        content.forEach(el => {
+            el.style.display = ''; // Reset display to default
+            el.style.opacity = '1';
+        });
+        backButton.style.display = 'none';
+        aiResponse.style.opacity = '0';
+        aiResponse.textContent = '';
+        heyText.contentEditable = false;
+        heyText.textContent = 'Hey';
+        comma.style.display = 'inline';
+        typingCursor.style.display = 'none'; // Keep cursor hidden after initial animation
+        messages = [];
+        playAnimation();
+    }
+
+    async function handleUserInput() {
+        const userInput = heyText.textContent;
+        heyText.textContent = userInput;
+
+        const aiResponseText = await generateAIResponse(userInput);
+        aiResponse.textContent = '';
+        aiResponse.style.opacity = '1';
+        typeText(aiResponse, aiResponseText);
+    }
+
+    async function generateAIResponse(userInput) {
+        messages.push({ "role": "user", "content": userInput });
+        try {
+            const response = await fetch('/.netlify/functions/generate-response', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userInput, messages })
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            const aiResponse = data.response;
+            messages.push({ "role": "assistant", "content": aiResponse });
+            return aiResponse;
+        } catch (error) {
+            console.error('Error:', error);
+            return "I'm sorry, I couldn't generate a response at this time.";
+        }
+    }
+
+    typeText(heyText, 'Hey', () => {
+        showContent();
+        playAnimation();
+        typingCursor.style.display = 'none'; // Hide cursor after initial animation
+    });
+
+    heyContainer.addEventListener('click', function() {
+        if (!inChatMode) {
+            enterChatMode();
+        } else {
+            heyText.focus();
+        }
+    });
+
+    backButton.addEventListener('click', exitChatMode);
+
+    heyText.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleUserInput();
+        }
+    });
+});
+    </script>
+</body>
+</html>
