@@ -807,26 +807,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         resetPromptTimer();
+        // Check if vibration is supported
+        let canVibrate = 'vibrate' in navigator;
+
+        function tryVibrate(duration) {
+            if (canVibrate) {
+                try {
+                    navigator.vibrate(duration);
+                    console.log("Vibration command sent successfully");
+                    return true;
+                } catch (error) {
+                    console.error("Error when trying to vibrate:", error);
+                    return false;
+                }
+            } else {
+                console.log("Vibration not supported on this device");
+                return false;
+            }
+        }
+
+        // Usage in your existing code:
         hey.addEventListener('touchstart', function(e) {
             isLongPress = false;
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
-                if ('vibrate' in navigator) {
-                console.log('Attempting to vibrate');
-                navigator.vibrate([100, 30, 100]);
-                console.log('Vibrate function called');
-            } else {
-                console.log('Vibration not supported on this device');
-            }
+                if (tryVibrate(50)) {
+                    console.log('Vibration successful');
+                } else {
+                    console.log('Vibration not supported or failed');
+                }
                 handleLongPress();
-            }, 800); // Increased to 800ms (0.8 seconds) for a longer press
+            }, 800);
         });
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
             if (!isLongPress && !inChatMode) {
-                if ('vibrate' in navigator) {
-                    navigator.vibrate([100, 30, 100]); // Short vibration for tap
+                if (tryVibrate(25)) {
+                    console.log('Short vibration successful');
+                } else {
+                    console.log('Short vibration not supported or failed');
                 }
                 playAnimation();
                 playCommaAnimation();
