@@ -808,50 +808,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
         resetPromptTimer();
         // Check if vibration is supported
+        // Check if vibration is supported
         let canVibrate = 'vibrate' in navigator;
 
         function tryVibrate(duration) {
             if (canVibrate) {
-                try {
-                    navigator.vibrate(duration);
-                    console.log("Vibration command sent successfully");
-                    return true;
-                } catch (error) {
-                    console.error("Error when trying to vibrate:", error);
-                    return false;
-                }
+                return new Promise((resolve, reject) => {
+                    try {
+                        navigator.vibrate(duration);
+                        console.log("Vibration command sent successfully");
+                        resolve(true);
+                    } catch (error) {
+                        console.error("Error when trying to vibrate:", error);
+                        reject(error);
+                    }
+                });
             } else {
                 console.log("Vibration not supported on this device");
-                return false;
+                return Promise.resolve(false);
             }
         }
 
-        // Usage in your existing code:
         hey.addEventListener('touchstart', function(e) {
             isLongPress = false;
             longPressTimer = setTimeout(() => {
                 isLongPress = true;
-                if (tryVibrate(50)) {
-                    console.log('Vibration successful');
-                } else {
-                    console.log('Vibration not supported or failed');
-                }
-                handleLongPress();
+                tryVibrate(50)
+                    .then(success => {
+                        if (success) {
+                            console.log('Long press vibration successful');
+                        } else {
+                            console.log('Long press vibration not supported or failed');
+                        }
+                        handleLongPress();
+                    })
+                    .catch(error => console.error('Vibration error:', error));
             }, 800);
         });
 
         hey.addEventListener('touchend', function(e) {
             clearTimeout(longPressTimer);
             if (!isLongPress && !inChatMode) {
-                if (tryVibrate(25)) {
-                    console.log('Short vibration successful');
-                } else {
-                    console.log('Short vibration not supported or failed');
-                }
-                playAnimation();
-                playCommaAnimation();
+                tryVibrate(25)
+                    .then(success => {
+                        if (success) {
+                            console.log('Short vibration successful');
+                        } else {
+                            console.log('Short vibration not supported or failed');
+                        }
+                        playAnimation();
+                        playCommaAnimation();
+                    })
+                    .catch(error => console.error('Vibration error:', error));
             }
         });
+
 
         function handleLongPress() {
     inChatMode = true;
