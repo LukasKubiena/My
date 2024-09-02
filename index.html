@@ -48,58 +48,6 @@
             gap: 1rem;
         }
 
-        header {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%; /* Start with full width */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            background: transparent;
-            transition: background 0.3s, backdrop-filter 0.3s;
-            z-index: 10;
-            top: 5vh;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -5vh; /* Extend the glass effect upwards */
-            left: 0; /* Extend the glass effect to the left edge of the page */
-            right: 0; /* Extend the glass effect to the right edge of the page */
-            bottom: -5vh; /* Extend the glass effect downwards */
-            z-index: -1;
-            transition: background 0.3s, backdrop-filter 0.3s;
-        }
-
-        header.glass-effect::before {
-            background: rgba(255, 255, 255, 0.01);
-            backdrop-filter: blur(1.2px);
-        }
-
-        .logo {
-            display: inline-block;
-            width: 36px; /* Adjust size as needed */
-            height: auto;
-            transition: color 0.3s ease;
-        }
-
-        .logo img {
-            filter: brightness(0) invert(1); /* Default to black */
-            transition: filter 0.3s ease;
-        }
-
-        .contact {
-            color: #000000;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            transition: color 0.3s ease;
-        }
-
         .hey {
             color: #000000;
             font-family: 'NeueHaasDisplay-Medium', sans-serif;
@@ -229,26 +177,6 @@
         }
     }
 
-        .side-group {
-            grid-column: 3 / 4;
-            grid-row: 2 / 4;
-            position: relative;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: var(--row-gap);
-        }
-        
-
-        ._24 {
-            color: #000000;
-            text-align: left;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-        }
-
         .personal-website {
             color: #000000;
             text-align: left;
@@ -258,101 +186,6 @@
             transform-origin: top left;
             transform: rotate(-90deg) translateX(-100%);
             white-space: nowrap;
-        }
-
-
-        /* Projects overview section */
-        .project-row {
-            grid-column: 3 / span 11;
-            grid-row: 6;
-            display: grid;
-            grid-template-columns: repeat(11, 1fr);
-            align-items: start;
-        }
-
-        .project-info {
-            grid-column: 1 / span 1;
-        }
-
-        .project-paragraph {
-            grid-column: 2 / span 10;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            text-align: justify;
-            column-count: 4;
-            column-gap: 1.5rem;
-        }
-
-        .project-paragraph-2 {
-            grid-column: 3 / span 11;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            text-align: justify;
-            column-count: 4;
-            column-gap: 1.5rem;
-        }
-
-        .project-row-right {
-            grid-column: 3 / span 11;
-            grid-row: 9; /* Correct grid placement */
-            display: grid;
-            grid-template-columns: repeat(11, 1fr);
-            align-items: start;
-        }
-
-        .project-info-right {
-            grid-column: 1 / span 2;
-        }
-
-        .project-title {
-            font-family: 'NeueHaasDisplay-Medium', sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .project-date {
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 14px;
-            font-weight: 300;
-        }
-
-        .project-image-container {
-            position: relative; /* Change from absolute to relative */
-            grid-column: 3 / 14;
-            grid-row: 8; /* Explicitly place it in row 8 */
-            height: 700px; /* Fixed height */
-            box-shadow: var(--box-box-shadow);
-            overflow: hidden;
-            margin-bottom: 12rem; /* Increase the margin here */
-        }
-
-        .project-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .project-image-container-2 {
-            position: relative; /* Change from absolute to relative */
-            grid-column: 3 / 14;
-            grid-row: 11; /* Explicitly place it in row 11 */
-            height: 1200px; /* Fixed height */
-            margin-bottom: 2rem;
-            box-shadow: var(--box-box-shadow);
-            overflow: hidden;
-        }
-
-        .project-image-2 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .copyright {
@@ -466,13 +299,6 @@
     </style>
 </head>
 <body class="initial-load">
-    <header id="header">
-        <a href="index2.html"><img src="logo1.svg" alt="Logo" class="logo" id="logo"></a>
-        <div class="right-links">
-            <a href="mailto:lukasmariakubiena@gmail.com" class="contact" id="contact">Contact</a>
-            <a href="#projects" class="contact">Projects</a>
-        </div>
-    </header>
     <div class="hey-container">
         <div class="hey">
             <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
@@ -492,40 +318,6 @@
             <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
         </div>
     </div>
-    <div class="side-group">
-        <div class="_24">24</div>
-        <div class="personal-website">Personal Website</div>
-    </div>
-    <div class="project-row">
-        <div class="project-info">
-            <p class="project-title">Dembrane</p>
-            <p class="project-date">2024</p>
-        </div>
-        <div class="project-paragraph">
-            Dembrane is a platform designed to enhance democratic processes by making them accessible to all types of organizations at various levels. Our goal is to elevate participation by creating a dynamic data environment that reflects community concerns and solutions. Whether you're a housing corporation, municipality, or any organization seeking meaningful dialogue at scale, our tools ensure that every voice is heard and no good idea is lost. Last year, Dembrane received a grant from OpenAI as part of their initiative to explore democratic inputs to AI. Additionally, Dembrane recently was honoured with the Gerard & Anton Award.
-        </div>
-    </div>
-
-    <div class="project-image-container">
-        <img src="image.webp" alt="Dembrane project image" class="project-image">
-    </div>
-
-    <!-- New Aarhus University project row -->
-    <div class="project-row-right">
-        <div class="project-info-right">
-            <p class="project-title">Aarhus University</p>
-            <p class="project-date">2024</p>
-        </div>
-        <div class="project-paragraph-2">
-            Aarhus University is a leading research institution dedicated to advancing knowledge and education in a variety of fields. Our focus is on creating an environment that fosters intellectual growth and innovation. Whether you're a student, researcher, or faculty member, our university provides the resources and support needed to achieve your goals. Last year, Aarhus University was recognized for its contributions to cognitive science and received several prestigious awards.
-        </div>
-    </div>
-
-    <div class="project-image-container-2">
-        <img src="image2.jpeg" alt="Aarhus University" class="project-image-2">
-    </div>
-
-
     <div class="copyright">
         © Lukas Maria Kubiena 2024
     </div>

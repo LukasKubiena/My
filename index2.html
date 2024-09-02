@@ -13,108 +13,62 @@
             font-family: 'NeueHaasDisplay-Medium';
             src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
         }
-        body {
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        @font-face {
+            font-family: 'NeueHaasDisplay-Thin';
+            src: url('NeueHaasDisplay-XThin.woff2') format('woff2');
+        }
+        :root {
+        --box-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.05),
+            0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+        }
+        body, body * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
         }
-        .container {
+        body {
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: grid;
+            --row-gap: 2rem;
+            row-gap: var(--row-gap);
             grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto auto;
-            gap: 1.5rem;
-            padding: 24vh 1.5rem 0;
+            grid-template-rows: auto auto auto auto auto auto; /* Added an extra row */
+            column-gap: 1.5rem;
+            padding-top: 24vh;
             max-width: 1400px;
             margin: 0 auto;
-        }
-        .system-message {
-            grid-column: 4 / 12;
-            grid-row: 1;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .hey-container {
-            grid-column: 4 / 6;
-            grid-row: 2;
             position: relative;
         }
+
+        .right-links {
+            display: flex;
+            gap: 1rem;
+        }
+
         .hey {
+            color: #000000;
             font-family: 'NeueHaasDisplay-Medium', sans-serif;
             font-size: 40px;
             font-weight: 600;
-            cursor: pointer;
-        }
-        .hey-text, .comma {
-            display: inline-block;
-        }
-        .typing-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 0.7em;
-            background-color: #000;
-            margin-left: 2px;
-            animation: blink 0.7s infinite;
-            vertical-align: middle;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-        .content-1 {
-            grid-column: 7 / 9;
-            grid-row: 2 / 3;
-        }
-        .content-2 {
-            grid-column: 7 / 9;
-            grid-row: 3 / 4;
-        }
-        .content-3 {
-            grid-column: 10 / 12;
-            grid-row: 2 / 3;
-        }
-        .send-mail {
-            grid-column: 10 / 12;
-            grid-row: 3;
-        }
-        .content, .send-mail {
-            font-size: 16px;
-            line-height: 1.5;
-            opacity: 0;
-            transition: opacity 1s ease-in;
-        }
-        .chat-input {
-            width: 100%;
-            font-family: 'NeueHaasDisplay-Medium', sans-serif;
-            font-size: 40px;
-            border: none;
-            background: transparent;
-            outline: none;
-            display: none;
-            resize: none;
-            overflow: hidden;
-        }
-        .back-button {
             grid-column: 4 / 6;
-            grid-row: 3;
-            text-decoration: underline;
+            margin-left: 2rem;
+            grid-row: 2 / 3;
+            align-self: start;
+            margin-top: -0.2em;
             cursor: pointer;
-            display: none;
+            display: inline-block;
+            transform-origin: center;
         }
-        .ai-response {
-            grid-column: 7 / 12;
-            grid-row: 2 / 4;
-            font-size: 16px;
-            line-height: 1.5;
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-        }
+
         @keyframes popOut {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
         @keyframes bellJingle {
             0% { transform: rotate(0deg); }
             25% { transform: rotate(10deg); }
@@ -122,91 +76,491 @@
             75% { transform: rotate(6deg); }
             100% { transform: rotate(0deg); }
         }
+
+        .comma-container {
+            display: inline-block;
+            padding-left: 2px; /* Adjust as needed for spacing */
+        }
+
+        .hey-text {
+            display: inline-block; /* Added to allow independent animation */
+        }
+
+        .comma {
+            display: inline-block;
+            transform-origin: center;
+        }
+
         .hey.animate {
             animation: popOut 0.3s ease-out;
         }
+
         .hey.animate .comma {
             animation: bellJingle 0.8s ease-in-out 0.3s;
         }
-        @media (max-width: 1024px) {
-            .container {
-                display: flex;
-                flex-direction: column;
-                padding: 40px;
-                margin-top: 12vh;
-            }
-            .hey-container, .content, .send-mail {
-                width: 100%;
-            }
+
+        .content-1 {
+            grid-column: 7 / 9;
+            grid-row: 2 / 4;
+            align-self: start;
+            text-align: justify;
         }
+
+        .content-2 {
+            grid-column: 7 / 9;
+            grid-row: 4 / 6;
+            text-align: justify;
+            margin-bottom: 12rem; /* Increase the margin here */
+        }
+
+        .content-group {
+            grid-column: 10 / 12;
+            grid-row: 2 / 6;
+            display: flex;
+            flex-direction: column;
+            gap: var(--row-gap);
+        }
+
+        .content-3 {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            text-align: justify;
+        }
+
+        .send-mail {
+            color: #000000;
+            font-size: 16px;
+            font-weight: 400;
+            text-decoration: underline;
+        }
+
+
+        /* General link styles */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Style for the "send email" link */
+        .send-mail a {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        .at-link {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+
+        @media screen and (min-width: 1025px) {
+    body {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: auto auto auto auto auto auto;
+        column-gap: 1.5rem;
+        padding-top: 24vh;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .hey-container {
+        grid-column: 4 / 6;
+        grid-row: 2 / 3;
+        align-self: start;
+        margin-top: -0.2em;
+    }
+
+    .hey {
+        font-size: 40px;
+        margin-left: 2rem;
+    }
+
+    .content-1 {
+        grid-column: 7 / 9;
+        grid-row: 2 / 4;
+    }
+
+    .content-2 {
+        grid-column: 7 / 9;
+        grid-row: 4 / 6;
+    }
+
+    .content-group {
+        grid-column: 10 / 12;
+        grid-row: 2 / 6;
+    }
+
+}
+
+@media screen and (min-width: 1025px) {
+    .hey-container {
+        position: relative;
+    }
+
+    .prompt {
+        position: absolute;
+        top: -30px;
+        left: 2rem; 
+        color: #888;
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+    .chat-input {
+        font-family: 'NeueHaasDisplay-Medium', sans-serif;
+        font-size: 40px;
+        font-weight: 600;
+        width: 100%;
+        border: none;
+        background: transparent;
+        outline: none;
+        resize: none;
+        overflow: hidden;
+    }
+
+    .chat-input::placeholder {
+        color: #CCCCCC;
+        opacity: 1;
+    }
+
+    .ai-response {
+        grid-column: 7 / 12;
+        grid-row: 2 / 6;
+        align-self: start;
+        text-align: justify;
+        font-family: 'NeueHaasDisplay-Light', sans-serif;
+        font-size: 16px;
+    }
+
+    .back-button {
+        grid-column: 10 / 12;
+        grid-row: 6;
+        align-self: start;
+        justify-self: start;
+        text-decoration: underline;
+        cursor: pointer;
+        font-family: 'NeueHaasDisplay-Light', sans-serif;
+        font-size: 16px;
+    }
+
+    .typing-cursor {
+        display: inline-block;
+        width: 1px;
+        height: 0.8em;
+        background-color: #000;
+        animation: blink 0.7s infinite;
+        margin-left: 2px;
+        vertical-align: baseline;
+    }
+
+    @keyframes popOut {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes bellJingle {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(10deg); }
+        50% { transform: rotate(-8deg); }
+        75% { transform: rotate(6deg); }
+        100% { transform: rotate(0deg); }
+    }
+}
+
+    /* Hover effects for larger screens only */
+    @media screen and (min-width: 1025px) {
+        .at-link::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #BFD4EA;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .at-link:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    }
+
+        .personal-website {
+            color: #000000;
+            text-align: left;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            transform-origin: top left;
+            transform: rotate(-90deg) translateX(-100%);
+            white-space: nowrap;
+        }
+
+        .copyright {
+            grid-column: 3 / 14;
+            grid-row: 12; /* Place it in the next available row */
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            color: #000000;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        
+        @media screen and (max-width: 1024px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+        margin-top: 12vh;
+        box-sizing: border-box;
+    }
+
+    .initial-load .comma {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+    .hey, .content, .send-mail {
+        width: 100%;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .hey-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: relative;
+    }
+
+    .typing-cursor {
+        display: inline-block;
+        width: 1px;
+        height: 0.8em; /* Adjust to match text height */
+        background-color: #000;
+        animation: blink 0.7s infinite;
+        margin-left: 2px;
+        vertical-align: baseline; /* Align with text baseline */
+    }
+
+    .prompt {
+        position: absolute;
+        top: -44px; /* Adjust this value as needed */
+        left: 0;
+        color: #888;
+        font-size: 16px;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .hey {
+        font-size: 36px;
+        text-align: left;
+        opacity: 1;
+        transition: transform 0.5s ease-out;
+    }
+    
+
+
+    /* Adjust the space between user input and AI output */
+    .user-input,
+    .ai-output {
+        margin-top: 4px; /* Reduce the space */
+        margin-bottom: 4px; /* Reduce the space */
+    }
+
+    .content, .send-mail {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+        text-align: left;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+    }
+
+
+    .content.visible, .send-mail.visible {
+        opacity: 1;
+    }
+
+    .chat-input::placeholder {
+        color: #CCCCCC;
+        font-family: 'NeueHaasDisplay-Medium', sans-serif;
+        font-size: 36px;
+        font-weight: 600;
+        opacity: 1; /* Firefox */
+    }
+
+
+    @keyframes blink {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
+    /* Hide elements not needed on mobile */
+    header, .side-group, ._24, .personal-website, .project-row, .project-image-container, .project-row-right, .project-image-container-2, .project-info, .project-paragraph-2, .copyright {
+        display: none;
+    }
+}
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="system-message"></div>
-        <div class="hey-container">
-            <div class="hey">
-                <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
-            </div>
+<body class="initial-load">
+    <div class="hey-container">
+        <div class="hey">
+            <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
         </div>
-        <div class="content content-1">
-            I'm Lukas. I work on building useful interactions between Humans and AI @Dembrane. We streamline the process of capturing insights from multiple conversations and transforming them into a structured, interactive, and evolving knowledge base.
-        </div>
-        <div class="content content-2">
-            Apart from work you can find me studying the Brain @AarhusUniversity in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
-        </div>
+    </div>
+    <div class="content content-1">
+        I'm Lukas. Currently, I am working on enabling more meaningful participation through AI <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. We streamline the process of capturing insights from multiple conversations and transforming them into a structured, interactive, and evolving knowledge base.
+    </div>
+    <div class="content content-2">
+        Apart from work you can find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
+    </div>
+    <div class="content-group">
         <div class="content content-3">
-            Outside my studies I sometimes write about what comes to mind in these so exciting times @cognitoergosum. Reach out if we care about the same things!
+            Outside my studies I love thinking about the future of AI, mental health and nature. Feel free to reach out if we care about the same things!
         </div>
         <div class="send-mail">
             <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
         </div>
-        <div class="back-button">back</div>
-        <div class="ai-response"></div>
     </div>
-
+    <div class="copyright">
+        © Lukas Maria Kubiena 2024
+    </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const heyContainer = document.querySelector('.hey-container');
-    const hey = document.querySelector('.hey');
-    const heyText = hey.querySelector('.hey-text');
-    const comma = hey.querySelector('.comma');
-    const typingCursor = document.querySelector('.typing-cursor');
-    const content = document.querySelectorAll('.content, .send-mail');
-    const backButton = document.querySelector('.back-button');
-    const aiResponse = document.querySelector('.ai-response');
-    const systemMessage = document.querySelector('.system-message');
-    let messages = [];
-    let inChatMode = false;
-
-    function typeText(element, text, callback) {
-        let i = 0;
-        element.textContent = '';
-        function type() {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, 150);
-            } else if (callback) {
-                callback();
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('glass-effect');
+            } else {
+                header.classList.remove('glass-effect');
+            }
+        });
+        
+    
+        function adjustHeaderWidth() {
+            const header = document.getElementById('header');
+            const projectImageContainer = document.querySelector('.project-image-container');
+            const projectImage = projectImageContainer.querySelector('.project-image');
+    
+            function setHeaderWidth() {
+                const imageWidth = projectImage.clientWidth;
+                const headerWidth = imageWidth * 1; // 90% of image width
+                header.style.width = `${headerWidth}px`;
+            }
+    
+            if (projectImage.complete) {
+                setHeaderWidth();
+            } else {
+                projectImage.onload = setHeaderWidth;
             }
         }
-        type();
-    }
-
-    function showContent() {
-        content.forEach(el => {
-            el.style.opacity = '1';
+    
+        window.addEventListener('resize', adjustHeaderWidth);
+        window.addEventListener('load', adjustHeaderWidth);
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const logo = document.getElementById('logo');
+            const contact = document.getElementById('contact');
+            const projects = document.querySelector('a[href="#projects"]');
+            const projectImages = document.querySelectorAll('.project-image, .project-image-2');
+    
+            function checkIntersection() {
+                let logoRect = logo.getBoundingClientRect();
+                let contactRect = contact.getBoundingClientRect();
+                let projectsRect = projects.getBoundingClientRect();
+                let logoIntersecting = false;
+                let contactIntersecting = false;
+                let projectsIntersecting = false;
+    
+                projectImages.forEach(image => {
+                    let imageRect = image.getBoundingClientRect();
+    
+                    if (logoRect.bottom > imageRect.top && logoRect.top < imageRect.bottom) {
+                        logoIntersecting = true;
+                    }
+    
+                    if (contactRect.bottom > imageRect.top && contactRect.top < imageRect.bottom) {
+                        contactIntersecting = true;
+                    }
+    
+                    if (projectsRect.bottom > imageRect.top && projectsRect.top < imageRect.bottom) {
+                        projectsIntersecting = true;
+                    }
+                });
+    
+                if (logoIntersecting) {
+                    logo.style.filter = 'brightness(0) invert(1)';
+                } else {
+                    logo.style.filter = 'brightness(0) invert(0)';
+                }
+    
+                if (contactIntersecting || projectsIntersecting) {
+                    contact.style.color = '#FFFFFF'; // Turn white
+                    projects.style.color = '#FFFFFF'; // Turn white
+                } else {
+                    contact.style.color = '#000000'; // Turn black
+                    projects.style.color = '#000000'; // Turn black
+                }
+            }
+    
+            window.addEventListener('scroll', checkIntersection);
+            window.addEventListener('resize', checkIntersection);
+            checkIntersection(); // Initial check
         });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const hey = document.querySelector('.hey');
+    
+            function playAnimation() {
+                hey.classList.remove('animate');
+                void hey.offsetWidth; // Trigger reflow
+                hey.classList.add('animate');
+            }
+    
+            // Play animation on page load
+            playAnimation();
+    
+            // Play animation on hover
+            hey.addEventListener('mouseenter', playAnimation);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+    function alignProjectParagraph() {
+        const hey = document.querySelector('.hey');
+        const projectParagraph = document.querySelector('.project-paragraph');
+        const heyRect = hey.getBoundingClientRect();
+        const paragraphRect = projectParagraph.getBoundingClientRect();
+        
+        const difference = heyRect.left - paragraphRect.left;
+        projectParagraph.style.paddingLeft = `${difference}px`;
     }
 
-    function showSystemMessage(text) {
-        systemMessage.textContent = text;
-        systemMessage.style.opacity = '1';
-        setTimeout(() => {
-            systemMessage.style.opacity = '0';
-        }, 5000);
-    }
+    // Run on load and resize
+    window.addEventListener('load', alignProjectParagraph);
+    window.addEventListener('resize', alignProjectParagraph);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const hey = document.querySelector('.hey');
 
     function playAnimation() {
         hey.classList.remove('animate');
@@ -214,88 +568,627 @@
         hey.classList.add('animate');
     }
 
-    function enterChatMode() {
-        inChatMode = true;
-        content.forEach(el => el.style.display = 'none'); // Change opacity to display
-        backButton.style.display = 'block';
-        heyText.contentEditable = true;
-        heyText.textContent = '';
-        heyText.focus();
-        comma.style.display = 'none';
-        typingCursor.style.display = 'none';
-        if (window.innerWidth <= 1024) {
-            showSystemMessage('Tap enter to send');
-        }
-    }
+    // Play animation on page load
+    playAnimation();
 
-    function exitChatMode() {
-        inChatMode = false;
-        content.forEach(el => {
-            el.style.display = ''; // Reset display to default
-            el.style.opacity = '1';
-        });
-        backButton.style.display = 'none';
-        aiResponse.style.opacity = '0';
-        aiResponse.textContent = '';
-        heyText.contentEditable = false;
-        heyText.textContent = 'Hey';
-        comma.style.display = 'inline';
-        typingCursor.style.display = 'none'; // Keep cursor hidden after initial animation
-        messages = [];
+    // Play animation on tap (for mobile)
+    hey.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Prevent default touch behavior
         playAnimation();
+    });
+
+    // For desktop, keep the hover functionality
+    if (window.matchMedia("(min-width: 1025px)").matches) {
+        hey.addEventListener('mouseenter', playAnimation);
     }
+});
 
-    async function handleUserInput() {
-        const userInput = heyText.textContent;
-        heyText.textContent = userInput;
 
-        const aiResponseText = await generateAIResponse(userInput);
-        aiResponse.textContent = '';
-        aiResponse.style.opacity = '1';
-        typeText(aiResponse, aiResponseText);
-    }
 
-    async function generateAIResponse(userInput) {
-        messages.push({ "role": "user", "content": userInput });
-        try {
-            const response = await fetch('/.netlify/functions/generate-response', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userInput, messages })
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 1024) {
+        const body = document.body;
+        const hey = document.querySelector('.hey');
+        const heyText = hey.querySelector('.hey-text');
+        const comma = hey.querySelector('.comma');
+        const cursor = hey.querySelector('.typing-cursor');
+        const content = document.querySelectorAll('.content, .send-mail');
+
+        // Disable the bounce animation initially
+        hey.style.animation = 'none';
+
+        // Hide content and hey text initially, but keep cursor visible
+        content.forEach(el => el.style.opacity = '0');
+        heyText.style.opacity = '0';
+        comma.style.opacity = '0';
+        
+        function typeText(text, element, callback) {
+            let i = 0;
+            element.textContent = ''; // Clear existing text
+            element.style.opacity = '1'; // Make text visible before typing
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 150);
+                } else {
+                    callback();
+                }
+            }
+            type();
+        }
+
+        function showComma() {
+            comma.style.opacity = '1';
+            playPopOutAnimation();
+        }
+
+        function playPopOutAnimation() {
+            hey.style.animation = '';
+            hey.classList.add('animate');
+            setTimeout(playCommaAnimation, 300); // Delay comma animation to match pop-out
+        }
+
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth; // Trigger reflow
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+            setTimeout(showContent, 800); // Wait for comma animation to finish
+        }
+
+        function showContent() {
+            cursor.style.display = 'none'; // Hide cursor after animations
+            content.forEach(el => {
+                el.style.opacity = '1';
+                el.style.transition = 'opacity 1s ease-in';
             });
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const data = await response.json();
-            const aiResponse = data.response;
-            messages.push({ "role": "assistant", "content": aiResponse });
-            return aiResponse;
-        } catch (error) {
-            console.error('Error:', error);
-            return "I'm sorry, I couldn't generate a response at this time.";
         }
+
+        // Delay the entire animation sequence by 2 seconds
+        setTimeout(() => {
+            // Remove the initial-load class
+            body.classList.remove('initial-load');
+            // Start the sequence
+            typeText('Hey', heyText, showComma);
+        }, 2000);
     }
+});
 
-    typeText(heyText, 'Hey', () => {
-        showContent();
-        playAnimation();
-        typingCursor.style.display = 'none'; // Hide cursor after initial animation
-    });
 
-    heyContainer.addEventListener('click', function() {
-        if (!inChatMode) {
-            enterChatMode();
-        } else {
-            heyText.focus();
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth <= 1024) {
+        let hey = document.querySelector('.hey');
+        let heyText = hey.querySelector('.hey-text');
+        let comma = hey.querySelector('.comma');
+        const content = document.querySelectorAll('.content, .send-mail');
+        let longPressTimer;
+        let isLongPress = false;
+        let messages = [];
+        let promptShown = false;
+        let inChatMode = false;
+        let promptTimer;
+        let blinkInterval;
+
+        function showPrompt(text) {
+            clearTimeout(promptTimer);
+            let promptContainer = document.querySelector('.prompt');
+            
+            if (!promptContainer) {
+                promptContainer = document.createElement('div');
+                promptContainer.className = 'prompt';
+                const heyContainer = document.querySelector('.hey-container');
+                heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
+            }
+            
+            promptContainer.textContent = text;
+            promptContainer.style.opacity = '0';
+            promptContainer.style.transition = 'opacity 0.5s ease-in';
+            
+            setTimeout(() => {
+                promptContainer.style.opacity = '1';
+            }, 10);
+            
+            promptShown = true;
         }
+
+        function hidePrompt() {
+            const promptContainer = document.querySelector('.prompt');
+            if (promptContainer) {
+                // Set the opacity to 0 to start the fade-out effect
+                promptContainer.style.transition = 'opacity 0.3s ease-out';
+                promptContainer.style.opacity = '0';
+
+                // Remove the element after the transition ends
+                setTimeout(() => {
+                    promptContainer.remove();
+                    promptShown = false;
+                }, 500); // Match the timeout with the duration of the opacity transition
+            }
+        }
+
+
+        function resetPromptTimer() {
+            clearTimeout(promptTimer);
+            promptTimer = setTimeout(() => {
+                if (!inChatMode) showPrompt('Press this to ask about me');
+            }, 10000);
+        }
+
+        resetPromptTimer();
+        // Check if vibration is supported
+        // Check if vibration is supported
+        let canVibrate = 'vibrate' in navigator;
+
+        function tryVibrate(duration) {
+            if (canVibrate) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        navigator.vibrate(duration);
+                        console.log("Vibration command sent successfully");
+                        resolve(true);
+                    } catch (error) {
+                        console.error("Error when trying to vibrate:", error);
+                        reject(error);
+                    }
+                });
+            } else {
+                console.log("Vibration not supported on this device");
+                return Promise.resolve(false);
+            }
+        }
+
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                tryVibrate(50)
+                    .then(success => {
+                        if (success) {
+                            console.log('Long press vibration successful');
+                        } else {
+                            console.log('Long press vibration not supported or failed');
+                        }
+                        handleLongPress();
+                    })
+                    .catch(error => console.error('Vibration error:', error));
+            }, 800);
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress && !inChatMode) {
+                tryVibrate(25)
+                    .then(success => {
+                        if (success) {
+                            console.log('Short vibration successful');
+                        } else {
+                            console.log('Short vibration not supported or failed');
+                        }
+                        playAnimation();
+                        playCommaAnimation();
+                    })
+                    .catch(error => console.error('Vibration error:', error));
+            }
+        });
+
+
+        function handleLongPress() {
+    inChatMode = true;
+
+    clearPreviousContent(true);
+    console.log('Long press detected');
+    
+    heyText.textContent = '';
+    comma.style.display = 'none';
+    const input = document.createElement('textarea');
+    input.className = 'chat-input';
+    input.placeholder = 'Ask...';
+    input.style.font = window.getComputedStyle(heyText).font;
+    input.style.border = 'none';
+    input.style.background = 'transparent';
+    input.style.outline = 'none';
+    input.style.width = '100%';
+    input.style.resize = 'none';
+    input.style.overflow = 'hidden';
+    input.style.caretColor = 'black';
+    heyText.appendChild(input);
+
+    // Force the keyboard to appear
+    input.readOnly = false;
+    input.focus();
+    input.click();
+
+    showPrompt('Tap enter to send');
+
+    input.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
     });
 
-    backButton.addEventListener('click', exitChatMode);
+    content.forEach(el => el.style.display = 'none');
 
-    heyText.addEventListener('keypress', function(e) {
+    input.addEventListener('keypress', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleUserInput();
+            const userInput = input.value;
+            handleUserInput(userInput);
         }
     });
+
+    addBackButton();
+
+    // Allow tapping on the hey area to refocus the input
+    hey.addEventListener('touchstart', function(e) {
+        if (inChatMode) {
+            e.preventDefault();
+            input.focus();
+        }
+    });
+}
+
+        function clearPreviousContent(keepPrompt = false) {
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
+            if (previousResponse) previousResponse.remove();
+            const existingBackButton = contentContainer.querySelector('a[style*="text-decoration: underline"]');
+            if (existingBackButton) existingBackButton.remove();
+            if (!keepPrompt) {
+                hidePrompt();
+            }
+        }
+
+        function addBackButton() {
+            let backButton = document.querySelector('a[style*="text-decoration: underline"]');
+            if (!backButton) {
+                backButton = document.createElement('a');
+                backButton.textContent = 'back';
+                backButton.style.textDecoration = 'underline';
+                backButton.style.display = 'block';
+                backButton.style.marginTop = '20px';
+                backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+                backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+                
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    resetPage();
+                });
+                
+                const contentContainer = document.querySelector('.content-1').parentNode;
+                contentContainer.appendChild(backButton);
+            }
+        }
+
+        async function handleUserInput(userInput) {
+        heyText.textContent = userInput;
+        heyText.style.whiteSpace = 'pre-wrap';
+        heyText.style.wordBreak = 'break-word';
+        
+        showPrompt('Tap again for new question');
+
+        const aiResponse = await generateAIResponse(userInput);
+        
+        const contentContainer = document.querySelector('.content-1').parentNode;
+        
+        // Remove previous response if it exists, but keep the prompt and back button
+        const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
+        if (previousResponse) previousResponse.remove();
+
+        const responseElement = document.createElement('div');
+        responseElement.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+        responseElement.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+        responseElement.style.marginTop = '10px';
+        responseElement.style.textAlign = 'justify';
+        
+        contentContainer.insertBefore(responseElement, contentContainer.lastElementChild); // Insert before the back button
+
+        const words = aiResponse.split(' ');
+        let i = 0;
+        const intervalId = setInterval(() => {
+            if (i < words.length) {
+                responseElement.textContent += words[i] + ' ';
+                i++;
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 120);
+    }
+
+        async function generateAIResponse(userInput) {
+    messages.push({ "role": "user", "content": userInput });
+
+    try {
+        const response = await fetch('/.netlify/functions/generate-response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userInput, messages })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const aiResponse = data.response;
+        messages.push({ "role": "assistant", "content": aiResponse });
+        return aiResponse;
+    } catch (error) {
+        console.error('Error:', error);
+        return "I'm sorry, I couldn't generate a response at this time.";
+    }
+}
+
+        function resetPage() {
+            inChatMode = false;
+            
+            // Immediately hide the prompt and system message
+            hidePrompt();
+            const systemMessage = document.querySelector('.system-message');
+            if (systemMessage) systemMessage.remove();
+
+            // Clear previous content and remove back button
+            clearPreviousContent();
+            const backButton = document.querySelector('a[style*="text-decoration: underline"]');
+            if (backButton) backButton.remove();
+
+            // Reset the Hey container
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
+
+            content.forEach(el => {
+                el.style.display = 'block';
+                el.style.opacity = '1';
+            });
+
+            // Ensure animations play after content is updated
+            setTimeout(() => {
+                playAnimation();
+                playCommaAnimation();
+            }, 10);
+
+            resetPromptTimer();
+
+            messages = [];
+        }
+
+
+        function playAnimation() {
+            hey.classList.remove('animate');
+            void hey.offsetWidth;
+            hey.classList.add('animate');
+        }
+
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth; // Trigger reflow
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+        }
+
+        hey.addEventListener('touchstart', function(e) {
+            isLongPress = false;
+            longPressTimer = setTimeout(() => {
+                isLongPress = true;
+                handleLongPress();
+            }, 500); // Adjusted delay for long press detection
+        });
+
+        hey.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+            if (!isLongPress) {
+                // Ignore quick taps
+                e.preventDefault();
+            }
+        });
+    }
+});
+// Replace the existing desktop JavaScript with this
+document.addEventListener('DOMContentLoaded', function() {
+    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
+    
+    if (isDesktop) {
+        const hey = document.querySelector('.hey');
+        let heyText = hey.querySelector('.hey-text');
+        let comma = hey.querySelector('.comma');
+        const content = document.querySelectorAll('.content, .send-mail');
+        let messages = [];
+        let inChatMode = false;
+
+        function typeHey() {
+            heyText.textContent = '';
+            comma.style.opacity = '0';
+            let text = 'Hey';
+            let index = 0;
+            const cursor = document.createElement('span');
+            cursor.className = 'typing-cursor';
+            hey.appendChild(cursor);
+
+            function typeChar() {
+                if (index < text.length) {
+                    heyText.textContent += text[index];
+                    index++;
+                    setTimeout(typeChar, 150);
+                } else {
+                    setTimeout(() => {
+                        hey.classList.add('animate');
+                        setTimeout(() => {
+                            comma.style.opacity = '1';
+                            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+                            setTimeout(() => {
+                                cursor.remove();
+                            }, 500);
+                        }, 300);
+                    }, 100);
+                }
+            }
+            typeChar();
+        }
+
+        // Initial load animation
+        typeHey();
+
+        hey.addEventListener('click', function() {
+            if (!inChatMode) {
+                handleDesktopClick();
+            } else {
+                const input = hey.querySelector('.chat-input');
+                if (input) {
+                    input.focus();
+                }
+            }
+        });
+        
+        function handleDesktopClick() {
+            inChatMode = true;
+            clearPreviousContent(true);
+            
+            hey.innerHTML = '';
+            
+            const input = document.createElement('textarea');
+            input.className = 'chat-input';
+            input.placeholder = 'Ask...';
+            hey.appendChild(input);
+            
+            input.focus();
+            
+            showPrompt('Press Enter to send');
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const userInput = input.value;
+                    handleUserInput(userInput);
+                }
+            });
+            
+            content.forEach(el => el.style.display = 'none');
+            addBackButton();
+        }
+        
+        async function handleUserInput(userInput) {
+            hey.textContent = userInput;
+            
+            showPrompt('Click here for a new question');
+            
+            const aiResponse = await generateAIResponse(userInput);
+            
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            const previousResponse = contentContainer.querySelector('.ai-response');
+            if (previousResponse) previousResponse.remove();
+            
+            const responseElement = document.createElement('div');
+            responseElement.className = 'ai-response';
+            
+            contentContainer.appendChild(responseElement);
+            
+            const words = aiResponse.split(' ');
+            let i = 0;
+            const intervalId = setInterval(() => {
+                if (i < words.length) {
+                    responseElement.textContent += words[i] + ' ';
+                    i++;
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 120);
+
+            hey.addEventListener('click', handleDesktopClick);
+        }
+        
+        async function generateAIResponse(userInput) {
+            messages.push({ "role": "user", "content": userInput });
+
+            try {
+                const response = await fetch('/.netlify/functions/generate-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userInput, messages })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.response;
+                messages.push({ "role": "assistant", "content": aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                return "I'm sorry, I couldn't generate a response at this time.";
+            }
+        }
+
+        function clearPreviousContent(keepPrompt = false) {
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            const previousResponse = contentContainer.querySelector('.ai-response');
+            if (previousResponse) previousResponse.remove();
+            const existingBackButton = contentContainer.querySelector('.back-button');
+            if (existingBackButton) existingBackButton.remove();
+            if (!keepPrompt) {
+                hidePrompt();
+            }
+        }
+
+        function addBackButton() {
+            let backButton = document.querySelector('.back-button');
+            if (!backButton) {
+                backButton = document.createElement('a');
+                backButton.textContent = 'back';
+                backButton.className = 'back-button';
+                
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    resetPage();
+                });
+                
+                const contentContainer = document.querySelector('.content-1').parentNode;
+                contentContainer.appendChild(backButton);
+            }
+        }
+
+        function resetPage() {
+            inChatMode = false;
+            
+            hidePrompt();
+            clearPreviousContent();
+            
+            hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
+
+            content.forEach(el => {
+                el.style.display = '';
+                el.style.opacity = '1';
+            });
+
+            messages = [];
+            typeHey();
+        }
+
+        function showPrompt(text) {
+            let promptContainer = document.querySelector('.prompt');
+            
+            if (!promptContainer) {
+                promptContainer = document.createElement('div');
+                promptContainer.className = 'prompt';
+                hey.parentNode.insertBefore(promptContainer, hey);
+            }
+            
+            promptContainer.textContent = text;
+            promptContainer.style.opacity = '1';
+        }
+
+        function hidePrompt() {
+            const promptContainer = document.querySelector('.prompt');
+            if (promptContainer) {
+                promptContainer.remove();
+            }
+        }
+    }
 });
     </script>
 </body>
