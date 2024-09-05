@@ -155,6 +155,167 @@
             z-index: 1;
         }
 
+        @media screen and (min-width: 1025px) {
+    body {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: auto auto auto auto auto auto;
+        column-gap: 1.5rem;
+        padding-top: 24vh;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .hey-container {
+        grid-column: 4 / 6;
+        grid-row: 2 / 3;
+        align-self: start;
+        margin-top: -0.2em;
+    }
+
+    .hey {
+        font-size: 40px;
+        margin-left: 2rem;
+        word-wrap: break-word;
+        max-width: 80%;
+    }
+
+    .content-1 {
+        grid-column: 7 / 9;
+        grid-row: 2 / 4;
+    }
+
+    .content-2 {
+        grid-column: 7 / 9;
+        grid-row: 4 / 6;
+    }
+
+    .content-group {
+        grid-column: 10 / 12;
+        grid-row: 2 / 6;
+    }
+
+}
+
+@media screen and (min-width: 1025px) {
+    body {
+        padding-top: 20vh;
+    }
+
+    .hey-container {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .prompt {
+        position: absolute;
+        top: -40px;
+        left: 2rem;
+        color: #888;
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+    .copyright {
+            grid-column: 10 / 12; /* Adjust this column range based on your layout */
+            grid-row: 4; /* Position in the specific row as needed */
+            text-align: left;
+            margin-top: 0; /* Remove unnecessary top margin */
+            margin-bottom: 0; /* Adjust bottom margin if necessary */
+            align-self: end; /* Align at the bottom of the grid row */
+        }
+
+    .chat-input {
+        font-family: 'NeueHaasDisplay-Medium', sans-serif;
+        font-size: 40px;
+        font-weight: 600;
+        width: 100%;
+        max-width: 800px;
+        border: none;
+        background: transparent;
+        outline: none;
+        resize: none;
+        overflow: hidden;
+    }
+
+    .chat-input::placeholder {
+        color: #CCCCCC;
+        opacity: 1;
+    }
+
+    .ai-response {
+        grid-column: 7 / 14;
+        grid-row: 2 / 6;
+        align-self: start;
+        text-align: justify;
+        font-family: 'NeueHaasDisplay-Light', sans-serif;
+        font-size: 16px;
+        word-wrap: break-word;
+        max-width: 60%;
+        margin-left: 20%;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .back-button {
+        grid-column: 10 / 12;
+        grid-row: 6;
+        align-self: start;
+        justify-self: start;
+        text-decoration: underline;
+        cursor: pointer;
+        font-family: 'NeueHaasDisplay-Light', sans-serif;
+        font-size: 16px;
+    }
+
+    .typing-cursor {
+        display: inline-block;
+        width: 1px;
+        height: 0.8em;
+        background-color: #000;
+        animation: blink 0.7s infinite;
+        margin-left: 2px;
+        vertical-align: baseline;
+    }
+
+    .typing-cursor {
+    display: inline-block;
+    width: 1px;
+    height: 1em;
+    background-color: black;
+    animation: blink 0.7s infinite;
+    margin-left: 2px;
+    vertical-align: bottom;
+}
+
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes popOut {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes bellJingle {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(10deg); }
+        50% { transform: rotate(-8deg); }
+        75% { transform: rotate(6deg); }
+        100% { transform: rotate(0deg); }
+    }
+}
+
     /* Hover effects for larger screens only */
     @media screen and (min-width: 1025px) {
         .at-link::before {
@@ -188,15 +349,6 @@
             white-space: nowrap;
         }
 
-        .copyright {
-            grid-column: 3 / 14;
-            grid-row: 12; /* Place it in the next available row */
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            color: #000000;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
-        }
 
         
         @media screen and (max-width: 1024px) {
@@ -553,27 +705,43 @@ document.addEventListener('DOMContentLoaded', function() {
         let promptTimer;
         let blinkInterval;
 
-        function showPrompt(text) {
-            clearTimeout(promptTimer);
-            let promptContainer = document.querySelector('.prompt');
-            
-            if (!promptContainer) {
-                promptContainer = document.createElement('div');
-                promptContainer.className = 'prompt';
-                const heyContainer = document.querySelector('.hey-container');
-                heyContainer.insertBefore(promptContainer, heyContainer.firstChild);
+        function showPrompt(text, fadeIn = false, isHomePrompt = false) {
+    clearTimeout(promptTimer);
+    hidePrompt();
+    
+    let promptContainer = document.createElement('div');
+    promptContainer.className = 'prompt';
+    hey.parentNode.insertBefore(promptContainer, hey);
+    
+    promptContainer.textContent = text;
+    
+    if (fadeIn) {
+        promptContainer.style.opacity = '0';
+        promptContainer.style.transition = 'opacity 1s ease-in';
+        setTimeout(() => {
+            promptContainer.style.opacity = '1';
+        }, 10);
+    } else {
+        promptContainer.style.opacity = '1';
+    }
+    promptContainer.style.cursor = 'pointer';
+    
+    if (isHomePrompt) {
+        promptContainer.addEventListener('click', handleDesktopClick);
+    } else {
+        promptContainer.addEventListener('click', () => {
+            if (inChatMode) {
+                handleDesktopClick();
             }
-            
-            promptContainer.textContent = text;
-            promptContainer.style.opacity = '0';
-            promptContainer.style.transition = 'opacity 0.5s ease-in';
-            
-            setTimeout(() => {
-                promptContainer.style.opacity = '1';
-            }, 10);
-            
-            promptShown = true;
-        }
+        });
+    }
+
+    if (isHomePrompt && !inChatMode) {
+        promptTimer = setTimeout(() => {
+            showPrompt('Click this to ask about me', true, true);
+        }, 5000);
+    }
+}
 
         function hidePrompt() {
             const promptContainer = document.querySelector('.prompt');
@@ -743,39 +911,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         async function handleUserInput(userInput) {
-        heyText.textContent = userInput;
-        heyText.style.whiteSpace = 'pre-wrap';
-        heyText.style.wordBreak = 'break-word';
-        
-        showPrompt('Tap again for new question');
-
-        const aiResponse = await generateAIResponse(userInput);
-        
-        const contentContainer = document.querySelector('.content-1').parentNode;
-        
-        // Remove previous response if it exists, but keep the prompt and back button
-        const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
-        if (previousResponse) previousResponse.remove();
-
-        const responseElement = document.createElement('div');
-        responseElement.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
-        responseElement.style.fontSize = window.getComputedStyle(content[0]).fontSize;
-        responseElement.style.marginTop = '10px';
-        responseElement.style.textAlign = 'justify';
-        
-        contentContainer.insertBefore(responseElement, contentContainer.lastElementChild); // Insert before the back button
-
-        const words = aiResponse.split(' ');
-        let i = 0;
-        const intervalId = setInterval(() => {
-            if (i < words.length) {
-                responseElement.textContent += words[i] + ' ';
-                i++;
-            } else {
-                clearInterval(intervalId);
-            }
-        }, 120);
-    }
+    hey.textContent = userInput;
+    
+    hidePrompt();
+    showPrompt('Click here for a new question', true);
+    
+    const aiResponse = await generateAIResponse(userInput);
+    
+    const contentContainer = document.querySelector('.content-1').parentNode;
+    const previousResponse = contentContainer.querySelector('.ai-response');
+    if (previousResponse) previousResponse.remove();
+    
+    const responseElement = document.createElement('div');
+    responseElement.className = 'ai-response';
+    responseElement.style.maxWidth = '60%';
+    responseElement.style.marginLeft = '20%';
+    responseElement.style.cursor = 'pointer';
+    responseElement.addEventListener('click', handleDesktopClick);
+    
+    contentContainer.insertBefore(responseElement, copyright);
+    
+    const words = aiResponse.split(' ');
+    let i = 0;
+    const intervalId = setInterval(() => {
+        if (i < words.length) {
+            responseElement.textContent += words[i] + ' ';
+            i++;
+        } else {
+            clearInterval(intervalId);
+            addBackButton();
+        }
+    }, 120);
+}
 
         async function generateAIResponse(userInput) {
     messages.push({ "role": "user", "content": userInput });
@@ -867,7 +1034,340 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// Desktop-specific JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
+    
+    if (isDesktop) {
+        const hey = document.querySelector('.hey');
+        let heyText = hey.querySelector('.hey-text');
+        let comma = hey.querySelector('.comma');
+        const content = document.querySelectorAll('.content, .send-mail');
+        const copyright = document.querySelector('.copyright');
+        let messages = [];
+        let inChatMode = false;
+        let cursor;
+        let promptTimer;
 
+        function toggleChatMode(enable) {
+        if (enable) {
+            copyright.classList.add('hidden');
+        } else {
+            copyright.classList.remove('hidden');
+        }
+    }
+
+        function typeHey(isInitialLoad = true) {
+            hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
+            heyText.textContent = '';
+            comma.style.opacity = '0';
+            let text = 'Hey,';
+            let index = 0;
+            cursor = document.createElement('span');
+            cursor.className = 'typing-cursor';
+            hey.appendChild(cursor);
+
+            if (isInitialLoad) {
+                content.forEach(el => el.style.opacity = '0');
+                copyright.style.opacity = '0';
+            }
+
+            setTimeout(() => {
+                function typeChar() {
+                    if (index < text.length) {
+                        if (index === text.length - 1) {
+                            comma.style.opacity = '1';
+                        } else {
+                            heyText.textContent += text[index];
+                        }
+                        index++;
+                        setTimeout(typeChar, 150);
+                    } else {
+                        setTimeout(() => {
+                            playPopOutAnimation();
+                        }, 100);
+                    }
+                }
+                typeChar();
+            }, 1000);
+        }
+
+        function playPopOutAnimation() {
+            hey.style.animation = 'none';
+            void hey.offsetWidth;
+            hey.style.animation = 'popOut 0.3s ease-out';
+            setTimeout(() => {
+                playCommaAnimation();
+            }, 300);
+        }
+
+        function playCommaAnimation() {
+            comma.style.animation = 'none';
+            void comma.offsetWidth;
+            comma.style.animation = 'bellJingle 0.8s ease-in-out';
+            setTimeout(() => {
+                if (cursor) {
+                    cursor.remove();
+                    cursor = null;
+                }
+                content.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.animation = 'fadeIn 1s ease-in';
+                });
+                copyright.style.opacity = '1';
+                copyright.style.animation = 'fadeIn 1s ease-in';
+                resetPromptTimer();
+            }, 800);
+        }
+
+        function resetPromptTimer() {
+            clearTimeout(promptTimer);
+            promptTimer = setTimeout(() => {
+                if (!inChatMode) {
+                    showPrompt('Click this to ask about me', true);
+                }
+            }, 5000);
+        }
+
+        typeHey();
+
+        function handleDesktopClick() {
+            inChatMode = true;
+            toggleChatMode(true)
+            clearPreviousContent(true);
+            hidePrompt();
+            
+            hey.innerHTML = '';
+            hey.style.cursor = 'text';
+            
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'input-container';
+            inputContainer.style.width = '100%';
+            inputContainer.style.height = '100%';
+            inputContainer.style.position = 'relative';
+            
+            const input = document.createElement('textarea');
+            input.className = 'chat-input';
+            input.placeholder = 'Ask...';
+            input.style.width = '100%';
+            input.style.height = '100%';
+            input.style.resize = 'none';
+            input.style.overflow = 'hidden';
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            input.style.outline = 'none';
+            input.style.font = window.getComputedStyle(hey).font;
+            
+            inputContainer.appendChild(input);
+            hey.appendChild(inputContainer);
+            
+            showPrompt('Press Enter to send', true);
+            
+            input.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const userInput = input.value;
+                    handleUserInput(userInput);
+                }
+            });
+            
+            hey.addEventListener('click', function(e) {
+                if (inChatMode) {
+                    input.focus();
+                }
+            });
+            
+            const aiResponse = document.querySelector('.ai-response');
+            if (aiResponse) {
+                aiResponse.style.display = 'none';
+            }
+
+            content.forEach(el => el.style.display = 'none');
+            addBackButton();
+            
+            input.focus();
+        }
+        
+        async function handleUserInput(userInput) {
+            hey.textContent = userInput;
+            hey.style.cursor = 'pointer';
+            
+            hidePrompt();
+            showPrompt('Click here for a new question', true);
+            
+            const aiResponse = await generateAIResponse(userInput);
+            
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            const previousResponse = contentContainer.querySelector('.ai-response');
+            if (previousResponse) previousResponse.remove();
+            
+            const responseElement = document.createElement('div');
+            responseElement.className = 'ai-response';
+            responseElement.style.maxWidth = '60%';
+            responseElement.style.marginLeft = '20%';
+            responseElement.style.cursor = 'pointer';
+            
+            contentContainer.insertBefore(responseElement, copyright);
+            
+            const words = aiResponse.split(' ');
+            let i = 0;
+            const intervalId = setInterval(() => {
+                if (i < words.length) {
+                    responseElement.textContent += words[i] + ' ';
+                    i++;
+                } else {
+                    clearInterval(intervalId);
+                    addBackButton();
+                }
+            }, 120);
+        }
+        
+        async function generateAIResponse(userInput) {
+            messages.push({ "role": "user", "content": userInput });
+
+            try {
+                const response = await fetch('/.netlify/functions/generate-response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userInput, messages })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.response;
+                messages.push({ "role": "assistant", "content": aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                return "I'm sorry, I couldn't generate a response at this time.";
+            }
+        }
+
+        function clearPreviousContent(keepPrompt = false) {
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            const previousResponse = contentContainer.querySelector('.ai-response');
+            if (previousResponse) previousResponse.remove();
+            const existingBackButton = contentContainer.querySelector('.back-button');
+            if (existingBackButton) existingBackButton.remove();
+            if (!keepPrompt) {
+                hidePrompt();
+            }
+        }
+
+        function addBackButton() {
+            let backButton = document.querySelector('.back-button');
+            if (!backButton) {
+                backButton = document.createElement('a');
+                backButton.textContent = 'back';
+                backButton.className = 'back-button';
+                backButton.style.display = 'block';
+                backButton.style.textAlign = 'right';
+                backButton.style.marginTop = '20px';
+                backButton.style.width = '60%';
+                backButton.style.marginLeft = '20%';
+                backButton.style.cursor = 'pointer';
+                
+                backButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    resetPage();
+                });
+                
+                const contentContainer = document.querySelector('.content-1').parentNode;
+                contentContainer.insertBefore(backButton, copyright);
+            }
+        }
+
+        function resetPage() {
+            inChatMode = false;
+            toggleChatMode(false);
+            
+            hidePrompt();
+            clearPreviousContent();
+            
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+            hey.style.cursor = 'pointer';
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
+
+            content.forEach(el => {
+                el.style.display = '';
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.animation = 'fadeIn 1s ease-in';
+                }, 100);
+            });
+            copyright.style.opacity = '1';
+
+            messages = [];
+            
+            playPopOutAnimation();
+            resetPromptTimer();
+        }
+
+        function showPrompt(text, fadeIn = false) {
+            hidePrompt();
+            
+            let promptContainer = document.createElement('div');
+            promptContainer.className = 'prompt';
+            hey.parentNode.insertBefore(promptContainer, hey);
+            
+            promptContainer.textContent = text;
+            
+            if (fadeIn) {
+                promptContainer.style.opacity = '0';
+                promptContainer.style.transition = 'opacity 0.5s ease-in';
+                setTimeout(() => {
+                    promptContainer.style.opacity = '1';
+                }, 10);
+            } else {
+                promptContainer.style.opacity = '1';
+            }
+        }
+
+        function hidePrompt() {
+            const promptContainer = document.querySelector('.prompt');
+            if (promptContainer) {
+                promptContainer.style.transition = 'opacity 0.5s ease-out';
+                promptContainer.style.opacity = '0';
+                setTimeout(() => {
+                    promptContainer.remove();
+                }, 500);
+            }
+        }
+
+        hey.addEventListener('click', function() {
+            if (!inChatMode) {
+                handleDesktopClick();
+            } else {
+                const input = hey.querySelector('.chat-input');
+                if (input) {
+                    input.focus();
+                } else {
+                    handleDesktopClick();
+                }
+            }
+        });
+
+        hey.addEventListener('mouseenter', function() {
+            if (!inChatMode) {
+                playPopOutAnimation();
+            }
+        });
+    }
+});
     </script>
 </body>
 </html>

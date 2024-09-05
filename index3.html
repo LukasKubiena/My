@@ -48,6 +48,58 @@
             gap: 1rem;
         }
 
+        header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%; /* Start with full width */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            background: transparent;
+            transition: background 0.3s, backdrop-filter 0.3s;
+            z-index: 10;
+            top: 5vh;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -5vh; /* Extend the glass effect upwards */
+            left: 0; /* Extend the glass effect to the left edge of the page */
+            right: 0; /* Extend the glass effect to the right edge of the page */
+            bottom: -5vh; /* Extend the glass effect downwards */
+            z-index: -1;
+            transition: background 0.3s, backdrop-filter 0.3s;
+        }
+
+        header.glass-effect::before {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(1.2px);
+        }
+
+        .logo {
+            display: inline-block;
+            width: 36px; /* Adjust size as needed */
+            height: auto;
+            transition: color 0.3s ease;
+        }
+
+        .logo img {
+            filter: brightness(0) invert(1); /* Default to black */
+            transition: filter 0.3s ease;
+        }
+
+        .contact {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
         .hey {
             color: #000000;
             font-family: 'NeueHaasDisplay-Medium', sans-serif;
@@ -155,122 +207,6 @@
             z-index: 1;
         }
 
-        @media screen and (min-width: 1025px) {
-    body {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-        grid-template-rows: auto auto auto auto auto auto;
-        column-gap: 1.5rem;
-        padding-top: 24vh;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .hey-container {
-        grid-column: 4 / 6;
-        grid-row: 2 / 3;
-        align-self: start;
-        margin-top: -0.2em;
-    }
-
-    .hey {
-        font-size: 40px;
-        margin-left: 2rem;
-    }
-
-    .content-1 {
-        grid-column: 7 / 9;
-        grid-row: 2 / 4;
-    }
-
-    .content-2 {
-        grid-column: 7 / 9;
-        grid-row: 4 / 6;
-    }
-
-    .content-group {
-        grid-column: 10 / 12;
-        grid-row: 2 / 6;
-    }
-
-}
-
-@media screen and (min-width: 1025px) {
-    .hey-container {
-        position: relative;
-    }
-
-    .prompt {
-        position: absolute;
-        top: -30px;
-        left: 2rem; 
-        color: #888;
-        font-size: 16px;
-        white-space: nowrap;
-    }
-
-    .chat-input {
-        font-family: 'NeueHaasDisplay-Medium', sans-serif;
-        font-size: 40px;
-        font-weight: 600;
-        width: 100%;
-        border: none;
-        background: transparent;
-        outline: none;
-        resize: none;
-        overflow: hidden;
-    }
-
-    .chat-input::placeholder {
-        color: #CCCCCC;
-        opacity: 1;
-    }
-
-    .ai-response {
-        grid-column: 7 / 12;
-        grid-row: 2 / 6;
-        align-self: start;
-        text-align: justify;
-        font-family: 'NeueHaasDisplay-Light', sans-serif;
-        font-size: 16px;
-    }
-
-    .back-button {
-        grid-column: 10 / 12;
-        grid-row: 6;
-        align-self: start;
-        justify-self: start;
-        text-decoration: underline;
-        cursor: pointer;
-        font-family: 'NeueHaasDisplay-Light', sans-serif;
-        font-size: 16px;
-    }
-
-    .typing-cursor {
-        display: inline-block;
-        width: 1px;
-        height: 0.8em;
-        background-color: #000;
-        animation: blink 0.7s infinite;
-        margin-left: 2px;
-        vertical-align: baseline;
-    }
-
-    @keyframes popOut {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-
-    @keyframes bellJingle {
-        0% { transform: rotate(0deg); }
-        25% { transform: rotate(10deg); }
-        50% { transform: rotate(-8deg); }
-        75% { transform: rotate(6deg); }
-        100% { transform: rotate(0deg); }
-    }
-}
-
     /* Hover effects for larger screens only */
     @media screen and (min-width: 1025px) {
         .at-link::before {
@@ -293,6 +229,26 @@
         }
     }
 
+        .side-group {
+            grid-column: 3 / 4;
+            grid-row: 2 / 4;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: var(--row-gap);
+        }
+        
+
+        ._24 {
+            color: #000000;
+            text-align: left;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
         .personal-website {
             color: #000000;
             text-align: left;
@@ -302,6 +258,101 @@
             transform-origin: top left;
             transform: rotate(-90deg) translateX(-100%);
             white-space: nowrap;
+        }
+
+
+        /* Projects overview section */
+        .project-row {
+            grid-column: 3 / span 11;
+            grid-row: 6;
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            align-items: start;
+        }
+
+        .project-info {
+            grid-column: 1 / span 1;
+        }
+
+        .project-paragraph {
+            grid-column: 2 / span 10;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            text-align: justify;
+            column-count: 4;
+            column-gap: 1.5rem;
+        }
+
+        .project-paragraph-2 {
+            grid-column: 3 / span 11;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            text-align: justify;
+            column-count: 4;
+            column-gap: 1.5rem;
+        }
+
+        .project-row-right {
+            grid-column: 3 / span 11;
+            grid-row: 9; /* Correct grid placement */
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            align-items: start;
+        }
+
+        .project-info-right {
+            grid-column: 1 / span 2;
+        }
+
+        .project-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .project-date {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .project-image-container {
+            position: relative; /* Change from absolute to relative */
+            grid-column: 3 / 14;
+            grid-row: 8; /* Explicitly place it in row 8 */
+            height: 700px; /* Fixed height */
+            box-shadow: var(--box-box-shadow);
+            overflow: hidden;
+            margin-bottom: 12rem; /* Increase the margin here */
+        }
+
+        .project-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-image-container-2 {
+            position: relative; /* Change from absolute to relative */
+            grid-column: 3 / 14;
+            grid-row: 11; /* Explicitly place it in row 11 */
+            height: 1200px; /* Fixed height */
+            margin-bottom: 2rem;
+            box-shadow: var(--box-box-shadow);
+            overflow: hidden;
+        }
+
+        .project-image-2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .copyright {
@@ -415,6 +466,13 @@
     </style>
 </head>
 <body class="initial-load">
+    <header id="header">
+        <a href="index2.html"><img src="logo1.svg" alt="Logo" class="logo" id="logo"></a>
+        <div class="right-links">
+            <a href="mailto:lukasmariakubiena@gmail.com" class="contact" id="contact">Contact</a>
+            <a href="#projects" class="contact">Projects</a>
+        </div>
+    </header>
     <div class="hey-container">
         <div class="hey">
             <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
@@ -434,6 +492,40 @@
             <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
         </div>
     </div>
+    <div class="side-group">
+        <div class="_24">24</div>
+        <div class="personal-website">Personal Website</div>
+    </div>
+    <div class="project-row">
+        <div class="project-info">
+            <p class="project-title">Dembrane</p>
+            <p class="project-date">2024</p>
+        </div>
+        <div class="project-paragraph">
+            Dembrane is a platform designed to enhance democratic processes by making them accessible to all types of organizations at various levels. Our goal is to elevate participation by creating a dynamic data environment that reflects community concerns and solutions. Whether you're a housing corporation, municipality, or any organization seeking meaningful dialogue at scale, our tools ensure that every voice is heard and no good idea is lost. Last year, Dembrane received a grant from OpenAI as part of their initiative to explore democratic inputs to AI. Additionally, Dembrane recently was honoured with the Gerard & Anton Award.
+        </div>
+    </div>
+
+    <div class="project-image-container">
+        <img src="image.webp" alt="Dembrane project image" class="project-image">
+    </div>
+
+    <!-- New Aarhus University project row -->
+    <div class="project-row-right">
+        <div class="project-info-right">
+            <p class="project-title">Aarhus University</p>
+            <p class="project-date">2024</p>
+        </div>
+        <div class="project-paragraph-2">
+            Aarhus University is a leading research institution dedicated to advancing knowledge and education in a variety of fields. Our focus is on creating an environment that fosters intellectual growth and innovation. Whether you're a student, researcher, or faculty member, our university provides the resources and support needed to achieve your goals. Last year, Aarhus University was recognized for its contributions to cognitive science and received several prestigious awards.
+        </div>
+    </div>
+
+    <div class="project-image-container-2">
+        <img src="image2.jpeg" alt="Aarhus University" class="project-image-2">
+    </div>
+
+
     <div class="copyright">
         © Lukas Maria Kubiena 2024
     </div>
@@ -983,213 +1075,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-// Replace the existing desktop JavaScript with this
-document.addEventListener('DOMContentLoaded', function() {
-    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
-    
-    if (isDesktop) {
-        const hey = document.querySelector('.hey');
-        let heyText = hey.querySelector('.hey-text');
-        let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail');
-        let messages = [];
-        let inChatMode = false;
 
-        function typeHey() {
-            heyText.textContent = '';
-            comma.style.opacity = '0';
-            let text = 'Hey';
-            let index = 0;
-            const cursor = document.createElement('span');
-            cursor.className = 'typing-cursor';
-            hey.appendChild(cursor);
-
-            function typeChar() {
-                if (index < text.length) {
-                    heyText.textContent += text[index];
-                    index++;
-                    setTimeout(typeChar, 150);
-                } else {
-                    setTimeout(() => {
-                        hey.classList.add('animate');
-                        setTimeout(() => {
-                            comma.style.opacity = '1';
-                            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-                            setTimeout(() => {
-                                cursor.remove();
-                            }, 500);
-                        }, 300);
-                    }, 100);
-                }
-            }
-            typeChar();
-        }
-
-        // Initial load animation
-        typeHey();
-
-        hey.addEventListener('click', function() {
-            if (!inChatMode) {
-                handleDesktopClick();
-            } else {
-                const input = hey.querySelector('.chat-input');
-                if (input) {
-                    input.focus();
-                }
-            }
-        });
-        
-        function handleDesktopClick() {
-            inChatMode = true;
-            clearPreviousContent(true);
-            
-            hey.innerHTML = '';
-            
-            const input = document.createElement('textarea');
-            input.className = 'chat-input';
-            input.placeholder = 'Ask...';
-            hey.appendChild(input);
-            
-            input.focus();
-            
-            showPrompt('Press Enter to send');
-            
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const userInput = input.value;
-                    handleUserInput(userInput);
-                }
-            });
-            
-            content.forEach(el => el.style.display = 'none');
-            addBackButton();
-        }
-        
-        async function handleUserInput(userInput) {
-            hey.textContent = userInput;
-            
-            showPrompt('Click here for a new question');
-            
-            const aiResponse = await generateAIResponse(userInput);
-            
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('.ai-response');
-            if (previousResponse) previousResponse.remove();
-            
-            const responseElement = document.createElement('div');
-            responseElement.className = 'ai-response';
-            
-            contentContainer.appendChild(responseElement);
-            
-            const words = aiResponse.split(' ');
-            let i = 0;
-            const intervalId = setInterval(() => {
-                if (i < words.length) {
-                    responseElement.textContent += words[i] + ' ';
-                    i++;
-                } else {
-                    clearInterval(intervalId);
-                }
-            }, 120);
-
-            hey.addEventListener('click', handleDesktopClick);
-        }
-        
-        async function generateAIResponse(userInput) {
-            messages.push({ "role": "user", "content": userInput });
-
-            try {
-                const response = await fetch('/.netlify/functions/generate-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput, messages })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const aiResponse = data.response;
-                messages.push({ "role": "assistant", "content": aiResponse });
-                return aiResponse;
-            } catch (error) {
-                console.error('Error:', error);
-                return "I'm sorry, I couldn't generate a response at this time.";
-            }
-        }
-
-        function clearPreviousContent(keepPrompt = false) {
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('.ai-response');
-            if (previousResponse) previousResponse.remove();
-            const existingBackButton = contentContainer.querySelector('.back-button');
-            if (existingBackButton) existingBackButton.remove();
-            if (!keepPrompt) {
-                hidePrompt();
-            }
-        }
-
-        function addBackButton() {
-            let backButton = document.querySelector('.back-button');
-            if (!backButton) {
-                backButton = document.createElement('a');
-                backButton.textContent = 'back';
-                backButton.className = 'back-button';
-                
-                backButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    resetPage();
-                });
-                
-                const contentContainer = document.querySelector('.content-1').parentNode;
-                contentContainer.appendChild(backButton);
-            }
-        }
-
-        function resetPage() {
-            inChatMode = false;
-            
-            hidePrompt();
-            clearPreviousContent();
-            
-            hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-
-            content.forEach(el => {
-                el.style.display = '';
-                el.style.opacity = '1';
-            });
-
-            messages = [];
-            typeHey();
-        }
-
-        function showPrompt(text) {
-            let promptContainer = document.querySelector('.prompt');
-            
-            if (!promptContainer) {
-                promptContainer = document.createElement('div');
-                promptContainer.className = 'prompt';
-                hey.parentNode.insertBefore(promptContainer, hey);
-            }
-            
-            promptContainer.textContent = text;
-            promptContainer.style.opacity = '1';
-        }
-
-        function hidePrompt() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                promptContainer.remove();
-            }
-        }
-    }
-});
     </script>
 </body>
 </html>
