@@ -26,10 +26,14 @@ export const handler = async (event) => {
       body: JSON.stringify({ response: response.choices[0].message.content }),
     };
   } catch (error) {
-    console.error('Error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "An error occurred while processing your request." }),
-    };
-  }
+  console.error('Error:', error);
+  return {
+    statusCode: 500,
+    body: JSON.stringify({ 
+      error: "An error occurred while processing your request.",
+      details: error.message,
+      stack: error.stack
+    }),
+  };
+}
 };
