@@ -67,7 +67,7 @@ export const handler = async (event) => {
         { role: "system", content: `Resume context: ${resumeContext}` },
         { role: "user", content: userInput }
       ],
-      max_tokens: 350,
+      max_tokens: 200,
       temperature: 0.7,
     });
     console.log('Received response from OpenAI');
