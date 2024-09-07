@@ -200,6 +200,7 @@
 @media screen and (min-width: 1025px) {
     body {
         padding-top: 20vh;
+        overflow: hidden; /* Prevent scrolling on the body */
     }
 
     .hey-container {
@@ -225,7 +226,26 @@
     align-self: start; /* Align to the top of its grid cell */
     margin-top: 9rem; /* Add some top margin to align with the end of the paragraph */
 }
+        /* New styles for chat mode */
+        body.chat-mode {
+            grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+            padding-top: 13vh;
+            padding-left: 1%;
+        }
 
+        .chat-mode .hey-container {
+            grid-column: 4 / 7;
+        }
+
+        .chat-mode .hey {
+            max-width: 100%;
+        }
+
+        .chat-mode .input-container,
+        .chat-mode .chat-input {
+            width: 100%;
+            max-width: none;
+        }
 
 
     .chat-input {
@@ -1108,6 +1128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleChatMode(true)
             clearPreviousContent(true);
             hidePrompt();
+            document.body.classList.add('chat-mode');  // Add this line
             
             hey.innerHTML = '';
             hey.style.cursor = 'text';
@@ -1262,6 +1283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function resetPage() {
             inChatMode = false;
             toggleChatMode(false);
+            document.body.classList.remove('chat-mode');  // Add this line
             
             hidePrompt();
             clearPreviousContent();
@@ -1336,6 +1358,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 playPopOutAnimation();
             }
         });
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
+    
+    if (isDesktop) {
+        const hey = document.querySelector('.hey');
+        
+        // Remove any existing click event listeners
+        hey.removeEventListener('click', handleDesktopClick);
+        
+        // Add a new click event listener that always triggers handleDesktopClick
+        hey.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent event bubbling
+            if (!inChatMode) {
+                handleDesktopClick();
+            } else {
+                const input = hey.querySelector('.chat-input');
+                if (input) {
+                    input.focus();
+                } else {
+                    handleDesktopClick();
+                }
+            }
+        });
+
+        // Ensure the hey element is always clickable
+        hey.style.cursor = 'pointer';
+        hey.style.position = 'relative';
+        hey.style.zIndex = '10';
     }
 });
     </script>
