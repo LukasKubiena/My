@@ -159,7 +159,7 @@
     body {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-        grid-template-rows: auto auto auto auto auto auto;
+            grid-template-rows: auto auto auto auto auto auto;
         column-gap: 1.5rem;
         padding-top: 24vh;
         max-width: 1400px;
@@ -217,20 +217,22 @@
     }
 
     .copyright {
-            grid-column: 10 / 12; /* Adjust this column range based on your layout */
-            grid-row: 4; /* Position in the specific row as needed */
-            text-align: left;
-            margin-top: 0; /* Remove unnecessary top margin */
-            margin-bottom: 0; /* Adjust bottom margin if necessary */
-            align-self: end; /* Align at the bottom of the grid row */
-        }
+    grid-column: 10 / 12;
+    grid-row: 4; /* Place it in the last row */
+    text-align: right;
+    font-size: 0.9rem;
+    color: #888;
+    align-self: start; /* Align to the top of its grid cell */
+    margin-top: 9rem; /* Add some top margin to align with the end of the paragraph */
+}
+
+
 
     .chat-input {
         font-family: 'NeueHaasDisplay-Medium', sans-serif;
         font-size: 40px;
         font-weight: 600;
         width: 100%;
-        max-width: 800px;
         border: none;
         background: transparent;
         outline: none;
@@ -451,6 +453,7 @@
     </style>
 </head>
 <body class="initial-load">
+    <div class="copyright">© 2024</div>
     <div class="hey-container">
         <div class="hey">
             <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
@@ -470,9 +473,6 @@
             <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
         </div>
     </div>
-    <div class="copyright">
-        © Lukas Maria Kubiena 2024
-    </div>
     <script>
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -483,36 +483,6 @@
             });
         });
     
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 100) {
-                header.classList.add('glass-effect');
-            } else {
-                header.classList.remove('glass-effect');
-            }
-        });
-        
-    
-        function adjustHeaderWidth() {
-            const header = document.getElementById('header');
-            const projectImageContainer = document.querySelector('.project-image-container');
-            const projectImage = projectImageContainer.querySelector('.project-image');
-    
-            function setHeaderWidth() {
-                const imageWidth = projectImage.clientWidth;
-                const headerWidth = imageWidth * 1; // 90% of image width
-                header.style.width = `${headerWidth}px`;
-            }
-    
-            if (projectImage.complete) {
-                setHeaderWidth();
-            } else {
-                projectImage.onload = setHeaderWidth;
-            }
-        }
-    
-        window.addEventListener('resize', adjustHeaderWidth);
-        window.addEventListener('load', adjustHeaderWidth);
     
         document.addEventListener('DOMContentLoaded', function() {
             const logo = document.getElementById('logo');

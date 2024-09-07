@@ -12,28 +12,30 @@ export const handler = async (event) => {
   try {
     const { userInput, messages } = JSON.parse(event.body);
 
+    console.log('Sending request to OpenAI...');
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini", // Changed from "gpt-4o-mini"
       messages: [
         { role: "system", content: "You are a helpful assistant." },
         ...messages,
         { role: "user", content: userInput }
       ],
     });
+    console.log('Received response from OpenAI');
 
     return {
       statusCode: 200,
       body: JSON.stringify({ response: response.choices[0].message.content }),
     };
   } catch (error) {
-  console.error('Error:', error);
-  return {
-    statusCode: 500,
-    body: JSON.stringify({ 
-      error: "An error occurred while processing your request.",
-      details: error.message,
-      stack: error.stack
-    }),
-  };
-}
+    console.error('Error details:', error.response?.data || error.message);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ 
+        error: "An error occurred while processing your request.",
+        details: error.response?.data || error.message,
+        stack: error.stack
+      }),
+    };
+  }
 };
