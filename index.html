@@ -400,6 +400,11 @@
         position: relative;
     }
 
+    .chat-input::placeholder {
+    font: inherit;
+    color: #CCCCCC;
+}
+
     .typing-cursor {
         display: inline-block;
         width: 1px;
@@ -816,12 +821,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const input = document.createElement('textarea');
     input.className = 'chat-input';
     input.placeholder = 'Ask...';
-    input.style.font = window.getComputedStyle(heyText).font;
+    input.style.font = window.getComputedStyle(hey).font; // Match the "Hey" font
     input.style.border = 'none';
     input.style.background = 'transparent';
     input.style.outline = 'none';
     input.style.width = '100%';
     input.style.resize = 'none';
+    input.style.height = 'auto'; // Allow height to adjust
     input.style.overflow = 'hidden';
     input.style.caretColor = 'black';
     heyText.appendChild(input);
@@ -908,6 +914,12 @@ function clearPreviousContent(keepPrompt = false) {
     const contentContainer = document.querySelector('.content-1').parentNode;
     const previousResponse = contentContainer.querySelector('.ai-response');
     if (previousResponse) previousResponse.remove();
+    const userInputElement = document.createElement('div');
+    userInputElement.textContent = userInput;
+    userInputElement.style.font = window.getComputedStyle(hey).font;
+    userInputElement.style.fontSize = window.getComputedStyle(hey).fontSize;
+    userInputElement.style.fontWeight = window.getComputedStyle(hey).fontWeight;
+    hey.appendChild(userInputElement);
     
     const responseElement = document.createElement('div');
     responseElement.className = 'ai-response';
