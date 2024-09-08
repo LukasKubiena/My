@@ -494,451 +494,627 @@
         </div>
     </div>
     <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    
-    
         document.addEventListener('DOMContentLoaded', function() {
-            const logo = document.getElementById('logo');
-            const contact = document.getElementById('contact');
-            const projects = document.querySelector('a[href="#projects"]');
-            const projectImages = document.querySelectorAll('.project-image, .project-image-2');
+    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
     
-            function checkIntersection() {
-                let logoRect = logo.getBoundingClientRect();
-                let contactRect = contact.getBoundingClientRect();
-                let projectsRect = projects.getBoundingClientRect();
-                let logoIntersecting = false;
-                let contactIntersecting = false;
-                let projectsIntersecting = false;
-    
-                projectImages.forEach(image => {
-                    let imageRect = image.getBoundingClientRect();
-    
-                    if (logoRect.bottom > imageRect.top && logoRect.top < imageRect.bottom) {
-                        logoIntersecting = true;
-                    }
-    
-                    if (contactRect.bottom > imageRect.top && contactRect.top < imageRect.bottom) {
-                        contactIntersecting = true;
-                    }
-    
-                    if (projectsRect.bottom > imageRect.top && projectsRect.top < imageRect.bottom) {
-                        projectsIntersecting = true;
-                    }
-                });
-    
-                if (logoIntersecting) {
-                    logo.style.filter = 'brightness(0) invert(1)';
-                } else {
-                    logo.style.filter = 'brightness(0) invert(0)';
-                }
-    
-                if (contactIntersecting || projectsIntersecting) {
-                    contact.style.color = '#FFFFFF'; // Turn white
-                    projects.style.color = '#FFFFFF'; // Turn white
-                } else {
-                    contact.style.color = '#000000'; // Turn black
-                    projects.style.color = '#000000'; // Turn black
-                }
-            }
-    
-            window.addEventListener('scroll', checkIntersection);
-            window.addEventListener('resize', checkIntersection);
-            checkIntersection(); // Initial check
-        });
-    
-        document.addEventListener('DOMContentLoaded', function() {
-            const hey = document.querySelector('.hey');
-    
-            function playAnimation() {
-                hey.classList.remove('animate');
-                void hey.offsetWidth; // Trigger reflow
-                hey.classList.add('animate');
-            }
-    
-            // Play animation on page load
-            playAnimation();
-    
-            // Play animation on hover
-            hey.addEventListener('mouseenter', playAnimation);
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-    function alignProjectParagraph() {
-        const hey = document.querySelector('.hey');
-        const projectParagraph = document.querySelector('.project-paragraph');
-        const heyRect = hey.getBoundingClientRect();
-        const paragraphRect = projectParagraph.getBoundingClientRect();
-        
-        const difference = heyRect.left - paragraphRect.left;
-        projectParagraph.style.paddingLeft = `${difference}px`;
+    if (isDesktop) {
+        initializeDesktop();
+    } else {
+        initializeMobile();
     }
-
-    // Run on load and resize
-    window.addEventListener('load', alignProjectParagraph);
-    window.addEventListener('resize', alignProjectParagraph);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const hey = document.querySelector('.hey');
+function initializeMobile() {
+    let hey = document.querySelector('.hey');
+    let heyText = hey.querySelector('.hey-text');
+    let comma = hey.querySelector('.comma');
+    const content = document.querySelectorAll('.content, .send-mail');
+    let longPressTimer;
+    let isLongPress = false;
+    let messages = [];
+    let promptShown = false;
+    let inChatMode = false;
+    let promptTimer;
+    let blinkInterval;
+
+    function showPrompt(text, fadeIn = false, isHomePrompt = false) {
+        clearTimeout(promptTimer);
+        hidePrompt();
+        
+        let promptContainer = document.createElement('div');
+        promptContainer.className = 'prompt';
+        hey.parentNode.insertBefore(promptContainer, hey);
+        
+        promptContainer.textContent = text;
+        
+        if (fadeIn) {
+            promptContainer.style.opacity = '0';
+            promptContainer.style.transition = 'opacity 1s ease-in';
+            setTimeout(() => {
+                promptContainer.style.opacity = '1';
+            }, 10);
+        } else {
+            promptContainer.style.opacity = '1';
+        }
+        promptContainer.style.cursor = 'pointer';
+        
+        if (isHomePrompt) {
+            promptContainer.addEventListener('click', handleLongPress);
+        } else {
+            promptContainer.addEventListener('click', () => {
+                if (inChatMode) {
+                    handleLongPress();
+                }
+            });
+        }
+
+        if (isHomePrompt && !inChatMode) {
+            promptTimer = setTimeout(() => {
+                showPrompt('Tap this to ask about me', true, true);
+            }, 5000);
+        }
+    }
+
+    function hidePrompt() {
+        const promptContainer = document.querySelector('.prompt');
+        if (promptContainer) {
+            promptContainer.style.transition = 'opacity 0.3s ease-out';
+            promptContainer.style.opacity = '0';
+
+            setTimeout(() => {
+                promptContainer.remove();
+                promptShown = false;
+            }, 500);
+        }
+    }
+
+    function resetPromptTimer() {
+        clearTimeout(promptTimer);
+        promptTimer = setTimeout(() => {
+            if (!inChatMode) showPrompt('Press this to ask about me');
+        }, 10000);
+    }
+
+    resetPromptTimer();
+
+    let canVibrate = 'vibrate' in navigator;
+
+    function tryVibrate(duration) {
+        if (canVibrate) {
+            return new Promise((resolve, reject) => {
+                try {
+                    navigator.vibrate(duration);
+                    console.log("Vibration command sent successfully");
+                    resolve(true);
+                } catch (error) {
+                    console.error("Error when trying to vibrate:", error);
+                    reject(error);
+                }
+            });
+        } else {
+            console.log("Vibration not supported on this device");
+            return Promise.resolve(false);
+        }
+    }
+
+    hey.addEventListener('touchstart', function(e) {
+        isLongPress = false;
+        longPressTimer = setTimeout(() => {
+            isLongPress = true;
+            tryVibrate(50)
+                .then(success => {
+                    if (success) {
+                        console.log('Long press vibration successful');
+                    } else {
+                        console.log('Long press vibration not supported or failed');
+                    }
+                    handleLongPress();
+                })
+                .catch(error => console.error('Vibration error:', error));
+        }, 800);
+    });
+
+    hey.addEventListener('touchend', function(e) {
+        clearTimeout(longPressTimer);
+        if (!isLongPress && !inChatMode) {
+            tryVibrate(25)
+                .then(success => {
+                    if (success) {
+                        console.log('Short vibration successful');
+                    } else {
+                        console.log('Short vibration not supported or failed');
+                    }
+                    playAnimation();
+                    playCommaAnimation();
+                })
+                .catch(error => console.error('Vibration error:', error));
+        }
+    });
+
+    function handleLongPress() {
+        inChatMode = true;
+
+        clearPreviousContent(true);
+        console.log('Long press detected');
+        
+        heyText.textContent = '';
+        comma.style.display = 'none';
+        const input = document.createElement('textarea');
+        input.className = 'chat-input';
+        input.placeholder = 'Ask...';
+        input.style.font = window.getComputedStyle(heyText).font;
+        input.style.border = 'none';
+        input.style.background = 'transparent';
+        input.style.outline = 'none';
+        input.style.width = '100%';
+        input.style.resize = 'none';
+        input.style.overflow = 'hidden';
+        input.style.caretColor = 'black';
+        heyText.appendChild(input);
+
+        input.readOnly = false;
+        input.focus();
+        input.click();
+
+        showPrompt('Tap enter to send');
+
+        input.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        content.forEach(el => el.style.display = 'none');
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const userInput = input.value;
+                handleUserInput(userInput);
+            }
+        });
+
+        addBackButton();
+
+        hey.addEventListener('touchstart', function(e) {
+            if (inChatMode) {
+                e.preventDefault();
+                input.focus();
+            }
+        });
+    }
+
+    function clearPreviousContent(keepPrompt = false) {
+        const contentContainer = document.querySelector('.content-1').parentNode;
+        const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
+        if (previousResponse) previousResponse.remove();
+        const existingBackButton = contentContainer.querySelector('a[style*="text-decoration: underline"]');
+        if (existingBackButton) existingBackButton.remove();
+        if (!keepPrompt) {
+            hidePrompt();
+        }
+    }
+
+    function addBackButton() {
+        let backButton = document.querySelector('a[style*="text-decoration: underline"]');
+        if (!backButton) {
+            backButton = document.createElement('a');
+            backButton.textContent = 'back';
+            backButton.style.textDecoration = 'underline';
+            backButton.style.display = 'block';
+            backButton.style.marginTop = '20px';
+            backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+            backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+            
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                resetPage();
+            });
+            
+            const contentContainer = document.querySelector('.content-1').parentNode;
+            contentContainer.appendChild(backButton);
+        }
+    }
+
+    async function handleUserInput(userInput) {
+        hey.textContent = userInput;
+        
+        hidePrompt();
+        showPrompt('Tap here for a new question', true);
+        
+        const aiResponse = await generateAIResponse(userInput);
+        
+        const contentContainer = document.querySelector('.content-1').parentNode;
+        const previousResponse = contentContainer.querySelector('.ai-response');
+        if (previousResponse) previousResponse.remove();
+        
+        const responseElement = document.createElement('div');
+        responseElement.className = 'ai-response';
+        responseElement.style.maxWidth = '60%';
+        responseElement.style.marginLeft = '20%';
+        responseElement.style.cursor = 'pointer';
+        responseElement.addEventListener('click', handleLongPress);
+        
+        contentContainer.insertBefore(responseElement, contentContainer.querySelector('.copyright'));
+        
+        const words = aiResponse.split(' ');
+        let i = 0;
+        const intervalId = setInterval(() => {
+            if (i < words.length) {
+                responseElement.textContent += words[i] + ' ';
+                i++;
+            } else {
+                clearInterval(intervalId);
+                addBackButton();
+            }
+        }, 120);
+    }
+
+    function resetPage() {
+        inChatMode = false;
+        
+        hidePrompt();
+        const systemMessage = document.querySelector('.system-message');
+        if (systemMessage) systemMessage.remove();
+
+        clearPreviousContent();
+        const backButton = document.querySelector('a[style*="text-decoration: underline"]');
+        if (backButton) backButton.remove();
+
+        hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+        heyText = hey.querySelector('.hey-text');
+        comma = hey.querySelector('.comma');
+
+        content.forEach(el => {
+            el.style.display = 'block';
+            el.style.opacity = '1';
+        });
+
+        setTimeout(() => {
+            playAnimation();
+            playCommaAnimation();
+        }, 10);
+
+        resetPromptTimer();
+
+        messages = [];
+    }
 
     function playAnimation() {
         hey.classList.remove('animate');
-        void hey.offsetWidth; // Trigger reflow
+        void hey.offsetWidth;
         hey.classList.add('animate');
     }
 
-    // Play animation on page load
-    playAnimation();
+    function playCommaAnimation() {
+        comma.style.animation = 'none';
+        void comma.offsetWidth;
+        comma.style.animation = 'bellJingle 0.8s ease-in-out';
+    }
 
-    // Play animation on tap (for mobile)
     hey.addEventListener('touchstart', function(e) {
-        e.preventDefault(); // Prevent default touch behavior
-        playAnimation();
+        isLongPress = false;
+        longPressTimer = setTimeout(() => {
+            isLongPress = true;
+            handleLongPress();
+        }, 500);
     });
 
-    // For desktop, keep the hover functionality
-    if (window.matchMedia("(min-width: 1025px)").matches) {
-        hey.addEventListener('mouseenter', playAnimation);
+    hey.addEventListener('touchend', function(e) {
+        clearTimeout(longPressTimer);
+        if (!isLongPress) {
+            e.preventDefault();
+        }
+    });
+}
+
+function initializeDesktop() {
+    const hey = document.querySelector('.hey');
+    let heyText = hey.querySelector('.hey-text');
+    let comma = hey.querySelector('.comma');
+    const content = document.querySelectorAll('.content, .send-mail');
+    const copyright = document.querySelector('.copyright');
+    let messages = [];
+    let inChatMode = false;
+    let cursor;
+    let promptTimer;
+
+    function toggleChatMode(enable) {
+        if (enable) {
+            copyright.classList.add('hidden');
+        } else {
+            copyright.classList.remove('hidden');
+        }
     }
-});
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth <= 1024) {
-        const body = document.body;
-        const hey = document.querySelector('.hey');
-        const heyText = hey.querySelector('.hey-text');
-        const comma = hey.querySelector('.comma');
-        const cursor = hey.querySelector('.typing-cursor');
-        const content = document.querySelectorAll('.content, .send-mail');
-
-        // Disable the bounce animation initially
-        hey.style.animation = 'none';
-
-        // Hide content and hey text initially, but keep cursor visible
-        content.forEach(el => el.style.opacity = '0');
-        heyText.style.opacity = '0';
+    function typeHey(isInitialLoad = true) {
+        hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
+        heyText = hey.querySelector('.hey-text');
+        comma = hey.querySelector('.comma');
+        heyText.textContent = '';
         comma.style.opacity = '0';
-        
-        function typeText(text, element, callback) {
-            let i = 0;
-            element.textContent = ''; // Clear existing text
-            element.style.opacity = '1'; // Make text visible before typing
-            function type() {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(type, 150);
+        let text = 'Hey,';
+        let index = 0;
+        cursor = document.createElement('span');
+        cursor.className = 'typing-cursor';
+        hey.appendChild(cursor);
+
+        if (isInitialLoad) {
+            content.forEach(el => el.style.opacity = '0');
+            copyright.style.opacity = '0';
+        }
+
+        setTimeout(() => {
+            function typeChar() {
+                if (index < text.length) {
+                    if (index === text.length - 1) {
+                        comma.style.opacity = '1';
+                    } else {
+                        heyText.textContent += text[index];
+                    }
+                    index++;
+                    setTimeout(typeChar, 150);
                 } else {
-                    callback();
+                    setTimeout(() => {
+                        playPopOutAnimation();
+                    }, 100);
                 }
             }
-            type();
-        }
+            typeChar();
+        }, 1000);
+    }
 
-        function showComma() {
-            comma.style.opacity = '1';
-            playPopOutAnimation();
-        }
+    function playPopOutAnimation() {
+        hey.style.animation = 'none';
+        void hey.offsetWidth;
+        hey.style.animation = 'popOut 0.3s ease-out';
+        setTimeout(() => {
+            playCommaAnimation();
+        }, 300);
+    }
 
-        function playPopOutAnimation() {
-            hey.style.animation = '';
-            hey.classList.add('animate');
-            setTimeout(playCommaAnimation, 300); // Delay comma animation to match pop-out
-        }
-
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth; // Trigger reflow
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-            setTimeout(showContent, 800); // Wait for comma animation to finish
-        }
-
-        function showContent() {
-            cursor.style.display = 'none'; // Hide cursor after animations
+    function playCommaAnimation() {
+        comma.style.animation = 'none';
+        void comma.offsetWidth;
+        comma.style.animation = 'bellJingle 0.8s ease-in-out';
+        setTimeout(() => {
+            if (cursor) {
+                cursor.remove();
+                cursor = null;
+            }
             content.forEach(el => {
                 el.style.opacity = '1';
-                el.style.transition = 'opacity 1s ease-in';
+                el.style.animation = 'fadeIn 1s ease-in';
             });
-        }
-
-        // Delay the entire animation sequence by 2 seconds
-        setTimeout(() => {
-            // Remove the initial-load class
-            body.classList.remove('initial-load');
-            // Start the sequence
-            typeText('Hey', heyText, showComma);
-        }, 2000);
-    }
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth <= 1024) {
-        let hey = document.querySelector('.hey');
-        let heyText = hey.querySelector('.hey-text');
-        let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail');
-        let longPressTimer;
-        let isLongPress = false;
-        let messages = [];
-        let promptShown = false;
-        let inChatMode = false;
-        let promptTimer;
-        let blinkInterval;
-
-        function showPrompt(text, fadeIn = false, isHomePrompt = false) {
-    clearTimeout(promptTimer);
-    hidePrompt();
-    
-    let promptContainer = document.createElement('div');
-    promptContainer.className = 'prompt';
-    hey.parentNode.insertBefore(promptContainer, hey);
-    
-    promptContainer.textContent = text;
-    
-    if (fadeIn) {
-        promptContainer.style.opacity = '0';
-        promptContainer.style.transition = 'opacity 1s ease-in';
-        setTimeout(() => {
-            promptContainer.style.opacity = '1';
-        }, 10);
-    } else {
-        promptContainer.style.opacity = '1';
-    }
-    promptContainer.style.cursor = 'pointer';
-    
-    if (isHomePrompt) {
-        promptContainer.addEventListener('click', handleLongPress);
-    } else {
-        promptContainer.addEventListener('click', () => {
-            if (inChatMode) {
-                handleLongPress();
-            }
-        });
+            copyright.style.opacity = '1';
+            copyright.style.animation = 'fadeIn 1s ease-in';
+            resetPromptTimer();
+        }, 800);
     }
 
-    if (isHomePrompt && !inChatMode) {
+    function resetPromptTimer() {
+        clearTimeout(promptTimer);
         promptTimer = setTimeout(() => {
-            showPrompt('Click this to ask about me', true, true);
+            if (!inChatMode) {
+                showPrompt('Click this to ask about me', true);
+            }
         }, 5000);
     }
-}
 
-        function hidePrompt() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                // Set the opacity to 0 to start the fade-out effect
-                promptContainer.style.transition = 'opacity 0.3s ease-out';
-                promptContainer.style.opacity = '0';
+    typeHey();
 
-                // Remove the element after the transition ends
-                setTimeout(() => {
-                    promptContainer.remove();
-                    promptShown = false;
-                }, 500); // Match the timeout with the duration of the opacity transition
+    function handleDesktopClick() {
+        inChatMode = true;
+        toggleChatMode(true);
+        clearPreviousContent(true);
+        hidePrompt();
+        document.body.classList.add('chat-mode');
+        
+        hey.innerHTML = '';
+        hey.style.cursor = 'text';
+        
+        const inputContainer = document.createElement('div');
+        inputContainer.className = 'input-container';
+        inputContainer.style.width = '100%';
+        inputContainer.style.height = '100%';
+        inputContainer.style.position = 'relative';
+        
+        const input = document.createElement('textarea');
+        input.className = 'chat-input';
+        input.placeholder = 'Ask...';
+        input.style.width = '100%';
+        input.style.height = '100%';
+        input.style.resize = 'none';
+        input.style.overflow = 'hidden';
+        input.style.border = 'none';
+        input.style.background = 'transparent';
+        input.style.outline = 'none';
+        input.style.font = window.getComputedStyle(hey).font;
+        
+        inputContainer.appendChild(input);
+        hey.appendChild(inputContainer);
+        
+        showPrompt('Press Enter to send', true);
+        
+        input.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const userInput = input.value;
+                handleUserInput(userInput);
             }
+        });
+        
+        hey.addEventListener('click', function(e) {
+            if (inChatMode) {
+                input.focus();
+            }
+        });
+        
+        const aiResponse = document.querySelector('.ai-response');
+        if (aiResponse) {
+            aiResponse.style.display = 'none';
         }
 
-
-        function resetPromptTimer() {
-            clearTimeout(promptTimer);
-            promptTimer = setTimeout(() => {
-                if (!inChatMode) showPrompt('Press this to ask about me');
-            }, 10000);
-        }
-
-        resetPromptTimer();
-        // Check if vibration is supported
-        // Check if vibration is supported
-        let canVibrate = 'vibrate' in navigator;
-
-        function tryVibrate(duration) {
-            if (canVibrate) {
-                return new Promise((resolve, reject) => {
-                    try {
-                        navigator.vibrate(duration);
-                        console.log("Vibration command sent successfully");
-                        resolve(true);
-                    } catch (error) {
-                        console.error("Error when trying to vibrate:", error);
-                        reject(error);
-                    }
-                });
+        content.forEach(el => el.style.display = 'none');
+        addBackButton();
+        
+        input.focus();
+    }
+    
+    async function handleUserInput(userInput) {
+        hey.textContent = userInput;
+        hey.style.cursor = 'pointer';
+        
+        hidePrompt();
+        showPrompt('Click here for a new question', true);
+        
+        const aiResponse = await generateAIResponse(userInput);
+        
+        const contentContainer = document.querySelector('.content-1').parentNode;
+        const previousResponse = contentContainer.querySelector('.ai-response');
+        if (previousResponse) previousResponse.remove();
+        
+        const responseElement = document.createElement('div');
+        responseElement.className = 'ai-response';
+        responseElement.style.maxWidth = '60%';
+        responseElement.style.marginLeft = '20%';
+        responseElement.style.cursor = 'pointer';
+        
+        contentContainer.insertBefore(responseElement, copyright);
+        
+        const words = aiResponse.split(' ');
+        let i = 0;
+        const intervalId = setInterval(() => {
+            if (i < words.length) {
+                responseElement.textContent += words[i] + ' ';
+                i++;
             } else {
-                console.log("Vibration not supported on this device");
-                return Promise.resolve(false);
+                clearInterval(intervalId);
+                addBackButton();
             }
+        }, 120);
+    }
+
+    function clearPreviousContent(keepPrompt = false) {
+        const contentContainer = document.querySelector('.content-1').parentNode;
+        const previousResponse = contentContainer.querySelector('.ai-response');
+        if (previousResponse) previousResponse.remove();
+        const existingBackButton = contentContainer.querySelector('.back-button');
+        if (existingBackButton) existingBackButton.remove();
+        if (!keepPrompt) {
+            hidePrompt();
         }
+    }
 
-        hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                tryVibrate(50)
-                    .then(success => {
-                        if (success) {
-                            console.log('Long press vibration successful');
-                        } else {
-                            console.log('Long press vibration not supported or failed');
-                        }
-                        handleLongPress();
-                    })
-                    .catch(error => console.error('Vibration error:', error));
-            }, 800);
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
-                tryVibrate(25)
-                    .then(success => {
-                        if (success) {
-                            console.log('Short vibration successful');
-                        } else {
-                            console.log('Short vibration not supported or failed');
-                        }
-                        playAnimation();
-                        playCommaAnimation();
-                    })
-                    .catch(error => console.error('Vibration error:', error));
-            }
-        });
-
-
-        function handleLongPress() {
-    inChatMode = true;
-
-    clearPreviousContent(true);
-    console.log('Long press detected');
-    
-    heyText.textContent = '';
-    comma.style.display = 'none';
-    const input = document.createElement('textarea');
-    input.className = 'chat-input';
-    input.placeholder = 'Ask...';
-    input.style.font = window.getComputedStyle(heyText).font;
-    input.style.border = 'none';
-    input.style.background = 'transparent';
-    input.style.outline = 'none';
-    input.style.width = '100%';
-    input.style.resize = 'none';
-    input.style.overflow = 'hidden';
-    input.style.caretColor = 'black';
-    heyText.appendChild(input);
-
-    // Force the keyboard to appear
-    input.readOnly = false;
-    input.focus();
-    input.click();
-
-    showPrompt('Tap enter to send');
-
-    input.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    });
-
-    content.forEach(el => el.style.display = 'none');
-
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            const userInput = input.value;
-            handleUserInput(userInput);
-        }
-    });
-
-    addBackButton();
-
-    // Allow tapping on the hey area to refocus the input
-    hey.addEventListener('touchstart', function(e) {
-        if (inChatMode) {
-            e.preventDefault();
-            input.focus();
-        }
-    });
-}
-
-        function clearPreviousContent(keepPrompt = false) {
+    function addBackButton() {
+        let backButton = document.querySelector('.back-button');
+        if (!backButton) {
+            backButton = document.createElement('a');
+            backButton.textContent = 'back';
+            backButton.className = 'back-button';
+            backButton.style.display = 'block';
+            backButton.style.textAlign = 'right';
+            backButton.style.marginTop = '20px';
+            backButton.style.width = '60%';
+            backButton.style.marginLeft = '20%';
+            backButton.style.cursor = 'pointer';
+            
+            backButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                resetPage();
+            });
+            
             const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
-            if (previousResponse) previousResponse.remove();
-            const existingBackButton = contentContainer.querySelector('a[style*="text-decoration: underline"]');
-            if (existingBackButton) existingBackButton.remove();
-            if (!keepPrompt) {
-                hidePrompt();
-            }
+            contentContainer.insertBefore(backButton, copyright);
         }
+    }
 
-        function addBackButton() {
-            let backButton = document.querySelector('a[style*="text-decoration: underline"]');
-            if (!backButton) {
-                backButton = document.createElement('a');
-                backButton.textContent = 'back';
-                backButton.style.textDecoration = 'underline';
-                backButton.style.display = 'block';
-                backButton.style.marginTop = '20px';
-                backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
-                backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
-                
-                backButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    resetPage();
-                });
-                
-                const contentContainer = document.querySelector('.content-1').parentNode;
-                contentContainer.appendChild(backButton);
-            }
+    function resetPage() {
+        inChatMode = false;
+        toggleChatMode(false);
+        document.body.classList.remove('chat-mode');
+        
+        hidePrompt();
+        clearPreviousContent();
+        
+        hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+        hey.style.cursor = 'pointer';
+        heyText = hey.querySelector('.hey-text');
+        comma = hey.querySelector('.comma');
+
+        content.forEach(el => {
+            el.style.display = '';
+            el.style.opacity = '0';
+            setTimeout(() => {
+                el.style.opacity = '1';
+                el.style.animation = 'fadeIn 1s ease-in';
+            }, 100);
+        });
+        copyright.style.opacity = '1';
+
+        messages = [];
+        
+        playPopOutAnimation();
+        resetPromptTimer();
+    }
+
+    function showPrompt(text, fadeIn = false) {
+        hidePrompt();
+        
+        let promptContainer = document.createElement('div');
+        promptContainer.className = 'prompt';
+        hey.parentNode.insertBefore(promptContainer, hey);
+        
+        promptContainer.textContent = text;
+        
+        if (fadeIn) {
+            promptContainer.style.opacity = '0';
+            promptContainer.style.transition = 'opacity 0.5s ease-in';
+            setTimeout(() => {
+                promptContainer.style.opacity = '1';
+            }, 10);
+        } else {
+            promptContainer.style.opacity = '1';
         }
+    }
 
-        async function handleUserInput(userInput) {
-    hey.textContent = userInput;
-    
-    hidePrompt();
-    showPrompt('Click here for a new question', true);
-    
-    const aiResponse = await generateAIResponse(userInput);
-    
-    const contentContainer = document.querySelector('.content-1').parentNode;
-    const previousResponse = contentContainer.querySelector('.ai-response');
-    if (previousResponse) previousResponse.remove();
-    
-    const responseElement = document.createElement('div');
-    responseElement.className = 'ai-response';
-    responseElement.style.maxWidth = '60%';
-    responseElement.style.marginLeft = '20%';
-    responseElement.style.cursor = 'pointer';
-    responseElement.addEventListener('click', () => {
-        if (inChatMode) {
-            handleLongPress();
+    function hidePrompt() {
+        const promptContainer = document.querySelector('.prompt');
+        if (promptContainer) {
+            promptContainer.style.transition = 'opacity 0.5s ease-out';
+            promptContainer.style.opacity = '0';
+            setTimeout(() => {
+                promptContainer.remove();
+            }, 500);
+        }
+    }
+
+    hey.addEventListener('click', function() {
+        if (!inChatMode) {
+            handleDesktopClick();
+        } else {
+            const input = hey.querySelector('.chat-input');
+            if (input) {
+                input.focus();
+            } else {
+                handleDesktopClick();
+            }
         }
     });
-    
-    contentContainer.insertBefore(responseElement, contentContainer.lastChild);
-    
-    const words = aiResponse.split(' ');
-    let i = 0;
-    const intervalId = setInterval(() => {
-        if (i < words.length) {
-            responseElement.textContent += words[i] + ' ';
-            i++;
-        } else {
-            clearInterval(intervalId);
-            addBackButton();
+
+    hey.addEventListener('mouseenter', function() {
+        if (!inChatMode) {
+            playPopOutAnimation();
         }
-    }, 120);
+    });
 }
 
-        async function generateAIResponse(userInput) {
+// Shared functions
+async function generateAIResponse(userInput) {
     messages.push({ "role": "user", "content": userInput });
 
     try {
@@ -963,407 +1139,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return "I'm sorry, I couldn't generate a response at this time.";
     }
 }
-
-        function resetPage() {
-            inChatMode = false;
-            
-            // Immediately hide the prompt and system message
-            hidePrompt();
-            const systemMessage = document.querySelector('.system-message');
-            if (systemMessage) systemMessage.remove();
-
-            // Clear previous content and remove back button
-            clearPreviousContent();
-            const backButton = document.querySelector('a[style*="text-decoration: underline"]');
-            if (backButton) backButton.remove();
-
-            // Reset the Hey container
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-
-            content.forEach(el => {
-                el.style.display = 'block';
-                el.style.opacity = '1';
-            });
-
-            // Ensure animations play after content is updated
-            setTimeout(() => {
-                playAnimation();
-                playCommaAnimation();
-            }, 10);
-
-            resetPromptTimer();
-
-            messages = [];
-        }
-
-
-        function playAnimation() {
-            hey.classList.remove('animate');
-            void hey.offsetWidth;
-            hey.classList.add('animate');
-        }
-
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth; // Trigger reflow
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-        }
-
-        hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                handleLongPress();
-            }, 500); // Adjusted delay for long press detection
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress) {
-                // Ignore quick taps
-                e.preventDefault();
-            }
-        });
-    }
-});
-// Desktop-specific JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
-    
-    if (isDesktop) {
-        const hey = document.querySelector('.hey');
-        let heyText = hey.querySelector('.hey-text');
-        let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail');
-        const copyright = document.querySelector('.copyright');
-        let messages = [];
-        let inChatMode = false;
-        let cursor;
-        let promptTimer;
-
-        function toggleChatMode(enable) {
-        if (enable) {
-            copyright.classList.add('hidden');
-        } else {
-            copyright.classList.remove('hidden');
-        }
-    }
-
-        function typeHey(isInitialLoad = true) {
-            hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-            heyText.textContent = '';
-            comma.style.opacity = '0';
-            let text = 'Hey,';
-            let index = 0;
-            cursor = document.createElement('span');
-            cursor.className = 'typing-cursor';
-            hey.appendChild(cursor);
-
-            if (isInitialLoad) {
-                content.forEach(el => el.style.opacity = '0');
-                copyright.style.opacity = '0';
-            }
-
-            setTimeout(() => {
-                function typeChar() {
-                    if (index < text.length) {
-                        if (index === text.length - 1) {
-                            comma.style.opacity = '1';
-                        } else {
-                            heyText.textContent += text[index];
-                        }
-                        index++;
-                        setTimeout(typeChar, 150);
-                    } else {
-                        setTimeout(() => {
-                            playPopOutAnimation();
-                        }, 100);
-                    }
-                }
-                typeChar();
-            }, 1000);
-        }
-
-        function playPopOutAnimation() {
-            hey.style.animation = 'none';
-            void hey.offsetWidth;
-            hey.style.animation = 'popOut 0.3s ease-out';
-            setTimeout(() => {
-                playCommaAnimation();
-            }, 300);
-        }
-
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth;
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-            setTimeout(() => {
-                if (cursor) {
-                    cursor.remove();
-                    cursor = null;
-                }
-                content.forEach(el => {
-                    el.style.opacity = '1';
-                    el.style.animation = 'fadeIn 1s ease-in';
-                });
-                copyright.style.opacity = '1';
-                copyright.style.animation = 'fadeIn 1s ease-in';
-                resetPromptTimer();
-            }, 800);
-        }
-
-        function resetPromptTimer() {
-            clearTimeout(promptTimer);
-            promptTimer = setTimeout(() => {
-                if (!inChatMode) {
-                    showPrompt('Click this to ask about me', true);
-                }
-            }, 5000);
-        }
-
-        typeHey();
-
-        function handleDesktopClick() {
-            inChatMode = true;
-            toggleChatMode(true)
-            clearPreviousContent(true);
-            hidePrompt();
-            document.body.classList.add('chat-mode');  // Add this line
-            
-            hey.innerHTML = '';
-            hey.style.cursor = 'text';
-            
-            const inputContainer = document.createElement('div');
-            inputContainer.className = 'input-container';
-            inputContainer.style.width = '100%';
-            inputContainer.style.height = '100%';
-            inputContainer.style.position = 'relative';
-            
-            const input = document.createElement('textarea');
-            input.className = 'chat-input';
-            input.placeholder = 'Ask...';
-            input.style.width = '100%';
-            input.style.height = '100%';
-            input.style.resize = 'none';
-            input.style.overflow = 'hidden';
-            input.style.border = 'none';
-            input.style.background = 'transparent';
-            input.style.outline = 'none';
-            input.style.font = window.getComputedStyle(hey).font;
-            
-            inputContainer.appendChild(input);
-            hey.appendChild(inputContainer);
-            
-            showPrompt('Press Enter to send', true);
-            
-            input.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
-            
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const userInput = input.value;
-                    handleUserInput(userInput);
-                }
-            });
-            
-            hey.addEventListener('click', function(e) {
-                if (inChatMode) {
-                    input.focus();
-                }
-            });
-            
-            const aiResponse = document.querySelector('.ai-response');
-            if (aiResponse) {
-                aiResponse.style.display = 'none';
-            }
-
-            content.forEach(el => el.style.display = 'none');
-            addBackButton();
-            
-            input.focus();
-        }
-        
-        async function handleUserInput(userInput) {
-            hey.textContent = userInput;
-            hey.style.cursor = 'pointer';
-            
-            hidePrompt();
-            showPrompt('Click here for a new question', true);
-            
-            const aiResponse = await generateAIResponse(userInput);
-            
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('.ai-response');
-            if (previousResponse) previousResponse.remove();
-            
-            const responseElement = document.createElement('div');
-            responseElement.className = 'ai-response';
-            responseElement.style.maxWidth = '60%';
-            responseElement.style.marginLeft = '20%';
-            responseElement.style.cursor = 'pointer';
-            
-            contentContainer.insertBefore(responseElement, copyright);
-            
-            const words = aiResponse.split(' ');
-            let i = 0;
-            const intervalId = setInterval(() => {
-                if (i < words.length) {
-                    responseElement.textContent += words[i] + ' ';
-                    i++;
-                } else {
-                    clearInterval(intervalId);
-                    addBackButton();
-                }
-            }, 120);
-        }
-        
-        async function generateAIResponse(userInput) {
-            messages.push({ "role": "user", "content": userInput });
-
-            try {
-                const response = await fetch('/.netlify/functions/generate-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput, messages })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const aiResponse = data.response;
-                messages.push({ "role": "assistant", "content": aiResponse });
-                return aiResponse;
-            } catch (error) {
-                console.error('Error:', error);
-                return "I'm sorry, I couldn't generate a response at this time.";
-            }
-        }
-
-        function clearPreviousContent(keepPrompt = false) {
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('.ai-response');
-            if (previousResponse) previousResponse.remove();
-            const existingBackButton = contentContainer.querySelector('.back-button');
-            if (existingBackButton) existingBackButton.remove();
-            if (!keepPrompt) {
-                hidePrompt();
-            }
-        }
-
-        function addBackButton() {
-            let backButton = document.querySelector('.back-button');
-            if (!backButton) {
-                backButton = document.createElement('a');
-                backButton.textContent = 'back';
-                backButton.className = 'back-button';
-                backButton.style.display = 'block';
-                backButton.style.textAlign = 'right';
-                backButton.style.marginTop = '20px';
-                backButton.style.width = '60%';
-                backButton.style.marginLeft = '20%';
-                backButton.style.cursor = 'pointer';
-                
-                backButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    resetPage();
-                });
-                
-                const contentContainer = document.querySelector('.content-1').parentNode;
-                contentContainer.insertBefore(backButton, copyright);
-            }
-        }
-
-        function resetPage() {
-            inChatMode = false;
-            toggleChatMode(false);
-            document.body.classList.remove('chat-mode');  // Add this line
-            
-            hidePrompt();
-            clearPreviousContent();
-            
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
-            hey.style.cursor = 'pointer';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-
-            content.forEach(el => {
-                el.style.display = '';
-                el.style.opacity = '0';
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.animation = 'fadeIn 1s ease-in';
-                }, 100);
-            });
-            copyright.style.opacity = '1';
-
-            messages = [];
-            
-            playPopOutAnimation();
-            resetPromptTimer();
-        }
-
-        function showPrompt(text, fadeIn = false) {
-            hidePrompt();
-            
-            let promptContainer = document.createElement('div');
-            promptContainer.className = 'prompt';
-            hey.parentNode.insertBefore(promptContainer, hey);
-            
-            promptContainer.textContent = text;
-            
-            if (fadeIn) {
-                promptContainer.style.opacity = '0';
-                promptContainer.style.transition = 'opacity 0.5s ease-in';
-                setTimeout(() => {
-                    promptContainer.style.opacity = '1';
-                }, 10);
-            } else {
-                promptContainer.style.opacity = '1';
-            }
-        }
-
-        function hidePrompt() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                promptContainer.style.transition = 'opacity 0.5s ease-out';
-                promptContainer.style.opacity = '0';
-                setTimeout(() => {
-                    promptContainer.remove();
-                }, 500);
-            }
-        }
-
-        hey.addEventListener('click', function() {
-            if (!inChatMode) {
-                handleDesktopClick();
-            } else {
-                const input = hey.querySelector('.chat-input');
-                if (input) {
-                    input.focus();
-                } else {
-                    handleDesktopClick();
-                }
-            }
-        });
-
-        hey.addEventListener('mouseenter', function() {
-            if (!inChatMode) {
-                playPopOutAnimation();
-            }
-        });
-    }
-});
     </script>
 </body>
 </html>
