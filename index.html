@@ -717,11 +717,11 @@ document.addEventListener('DOMContentLoaded', function() {
     promptContainer.style.cursor = 'pointer';
     
     if (isHomePrompt) {
-        promptContainer.addEventListener('click', handleDesktopClick);
+        promptContainer.addEventListener('click', handleLongPress);
     } else {
         promptContainer.addEventListener('click', () => {
             if (inChatMode) {
-                handleDesktopClick();
+                handleLongPress();
             }
         });
     }
@@ -917,9 +917,13 @@ document.addEventListener('DOMContentLoaded', function() {
     responseElement.style.maxWidth = '60%';
     responseElement.style.marginLeft = '20%';
     responseElement.style.cursor = 'pointer';
-    responseElement.addEventListener('click', handleDesktopClick);
+    responseElement.addEventListener('click', () => {
+        if (inChatMode) {
+            handleLongPress();
+        }
+    });
     
-    contentContainer.insertBefore(responseElement, copyright);
+    contentContainer.insertBefore(responseElement, contentContainer.lastChild);
     
     const words = aiResponse.split(' ');
     let i = 0;
