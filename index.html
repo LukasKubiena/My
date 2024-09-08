@@ -925,7 +925,6 @@ async function handleUserInput(userInput) {
     responseElement.style.marginLeft = '0';
     responseElement.style.textAlign = 'left';
     responseElement.style.cursor = 'pointer';
-    responseElement.style.marginTop = 'calc(var(--row-gap) / 2)'; // Reduced gap
     responseElement.addEventListener('click', handleLongPress);
     
     contentContainer.insertBefore(responseElement, contentContainer.lastChild);
