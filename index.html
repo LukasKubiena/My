@@ -871,8 +871,7 @@ function clearPreviousContent(keepPrompt = false) {
     const previousResponses = contentContainer.querySelectorAll('.ai-response');
     previousResponses.forEach(response => response.remove());
     
-    const existingBackButtons = contentContainer.querySelectorAll('a[style*="text-decoration: underline"]');
-    existingBackButtons.forEach(button => button.remove());
+
     
     const chatInputs = document.querySelectorAll('.chat-input');
     chatInputs.forEach(input => input.remove());
@@ -907,13 +906,15 @@ function addBackButton() {
 async function handleUserInput(userInput) {
     clearPreviousContent(true);
     
-    // Only set the text content if it hasn't been set already
     if (hey.textContent !== userInput) {
         hey.textContent = userInput;
     }
     
     hidePrompt();
     showPrompt('Tap here for a new question', true);
+    
+    // Ensure back button is present
+    addBackButton();
     
     const aiResponse = await generateAIResponse(userInput);
     
@@ -924,12 +925,10 @@ async function handleUserInput(userInput) {
     responseElement.style.marginLeft = '0';
     responseElement.style.textAlign = 'left';
     responseElement.style.cursor = 'pointer';
-    responseElement.style.marginTop = 'var(--row-gap)'; // Match the distance from "hey" to content
+    responseElement.style.marginTop = 'calc(var(--row-gap) / 2)'; // Reduced gap
     responseElement.addEventListener('click', handleLongPress);
     
     contentContainer.insertBefore(responseElement, contentContainer.lastChild);
-    
-    addBackButton(); // Add back button before typing out the response
     
     const words = aiResponse.split(' ');
     let i = 0;
