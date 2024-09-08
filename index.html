@@ -382,6 +382,10 @@
         box-sizing: border-box;
     }
 
+    body.chat-mode {
+    row-gap: 0;
+}
+
     .ai-response {
         font-family: 'NeueHaasDisplay-Light', sans-serif;
         font-size: 18px;
@@ -891,6 +895,15 @@ function clearPreviousContent(keepPrompt = false) {
     }
 }
 
+// Add this function to toggle chat mode
+function toggleChatMode(enable) {
+    if (enable) {
+        document.body.classList.add('chat-mode');
+    } else {
+        document.body.classList.remove('chat-mode');
+    }
+}
+
 function addBackButton() {
     let backButton = document.querySelector('a[style*="text-decoration: underline"]');
     if (!backButton) {
@@ -938,6 +951,10 @@ async function handleUserInput(userInput) {
     responseElement.addEventListener('click', handleLongPress);
     
     contentContainer.insertBefore(responseElement, contentContainer.lastChild);
+
+        // Change the insertion point to be after the hey element
+        const heyContainer = document.querySelector('.hey-container');
+    heyContainer.insertAdjacentElement('afterend', responseElement);
     
     const words = aiResponse.split(' ');
     let i = 0;
@@ -1290,7 +1307,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 backButton.className = 'back-button';
                 backButton.style.display = 'block';
                 backButton.style.textAlign = 'right';
-                backButton.style.marginTop = '20px';
                 backButton.style.width = '60%';
                 backButton.style.marginLeft = '20%';
                 backButton.style.cursor = 'pointer';
