@@ -382,6 +382,16 @@
         box-sizing: border-box;
     }
 
+    .ai-response {
+        font-family: 'NeueHaasDisplay-Light', sans-serif;
+        font-size: 18px;
+        line-height: 1.5;
+        max-width: 100%;
+        margin-left: 0;
+        text-align: left;
+        cursor: pointer;
+    }
+
     .initial-load .comma {
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -1096,7 +1106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 typeChar();
-            }, 1000);
+            }, 2000);
         }
 
         function playPopOutAnimation() {
