@@ -811,6 +811,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Long press detected');
     
     heyText.textContent = '';
+    hey.innerHTML = ''; // Clear existing content
     comma.style.display = 'none';
     const input = document.createElement('textarea');
     input.className = 'chat-input';
@@ -824,6 +825,7 @@ document.addEventListener('DOMContentLoaded', function() {
     input.style.overflow = 'hidden';
     input.style.caretColor = 'black';
     heyText.appendChild(input);
+    hey.appendChild(input);
 
     // Force the keyboard to appear
     input.readOnly = false;
@@ -858,16 +860,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 }
 
-        function clearPreviousContent(keepPrompt = false) {
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('div[style*="text-align: justify"]');
-            if (previousResponse) previousResponse.remove();
-            const existingBackButton = contentContainer.querySelector('a[style*="text-decoration: underline"]');
-            if (existingBackButton) existingBackButton.remove();
-            if (!keepPrompt) {
-                hidePrompt();
-            }
-        }
+function clearPreviousContent(keepPrompt = false) {
+    const contentContainer = document.querySelector('.content-1').parentNode;
+    const previousResponses = contentContainer.querySelectorAll('.ai-response');
+    previousResponses.forEach(response => response.remove());
+    
+    const existingBackButtons = contentContainer.querySelectorAll('a[style*="text-decoration: underline"]');
+    existingBackButtons.forEach(button => button.remove());
+    
+    const chatInputs = document.querySelectorAll('.chat-input');
+    chatInputs.forEach(input => input.remove());
+    
+    if (!keepPrompt) {
+        hidePrompt();
+    }
+}
 
         function addBackButton() {
             let backButton = document.querySelector('a[style*="text-decoration: underline"]');
@@ -892,7 +899,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async function handleUserInput(userInput) {
     hey.textContent = userInput;
-    
+    clearPreviousContent(true);
     hidePrompt();
     showPrompt('Tap here for a new question', true);
     
@@ -904,8 +911,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const responseElement = document.createElement('div');
     responseElement.className = 'ai-response';
-    responseElement.style.maxWidth = '60%';
-    responseElement.style.marginLeft = '20%';
+    responseElement.style.maxWidth = '100%';
+    responseElement.style.marginLeft = '0';
+    responseElement.style.textAlign = 'left';
     responseElement.style.cursor = 'pointer';
     responseElement.addEventListener('click', handleLongPress); // Change this line
     
@@ -972,6 +980,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.style.display = 'block';
                 el.style.opacity = '1';
             });
+
+            // Remove any AI responses
+            const aiResponses = document.querySelectorAll('.ai-response');
+            aiResponses.forEach(response => response.remove());
+
+            // Remove any chat inputs
+            const chatInputs = document.querySelectorAll('.chat-input');
+            chatInputs.forEach(input => input.remove());
 
             // Ensure animations play after content is updated
             setTimeout(() => {
