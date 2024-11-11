@@ -77,6 +77,13 @@
             100% { transform: rotate(0deg); }
         }
 
+
+
+        .blog-link a {
+            color: #000000;
+            text-decoration: underline;
+        }
+
         .comma-container {
             display: inline-block;
             padding-left: 2px; /* Adjust as needed for spacing */
@@ -455,7 +462,7 @@
         margin-bottom: 4px; /* Reduce the space */
     }
 
-    .content, .send-mail {
+    .content, .send-mail, .blog-link {
         font-size: 18px;
         line-height: 1.5;
         margin-bottom: 20px;
@@ -465,7 +472,7 @@
     }
 
 
-    .content.visible, .send-mail.visible {
+    .content.visible, .send-mail.visible, .blog-link.visible {
         opacity: 1;
     }
 
@@ -507,6 +514,9 @@
     <div class="content-group">
         <div class="content content-3">
             Outside my studies I love thinking about the future of AI, mental health and nature. Feel free to reach out if we care about the same things!
+        </div>
+        <div class="blog-link">
+            <a href="blog.html">blog</a>
         </div>
         <div class="send-mail">
             <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
@@ -637,8 +647,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const heyText = hey.querySelector('.hey-text');
         const comma = hey.querySelector('.comma');
         const cursor = hey.querySelector('.typing-cursor');
-        const content = document.querySelectorAll('.content, .send-mail');
-
+        const content = document.querySelectorAll('.content, .send-mail, .blog-link');
         // Disable the bounce animation initially
         hey.style.animation = 'none';
 
@@ -705,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let hey = document.querySelector('.hey');
         let heyText = hey.querySelector('.hey-text');
         let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail');
+        const content = document.querySelectorAll('.content, .send-mail, .blog-link'); // Added blog-link here
         let longPressTimer;
         let isLongPress = false;
         let messages = [];
@@ -1074,7 +1083,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const hey = document.querySelector('.hey');
         let heyText = hey.querySelector('.hey-text');
         let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail');
+        const content = document.querySelectorAll('.content, .send-mail, .blog-link'); // Added blog-link here
         const copyright = document.querySelector('.copyright');
         let messages = [];
         let inChatMode = false;
