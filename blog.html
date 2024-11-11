@@ -93,7 +93,19 @@
             padding-bottom: 8rem;
             max-width: 800px;
             margin: 0 auto;
-            padding: 0 20px 8rem;
+            padding: 0 20px 2rem; /* Reduced bottom padding to accommodate image */
+        }
+
+        .blog-image-container {
+            max-width: 800px;
+            margin: 0 auto 8rem; /* Added margin bottom for spacing */
+            padding: 0 20px;
+        }
+
+        .blog-image {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .navigation {
@@ -155,6 +167,11 @@
                 font-size: 18px;
                 line-height: 1.5;
             }
+
+            .blog-image-container {
+                margin: 0 auto 4rem;
+                padding: 0;
+            }
             
             .navigation {
                 width: 100%;
@@ -169,6 +186,61 @@
 
             .blog-title {
                 font-size: 28px;
+            }
+        }
+
+        .next-post-preview {
+            max-width: 800px;
+            margin: 4rem auto 2rem;
+            padding: 0 20px;
+            text-align: left;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            padding: 0 20px 6rem; /* Added significant bottom padding */
+        }
+
+        .next-post-preview:hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .next-post-label {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+
+        .next-post-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 24px;
+            margin: 0;
+            color: #000;
+            position: relative;
+            display: inline-block;
+        }
+
+        .next-post-title::after {
+            content: "→";
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .next-post-preview:hover .next-post-title::after {
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 480px) {
+            .next-post-preview {
+                margin: 3rem auto 1rem;
+            }
+            
+            .next-post-title {
+                font-size: 20px;
             }
         }
 
@@ -192,6 +264,11 @@
 
             .blog-content {
                 font-size: 16px;
+            }
+
+            .blog-image-container {
+                margin: 0 auto 4rem;
+                padding: 0;
             }
         }
     </style>
@@ -262,12 +339,19 @@
 
                 even if it just got a tiny piece of leaf.
             </div>
+            <div class="blog-image-container">
+                <img src="img.jpg" alt="Blog post image" class="blog-image">
+            </div>
+            <div class="next-post-preview">
+                <span class="next-post-label">Next</span>
+                <h2 class="next-post-title"></h2>
+            </div>
         </div>
 
         <div class="blog-post" data-index="1">
             <div class="blog-header">
                 <h1 class="blog-title">Care</h1>
-                <a href="/" class="home-link">back</a>
+                <a href="index.html" class="home-link">back</a>
             </div>
             <div class="blog-content">
                 i was recently asked how i found work that i really enjoyed doing, that i was super passionate about.<br><br>
@@ -297,6 +381,13 @@
                 Care, and something to get done will follow.<br><br>
 
                 Care and work and a job and money will follow.
+            </div>
+            <div class="blog-image-container">
+                <img src="img2.jpeg" alt="Blog post image" class="blog-image">
+            </div>
+            <div class="next-post-preview">
+                <span class="next-post-label">Next</span>
+                <h2 class="next-post-title"></h2>
             </div>
         </div>
     </div>
@@ -448,6 +539,56 @@
                 window.scrollTo(0, 0);
             }, 250);
         });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+    // Initialize variables
+    let currentIndex = 0;
+    const posts = document.querySelectorAll('.blog-post');
+    const totalPosts = posts.length;
+    const titles = document.querySelectorAll('.blog-title');
+
+    // Set up initial state
+    posts[0].classList.add('active');
+
+    // Function to handle post transitions
+    function navigate(direction) {
+        // Remove active class from current post
+        posts[currentIndex].classList.remove('active');
+        posts[currentIndex].style.transform = direction > 0 ? 'translateX(-100%)' : 'translateX(100%)';
+        
+        // Update index
+        currentIndex = (currentIndex + direction + totalPosts) % totalPosts;
+        
+        // Add active class to new post
+        posts[currentIndex].style.transform = 'translateX(0)';
+        posts[currentIndex].classList.add('active');
+        
+        // Reset scroll position
+        window.scrollTo(0, 0);
+    }
+
+        // Function to update next post titles
+        function updateNextPostTitles() {
+            posts.forEach((post, index) => {
+                const nextPostPreview = post.querySelector('.next-post-preview');
+                const nextIndex = (index + 1) % posts.length;
+                const nextTitle = posts[nextIndex].querySelector('.blog-title').textContent;
+                
+                const nextPostTitle = nextPostPreview.querySelector('.next-post-title');
+                nextPostTitle.textContent = nextTitle;
+                
+                // Add click handler to navigate to next post
+                nextPostPreview.addEventListener('click', () => {
+                    navigate(1);
+                });
+            });
+        }
+
+        // Call updateNextPostTitles after setting up initial state
+        updateNextPostTitles();
+
+        // Rest of your event listeners...
+        // [Previous touch navigation, keyboard navigation, etc. code remains the same]
     });
     </script>
 </body>
