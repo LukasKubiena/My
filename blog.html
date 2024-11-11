@@ -6,404 +6,329 @@
     <title>Blog - Lukas Kubiena</title>
     <style>
         @font-face {
-            font-family: 'NeueHaasDisplay-Light';
-            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
-        }
-        @font-face {
-            font-family: 'NeueHaasDisplay-Medium';
-            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
-        }
+    font-family: 'NeueHaasDisplay-Light';
+    src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+}
 
-        @keyframes popOut {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+@font-face {
+    font-family: 'NeueHaasDisplay-Medium';
+    src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+}
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            background: #ffffff;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
+:root {
+    --content-width: 680px;
+    --nav-height: 64px;
+    --page-padding: max(5vw, 24px);
+}
 
-        .blog-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 24vh;
-            position: relative;
-            overflow: hidden;
-        }
+/* Base Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'NeueHaasDisplay-Light', sans-serif;
+    background: #ffffff;
+    line-height: 1.6;
+    color: #1a1a1a;
+    overflow-x: hidden;
+}
 
-        .blog-post {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            position: absolute;
-            width: 100%;
-            transform: translateX(100%);
-            padding: 0 40px;
-        }
+/* Navigation */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--nav-height);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 100;
+}
 
-        .blog-post.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-            position: relative;
-        }
+.nav-content {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0 var(--page-padding);
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .blog-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 3rem;
-            margin-left: 2rem;
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            padding: 0 20px;
-        }
+.home-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.3s ease;
+}
 
-        .blog-title {
-            font-family: 'NeueHaasDisplay-Medium', sans-serif;
-            font-size: 32px;
-            margin: 0;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-block;
-            transform-origin: center;
-        }
+.home-link:hover {
+    color: #000;
+}
 
-        .blog-title.animate {
-            animation: popOut 0.3s ease-out;
-        }
+.post-counter {
+    font-size: 14px;
+    color: #999;
+}
 
-        .home-link {
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            text-decoration: underline;
-            color: #000;
-        }
+/* Main Content */
+.blog-container {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: calc(var(--nav-height) + 64px) var(--page-padding) 0;
+    min-height: 100vh;
+}
 
-        .blog-content {
-            font-size: 16px;
-            line-height: 1.6;
-            text-align: justify;
-            padding-bottom: 8rem;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px 2rem; /* Reduced bottom padding to accommodate image */
-        }
+.blog-post {
+    position: relative;
+    width: 100%;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    display: none;
+    margin-bottom: 120px;
+}
 
-        .blog-image-container {
-            max-width: 800px;
-            margin: 0 auto 8rem; /* Added margin bottom for spacing */
-            padding: 0 20px;
-        }
+.blog-post.active {
+    opacity: 1;
+    transform: translateX(0);
+    display: block;
+}
 
-        .blog-image {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+.blog-title {
+    font-family: 'NeueHaasDisplay-Medium', sans-serif;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.2;
+    margin: 0 0 64px 0;
+}
 
-        .navigation {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: calc(100% - 80px);
-            max-width: 1320px;
-            display: flex;
-            justify-content: space-between;
-            pointer-events: none;
-            z-index: 10;
-        }
+.blog-content {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 0;
+}
 
-        .nav-button {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 20px;
-            color: #000;
-            pointer-events: auto;
-            opacity: 0.3;
-            transition: opacity 0.3s ease;
-        }
+.blog-content p {
+    margin: 0 0 32px 0;
+}
 
-        .nav-button:hover {
-            opacity: 0.8;
-        }
+.blog-content p:last-child {
+    margin-bottom: 0;
+}
 
-        /* Mobile Styles */
-        @media (max-width: 1024px) {
-            body {
-                overflow-x: hidden;
-            }
+.blog-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 64px;
+    margin-bottom: 0;
+}
 
-            .blog-container {
-                padding-top: 12vh;
-                width: 100%;
-                overflow-x: hidden;
-            }
-            
-            .blog-post {
-                padding: 0 20px;
-                width: 100%;
-                box-sizing: border-box;
-                overflow-x: hidden;
-            }
+/* Navigation Arrows */
+.page-navigation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 32px);
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 90;
+}
 
-            .blog-header {
-                margin: 0 0 2rem 0;
-                padding: 0;
-            }
+.nav-button {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: none;
+    color: #999;
+    font-size: 24px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: color 0.3s ease;
+    opacity: 0.6;
+}
 
-            .blog-content {
-                margin: 0;
-                padding: 0 0 4rem 0;
-                font-size: 18px;
-                line-height: 1.5;
-            }
+.nav-button:hover {
+    color: #000;
+    opacity: 1;
+}
 
-            .blog-image-container {
-                margin: 0 auto 4rem;
-                padding: 0;
-            }
-            
-            .navigation {
-                width: 100%;
-                padding: 0 10px;
-                box-sizing: border-box;
-            }
-            
-            .nav-button {
-                font-size: 20px;
-                padding: 15px;
-            }
+/* Next Post Preview */
+.next-post {
+    margin-top: 80px;
+    margin-bottom: 0;
+    padding-top: 32px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
 
-            .blog-title {
-                font-size: 28px;
-            }
-        }
+.next-post:hover {
+    opacity: 0.7;
+}
 
-        .next-post-preview {
-            max-width: 800px;
-            margin: 4rem auto 2rem;
-            padding: 0 20px;
-            text-align: left;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-            padding: 0 20px 6rem; /* Added significant bottom padding */
-        }
+.next-label {
+    font-size: 14px;
+    color: #999;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
-        .next-post-preview:hover {
-            opacity: 1;
-            cursor: pointer;
-        }
+.next-title {
+    font-family: 'NeueHaasDisplay-Medium', sans-serif;
+    font-size: 24px;
+    margin: 0;
+}
 
-        .next-post-label {
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #666;
-        }
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    :root {
+        --nav-height: 56px;
+    }
 
-        .next-post-title {
-            font-family: 'NeueHaasDisplay-Medium', sans-serif;
-            font-size: 24px;
-            margin: 0;
-            color: #000;
-            position: relative;
-            display: inline-block;
-        }
+    .blog-container {
+        padding-top: calc(var(--nav-height) + 40px);
+    }
 
-        .next-post-title::after {
-            content: "→";
-            margin-left: 0.5rem;
-            transition: transform 0.3s ease;
-            display: inline-block;
-        }
+    .blog-post {
+        margin-bottom: 80px;
+    }
 
-        .next-post-preview:hover .next-post-title::after {
-            transform: translateX(5px);
-        }
+    .blog-title {
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
 
-        @media (max-width: 480px) {
-            .next-post-preview {
-                margin: 3rem auto 1rem;
-            }
-            
-            .next-post-title {
-                font-size: 20px;
-            }
-        }
+    .blog-content {
+        font-size: 17px;
+        line-height: 1.7;
+    }
 
-        /* Small Screen Adjustments */
-        @media (max-width: 480px) {
-            .blog-container {
-                padding-top: 10vh;
-            }
+    .nav-button {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
 
-            .blog-post {
-                padding: 0 20px;
-            }
+    .next-post {
+        margin-top: 60px;
+    }
 
-            .navigation {
-                padding: 0 5px;
-            }
-            
-            .nav-button {
-                padding: 10px;
-            }
-
-            .blog-content {
-                font-size: 16px;
-            }
-
-            .blog-image-container {
-                margin: 0 auto 4rem;
-                padding: 0;
-            }
-        }
+    .blog-image {
+        margin-top: 40px;
+    }
+}
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="index.html" class="home-link">← home</a>
+            <div class="post-counter">1/2</div>
+        </div>
+    </nav>
+
+    <!-- Blog Content -->
     <div class="blog-container">
-        <div class="blog-post active" data-index="0">
-            <div class="blog-header">
-                <h1 class="blog-title">Being a peace of it all</h1>
-                <a href="index.html" class="home-link">back</a>
-            </div>
+        <article class="blog-post active">
+            <h1 class="blog-title">Being a peace of it all</h1>
             <div class="blog-content">
-                One thing I love to do when I'm on my bike and bored, agitated, pissed at life, is to close my eyes for a second and imagine I am a lonely particle floating somewhere deep in space (yes this is stupid but bare with me)<br><br>
+                <p>One thing I love to do when I'm on my bike and bored, agitated, pissed at life, is to close my eyes for a second and imagine I am a lonely particle floating somewhere deep in space (yes this is stupid but bare with me)</p>
             
-                And Im out there, further than our solar system, galaxy or even galaxy clusters. Im literally just in dark, empty space. And then I just pretend that all ive ever known, my entire life as particle was just in this complete nothingness.<br><br>
+                <p>And Im out there, further than our solar system, galaxy or even galaxy clusters. Im literally just in dark, empty space. And then I just pretend that all ive ever known, my entire life as particle was just in this complete nothingness.</p>
             
-                Then I slowly open my eyes, only a fuzzy glimpse at first. And I look and see what the first thing I can recognise is. Oh a leaf!<br><br>
+                <p>Then I slowly open my eyes, only a fuzzy glimpse at first. And I look and see what the first thing I can recognise is. Oh a leaf!</p>
             
-                Well this is normally pretty standard, boring. Its fall I see a thousand of them. But then I close my eyes again.<br><br>
+                <p>Well this is normally pretty standard, boring. Its fall I see a thousand of them. But then I close my eyes again.</p>
             
-                Now imagine YOU ARE this particle in space. You would go nuts over just a piece of that leaf!! Like EVERYTHING you have EVER known is just emptiness, nothing, nada. And now I give you this object that has texture, color, taste smell. And by definition this thing looks like NOTHING you have ever seen before. Cause you literally just have seen NOTHING<br><br>
+                <p>Now imagine YOU ARE this particle in space. You would go nuts over just a piece of that leaf!! Like EVERYTHING you have EVER known is just emptiness, nothing, nada. And now I give you this object that has texture, color, taste smell. And by definition this thing looks like NOTHING you have ever seen before. Cause you literally just have seen NOTHING</p>
             
-                Then I open my eyes fully. And what I see is not just one leaf from one tree in one species. There is all that … somethingness!<br><br>
+                <p>Then I open my eyes fully. And what I see is not just one leaf from one tree in one species. There is all that … somethingness!</p>
             
-                Like we didn't just get one tree from one species we got thousand leaves from thousand different types of trees. And all this other stuff. All the types of sidewalks, builkdings cars, people, …<br><br>
+                <p>Like we didn't just get one tree from one species we got thousand leaves from thousand different types of trees. And all this other stuff. All the types of sidewalks, builkdings cars, people, …</p>
             
-                There is so much SOMETHING<br><br>
+                <p>There is so much SOMETHING</p>
             
-                And then I am rly happy. On my bike. Riding through all this somethingness.<br><br>
+                <p>And then I am rly happy. On my bike. Riding through all this somethingness.</p>
             
-                Glad I didn't fall or cause an accident. There is no more awesome feeling like that.<br><br>
+                <p>Glad I didn't fall or cause an accident. There is no more awesome feeling like that.</p>
             
-                People, we got so much more stuff around us this, that you as a particle would literally kill over even if it just got a tiny piece of leaf.
+                <p>People, we got so much more stuff around us this, that you as a particle would literally kill over even if it just got a tiny piece of leaf.</p>
             </div>
-            <div class="blog-image-container">
-                <img src="img.jpg" alt="Blog post image" class="blog-image">
+            <img src="img.jpg" alt="Blog post image" class="blog-image">            
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
+                <h2 class="next-title">Care →</h2>
             </div>
-            <div class="next-post-preview">
-                <span class="next-post-label">Next</span>
-                <h2 class="next-post-title"></h2>
-            </div>
-        </div>
+        </article>
 
-        <div class="blog-post" data-index="1">
-            <div class="blog-header">
-                <h1 class="blog-title">Care</h1>
-                <a href="index.html" class="home-link">back</a>
-            </div>
+        <article class="blog-post">
+            <h1 class="blog-title">Care</h1>
             <div class="blog-content">
-                i was recently asked how i found work that i really enjoyed doing, that i was super passionate about.<br><br>
+                <p>i was recently asked how i found work that i really enjoyed doing, that i was super passionate about.</p>
 
-                And my answer quite plainly was i forced myself to never think of work as a job.<br><br>
+                <p>And my answer quite plainly was i forced myself to never think of work as a job.</p>
 
-                We often forget that jobs were not created for us to have jobs, jobs just kind of came into existence because there was shit to get done and problems to be solved. And along the way of solving it you got compensated for your effort. Not for the sake of having the job in the first place. that was a nice side effect.<br><br>
+                <p>We often forget that jobs were not created for us to have jobs, jobs just kind of came into existence because there was shit to get done and problems to be solved. And along the way of solving it you got compensated for your effort. Not for the sake of having the job in the first place. that was a nice side effect.</p>
 
-                But I feel like we don't see work like that anymore. We work for the sake of working, not for the sake of solving the problem that work was necessary for in the first place. Work is not a means to an end anymore, it is the end.<br><br>
+                <p>But I feel like we don't see work like that anymore. We work for the sake of working, not for the sake of solving the problem that work was necessary for in the first place. Work is not a means to an end anymore, it is the end.</p>
 
-                So how did i find sth to actually work on? I simply cared.<br><br>
+                <p>So how did i find sth to actually work on? I simply cared.</p>
 
-                I cared enough about a set of problems that I wanted to do sth about them.<br><br>
+                <p>I cared enough about a set of problems that I wanted to do sth about them.</p>
 
-                As a teenager I was kind of depressed by all the problems people were talking about constantly. Climate change, poverty, all of that stuff. But while we were constantly confronted with these problems, rarely did the conversation focus around actually doing something about them. People learnt to care about the problems, but not about the solution. That really bummed me out cause how can you ever be optimistic about life if no one's doing sth about the things you're worried about in the first place.<br><br>
+                <p>As a teenager I was kind of depressed by all the problems people were talking about constantly. Climate change, poverty, all of that stuff. But while we were constantly confronted with these problems, rarely did the conversation focus around actually doing something about them. People learnt to care about the problems, but not about the solution. That really bummed me out cause how can you ever be optimistic about life if no one's doing sth about the things you're worried about in the first place.</p>
 
-                The problem is that most of us grew up being told that they can't care cause they don't have the right to ideas or agency to care. But they do. Most of the stuff around you was thought off by people with not that different brains from you. Your ideas matter, if you just make them worth caring about.<br><br>
+                <p>The problem is that most of us grew up being told that they can't care cause they don't have the right to ideas or agency to care. But they do. Most of the stuff around you was thought off by people with not that different brains from you. Your ideas matter, if you just make them worth caring about.</p>
 
-                So even though there is all this shit we are facing, there still is something worth living about in spite of that. There is something to care about. Life is worth caring about. and making sure life gets better.<br><br>
+                <p>So even though there is all this shit we are facing, there still is something worth living about in spite of that. There is something to care about. Life is worth caring about. and making sure life gets better.</p>
 
-                So what i did is essentially decide that the best way out of this nihilism is to find my set of problems I deeply cared about and the solutions I wanted to see exist, push forward, rally behind, which i did and now still do.<br><br>
+                <p>So what i did is essentially decide that the best way out of this nihilism is to find my set of problems I deeply cared about and the solutions I wanted to see exist, push forward, rally behind, which i did and now still do.</p>
 
-                So if you struggle finding meaning in your work or something do to in the first place, look for something which makes life worth caring about. Things that you deeply care about. What problems move you? What do you want to get better at? Find a set of topics or people or things you deeply care about, you want to be better at, you want to help solve.<br><br>
+                <p>So if you struggle finding meaning in your work or something do to in the first place, look for something which makes life worth caring about. Things that you deeply care about. What problems move you? What do you want to get better at? Find a set of topics or people or things you deeply care about, you want to be better at, you want to help solve.</p>
 
-                And then find the work that would be required to protect them from the problems threatening them, things required to come closer to a solution for these problems. And then just do it. That's work. And the job title or the position is just a thing secondary to that that emerges from that.<br><br>
+                <p>And then find the work that would be required to protect them from the problems threatening them, things required to come closer to a solution for these problems. And then just do it. That's work. And the job title or the position is just a thing secondary to that that emerges from that.</p>
 
-                Care, and something to get done will follow.<br><br>
+                <p>Care, and something to get done will follow.</p>
 
-                Care and work and a job and money will follow.
+                <p>Care and work and a job and money will follow.</p>
             </div>
-            <div class="blog-image-container">
-                <img src="img2.jpeg" alt="Blog post image" class="blog-image">
+            <img src="img2.jpeg" alt="Blog post image" class="blog-image">            
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
+                <h2 class="next-title">Being a peace of it all →</h2>
             </div>
-            <div class="next-post-preview">
-                <span class="next-post-label">Next</span>
-                <h2 class="next-post-title"></h2>
-            </div>
-        </div>
+        </article>
     </div>
 
-    <div class="navigation">
+    <!-- Navigation Arrows -->
+    <div class="page-navigation">
         <button class="nav-button" onclick="navigate(-1)">←</button>
         <button class="nav-button" onclick="navigate(1)">→</button>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        // Initialize variables
-        let currentIndex = 0;
+        let currentPost = 0;
         const posts = document.querySelectorAll('.blog-post');
-        const totalPosts = posts.length;
-        const titles = document.querySelectorAll('.blog-title');
-
-        // Set up initial state
-        posts[0].classList.add('active');
-
-        // Function to handle post transitions
+        const postCounter = document.querySelector('.post-counter');
+        
         function navigate(direction) {
-            // Remove active class from current post
-            posts[currentIndex].classList.remove('active');
-            posts[currentIndex].style.transform = direction > 0 ? 'translateX(-100%)' : 'translateX(100%)';
-            
-            // Update index
-            currentIndex = (currentIndex + direction + totalPosts) % totalPosts;
-            
-            // Add active class to new post
-            posts[currentIndex].style.transform = 'translateX(0)';
-            posts[currentIndex].classList.add('active');
-            
-            // Reset scroll position
+            posts[currentPost].classList.remove('active');
+            currentPost = (currentPost + direction + posts.length) % posts.length;
+            posts[currentPost].classList.add('active');
+            postCounter.textContent = `${currentPost + 1}/${posts.length}`;
             window.scrollTo(0, 0);
         }
 
-        // Title animation
-        titles.forEach(title => {
-            title.addEventListener('click', function() {
-                this.classList.remove('animate');
-                void this.offsetWidth; // Trigger reflow
-                this.classList.add('animate');
-            });
-
-            // For mobile
-            title.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                this.classList.remove('animate');
-                void this.offsetWidth;
-                this.classList.add('animate');
-            });
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') navigate(-1);
+            if (e.key === 'ArrowRight') navigate(1);
         });
 
         // Touch navigation
@@ -412,21 +337,20 @@
         let isSwiping = false;
         let startScrollPos = 0;
         let isScrollingVertically = false;
-
-        document.addEventListener('touchstart', e => {
+        
+        document.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
             startScrollPos = window.scrollY;
             isSwiping = true;
             isScrollingVertically = false;
         }, { passive: true });
 
-        document.addEventListener('touchmove', e => {
+        document.addEventListener('touchmove', (e) => {
             if (!isSwiping) return;
             
             const currentY = window.scrollY;
             const verticalScroll = Math.abs(currentY - startScrollPos);
             
-            // If user is scrolling vertically, don't handle swipe
             if (verticalScroll > 10) {
                 isScrollingVertically = true;
             }
@@ -435,14 +359,13 @@
                 touchEndX = e.touches[0].clientX;
                 const diff = touchStartX - touchEndX;
                 
-                // If significant horizontal movement, prevent vertical scroll
                 if (Math.abs(diff) > 30) {
                     e.preventDefault();
                 }
             }
         }, { passive: false });
 
-        document.addEventListener('touchend', e => {
+        document.addEventListener('touchend', (e) => {
             if (!isSwiping || isScrollingVertically) return;
             
             touchEndX = e.changedTouches[0].clientX;
@@ -450,110 +373,20 @@
             const diff = touchStartX - touchEndX;
 
             if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    navigate(1); // Next post
-                } else {
-                    navigate(-1); // Previous post
-                }
+                if (diff > 0) navigate(1);
+                else navigate(-1);
             }
             
             isSwiping = false;
         }, { passive: true });
 
-        // Keyboard navigation
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowLeft') {
-                navigate(-1);
-            } else if (e.key === 'ArrowRight') {
-                navigate(1);
-            }
-        });
-
-        // Arrow button navigation
-        const navButtons = document.querySelectorAll('.nav-button');
-        navButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const direction = this.textContent === '←' ? -1 : 1;
-                navigate(direction);
-            });
-
-            // Prevent focus on buttons after click (mobile)
-            button.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                const direction = this.textContent === '←' ? -1 : 1;
-                navigate(direction);
-            });
-        });
-
-        // Handle visibility changes for better mobile experience
-        document.addEventListener('visibilitychange', function() {
+        // Handle visibility changes
+        document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                // Reset any ongoing swipe when tab/app becomes visible again
                 isSwiping = false;
                 isScrollingVertically = false;
             }
         });
-
-        // Handle window resize
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                // Reset scroll position after resize
-                window.scrollTo(0, 0);
-            }, 250);
-        });
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-    // Initialize variables
-    let currentIndex = 0;
-    const posts = document.querySelectorAll('.blog-post');
-    const totalPosts = posts.length;
-    const titles = document.querySelectorAll('.blog-title');
-
-    // Set up initial state
-    posts[0].classList.add('active');
-
-    // Function to handle post transitions
-    function navigate(direction) {
-        // Remove active class from current post
-        posts[currentIndex].classList.remove('active');
-        posts[currentIndex].style.transform = direction > 0 ? 'translateX(-100%)' : 'translateX(100%)';
-        
-        // Update index
-        currentIndex = (currentIndex + direction + totalPosts) % totalPosts;
-        
-        // Add active class to new post
-        posts[currentIndex].style.transform = 'translateX(0)';
-        posts[currentIndex].classList.add('active');
-        
-        // Reset scroll position
-        window.scrollTo(0, 0);
-    }
-
-        // Function to update next post titles
-        function updateNextPostTitles() {
-            posts.forEach((post, index) => {
-                const nextPostPreview = post.querySelector('.next-post-preview');
-                const nextIndex = (index + 1) % posts.length;
-                const nextTitle = posts[nextIndex].querySelector('.blog-title').textContent;
-                
-                const nextPostTitle = nextPostPreview.querySelector('.next-post-title');
-                nextPostTitle.textContent = nextTitle;
-                
-                // Add click handler to navigate to next post
-                nextPostPreview.addEventListener('click', () => {
-                    navigate(1);
-                });
-            });
-        }
-
-        // Call updateNextPostTitles after setting up initial state
-        updateNextPostTitles();
-
-        // Rest of your event listeners...
-        // [Previous touch navigation, keyboard navigation, etc. code remains the same]
-    });
     </script>
 </body>
 </html>
