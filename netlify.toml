@@ -9,6 +9,32 @@
   included_files = ["node_modules/openai/**"]
   timeout = 30
 
+# Add these redirect rules at the top of your redirects section
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://lukaskubiena.com/*"
+  to = "https://lukaskubiena.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.lukaskubiena.com/*"
+  to = "https://lukaskubiena.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.lukaskubiena.com/*"
+  to = "https://lukaskubiena.com/:splat"
+  status = 301
+  force = true
+
+# Your existing redirect
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
