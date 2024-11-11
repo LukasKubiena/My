@@ -32,6 +32,82 @@ body {
     overflow-x: hidden;
 }
 
+/* Authentication Overlay Styles */
+.auth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    text-align: center;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 0.75rem 0;
+    margin: 0 0 2rem 0;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    font-family: 'NeueHaasDisplay-Light', sans-serif;
+    font-size: 18px;
+    background: transparent;
+    transition: border-color 0.3s ease;
+    text-align: center;
+}
+
+.auth-container input:focus {
+    outline: none;
+    border-bottom-color: rgba(0, 0, 0, 0.3);
+}
+
+.auth-container input::placeholder {
+    color: #999;
+    text-align: center;
+}
+
+.auth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.auth-button {
+    background: none;
+    border: none;
+    color: #000000;
+    padding: 0;
+    font-family: 'NeueHaasDisplay-Light', sans-serif;
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.auth-button:hover {
+    opacity: 0.7;
+}
+
+.error-message {
+    color: #ff0000;
+    margin-top: 1rem;
+    display: none;
+    font-family: 'NeueHaasDisplay-Light', sans-serif;
+    font-size: 16px;
+    text-align: center;
+}
+
 /* Navigation */
 .nav-bar {
     position: fixed;
@@ -221,10 +297,33 @@ body {
     .blog-image {
         margin-top: 40px;
     }
+    
+    .auth-container {
+        padding: 2rem;
+        margin: 0 1rem;
+    }
+
+    .auth-container input {
+        font-size: 17px;
+    }
 }
     </style>
 </head>
 <body>
+
+    <!-- Password Protection Overlay -->
+    <div class="auth-overlay" id="auth-overlay">
+        <div class="auth-container">
+            <input type="password" id="password-input" placeholder="Enter password">
+            <div class="auth-buttons">
+                <a href="index.html" class="auth-button">back</a>
+                <button onclick="checkPassword()" class="auth-button">enter</button>            </div>
+            <div class="error-message" id="error-message">Incorrect password</div>
+        </div>
+    </div>
+
+    <!-- Your existing blog content, wrapped in a div -->
+    <div id="blog-content" style="display: none;">
     <!-- Navigation Bar -->
     <nav class="nav-bar">
         <div class="nav-content">
@@ -305,6 +404,7 @@ body {
             </div>
         </article>
     </div>
+    </div>
 
     <!-- Navigation Arrows -->
     <div class="page-navigation">
@@ -313,6 +413,39 @@ body {
     </div>
 
     <script>
+        // Password protection script
+        const CORRECT_PASSWORD = 'nichts besonderes'; // Change this to your desired password
+        
+        // Check if already authenticated
+        if (sessionStorage.getItem('blogAuthenticated') === 'true') {
+            showBlogContent();
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+            
+            if (input.value === CORRECT_PASSWORD) {
+                sessionStorage.setItem('blogAuthenticated', 'true');
+                showBlogContent();
+            } else {
+                errorMessage.style.display = 'block';
+                input.value = '';
+            }
+        }
+
+        function showBlogContent() {
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('blog-content').style.display = 'block';
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
         let currentPost = 0;
         const posts = document.querySelectorAll('.blog-post');
         const postCounter = document.querySelector('.post-counter');
