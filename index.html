@@ -472,7 +472,29 @@
     }
 
     .profile-image {
-        display: none !important;  /* Ensure image is completely hidden on mobile */
+        width: 100%;
+        height: auto;
+        margin: 2rem 0;
+        grid-column: 1 / -1;
+        grid-row: auto;
+        opacity: 0;
+        transition: opacity 1s ease-in;
+        display: block;  /* Ensure image is block-level */
+        max-width: 100%; /* Ensure image doesn't overflow */
+    }
+    
+    .profile-image.visible {
+        opacity: 1;
+    }
+
+    /* Hide image in chat mode */
+    body.chat-mode .profile-image {
+        display: none;
+    }
+
+    /* Initial load state */
+    .initial-load .profile-image {
+        opacity: 0;
     }
 
     .prompt {
@@ -731,10 +753,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function showContent() {
             cursor.style.display = 'none'; // Hide cursor after animations
+            
+            // Show all content including the image
             content.forEach(el => {
                 el.style.opacity = '1';
                 el.style.transition = 'opacity 1s ease-in';
             });
+            
+            // Explicitly handle the profile image
+            const profileImage = document.querySelector('.profile-image');
+            if (profileImage) {
+                profileImage.style.display = 'block';  // Ensure image is displayed
+                profileImage.style.opacity = '0';      // Start hidden
+                setTimeout(() => {
+                    profileImage.style.opacity = '1';   // Fade in
+                    profileImage.style.transition = 'opacity 1s ease-in';
+                }, 100);
+            }
         }
 
         // Delay the entire animation sequence by 2 seconds
@@ -871,6 +906,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
+        // Update the handleLongPress function to properly hide the image:
         function handleLongPress() {
     inChatMode = true;
 
@@ -880,16 +916,24 @@ document.addEventListener('DOMContentLoaded', function() {
     heyText.textContent = '';
     hey.innerHTML = ''; // Clear existing content
     comma.style.display = 'none';
+    
+    // Add this block here to hide content and image
+    content.forEach(el => el.style.display = 'none');
+    const profileImage = document.querySelector('.profile-image');
+    if (profileImage) {
+        profileImage.style.display = 'none';
+    }
+    
     const input = document.createElement('textarea');
     input.className = 'chat-input';
     input.placeholder = 'Ask...';
-    input.style.font = window.getComputedStyle(hey).font; // Match the "Hey" font
+    input.style.font = window.getComputedStyle(hey).font;
     input.style.border = 'none';
     input.style.background = 'transparent';
     input.style.outline = 'none';
     input.style.width = '100%';
     input.style.resize = 'none';
-    input.style.height = 'auto'; // Allow height to adjust
+    input.style.height = 'auto';
     input.style.overflow = 'hidden';
     input.style.caretColor = 'black';
     heyText.appendChild(input);
@@ -1060,10 +1104,18 @@ async function handleUserInput(userInput) {
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
 
+            // Show all content including image
             content.forEach(el => {
                 el.style.display = 'block';
                 el.style.opacity = '1';
             });
+
+            // Explicitly handle the profile image
+            const profileImage = document.querySelector('.profile-image');
+            if (profileImage) {
+                profileImage.style.display = 'block';
+                profileImage.style.opacity = '1';
+            }
 
             // Remove any AI responses
             const aiResponses = document.querySelectorAll('.ai-response');
@@ -1080,9 +1132,9 @@ async function handleUserInput(userInput) {
             }, 10);
 
             resetPromptTimer();
-
             messages = [];
         }
+
 
 
         function playAnimation() {
