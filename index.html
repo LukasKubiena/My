@@ -176,6 +176,24 @@
         margin: 0 auto;
     }
 
+    .profile-image {
+    grid-column: 10 / 12;
+    grid-row: 2 / 4;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    margin: 0;
+    display: block;
+    opacity: 0;  /* Start hidden */
+    transition: opacity 1s ease-in;  /* Match content fade-in transition */
+}
+
+/* Add fade-in class to use in JavaScript */
+.profile-image.visible {
+    opacity: 1;
+}
+
     .hey-container {
         grid-column: 4 / 6;
         grid-row: 2 / 3;
@@ -205,9 +223,13 @@
     }
 
     .content-group {
-        grid-column: 10 / 12;
-        grid-row: 2 / 6;
-    }
+    grid-column: 10 / 12;
+    grid-row: 4 / 6;  /* Align with content-2 */
+    display: flex;
+    flex-direction: column;
+    gap: var(--row-gap);
+    margin-top: 0;  /* Remove any top margin */
+}
 
 }
 
@@ -238,7 +260,6 @@
     font-size: 0.9rem;
     color: #888;
     align-self: start; /* Align to the top of its grid cell */
-    margin-top: 9rem; /* Add some top margin to align with the end of the paragraph */
 }
         /* New styles for chat mode */
         body.chat-mode {
@@ -450,6 +471,10 @@
         vertical-align: baseline; /* Align with text baseline */
     }
 
+    .profile-image {
+        display: none !important;  /* Ensure image is completely hidden on mobile */
+    }
+
     .prompt {
         position: absolute;
         top: -44px; /* Adjust this value as needed */
@@ -521,7 +546,8 @@
     </div>
     <div class="content content-1">
         I'm Lukas. Currently, I am working on enabling more meaningful participation through AI <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. We want to empower every voice to participate in decisions that impact their community. As Impact Lead, I make sure our daily work moves us closer to that mission and to positive impact for communities in the world.    </div>
-    <div class="content content-2">
+        <img src="profile.jpeg" alt="Lukas Kubiena" class="profile-image">
+        <div class="content content-2">
         Apart from work you can find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
     </div>
     <div class="content-group">
@@ -1170,6 +1196,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     el.style.opacity = '1';
                     el.style.animation = 'fadeIn 1s ease-in';
                 });
+                const profileImage = document.querySelector('.profile-image');
+                if (profileImage) {
+                    profileImage.classList.add('visible');
+                }
+                cop
                 copyright.style.opacity = '1';
                 copyright.style.animation = 'fadeIn 1s ease-in';
                 resetPromptTimer();
@@ -1214,6 +1245,12 @@ document.addEventListener('DOMContentLoaded', function() {
             input.style.background = 'transparent';
             input.style.outline = 'none';
             input.style.font = window.getComputedStyle(hey).font;
+
+               // Hide image along with other content
+            const profileImage = document.querySelector('.profile-image');
+            if (profileImage) {
+                profileImage.style.display = 'none';
+            }
             
             inputContainer.appendChild(input);
             hey.appendChild(inputContainer);
@@ -1346,7 +1383,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function resetPage() {
             inChatMode = false;
             toggleChatMode(false);
-            document.body.classList.remove('chat-mode');  // Add this line
+            document.body.classList.remove('chat-mode');
             
             hidePrompt();
             clearPreviousContent();
@@ -1356,16 +1393,29 @@ document.addEventListener('DOMContentLoaded', function() {
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
 
+            // Reset all content including image
             content.forEach(el => {
                 el.style.display = '';
                 el.style.opacity = '0';
-                setTimeout(() => {
+            });
+            
+            const profileImage = document.querySelector('.profile-image');
+            if (profileImage) {
+                profileImage.style.display = '';
+                profileImage.classList.remove('visible');
+            }
+
+            setTimeout(() => {
+                content.forEach(el => {
                     el.style.opacity = '1';
                     el.style.animation = 'fadeIn 1s ease-in';
-                }, 100);
-            });
+                });
+                if (profileImage) {
+                    profileImage.classList.add('visible');
+                }
+            }, 100);
+            
             copyright.style.opacity = '1';
-
             messages = [];
             
             playPopOutAnimation();
