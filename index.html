@@ -37,11 +37,51 @@
             grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
             grid-template-rows: auto auto auto auto auto auto; /* Added an extra row */
             column-gap: 1.5rem;
-            padding-top: 24vh;
+            padding-top: 11vh;
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
         }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        .right-links {
+            display: flex;
+            gap: 24px;
+        }
+
 
         .right-links {
             display: flex;
@@ -171,22 +211,21 @@
         grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
             grid-template-rows: auto auto auto auto auto auto;
         column-gap: 1.5rem;
-        padding-top: 24vh;
         max-width: 1400px;
         margin: 0 auto;
     }
 
     .profile-image {
     grid-column: 10 / 12;
-    grid-row: 2 / 4;
+    grid-row: 2 / 4;  /* Match content-1's grid position */
     width: 100%;
-    height: 100%;
-    border-radius: 4px;
+    height: 100%;  /* Fill the grid area */
     object-fit: cover;
+    border-radius: 4px;
     margin: 0;
     display: block;
-    opacity: 0;  /* Start hidden */
-    transition: opacity 1s ease-in;  /* Match content fade-in transition */
+    opacity: 0;
+    transition: opacity 1s ease-in;
 }
 
 /* Add fade-in class to use in JavaScript */
@@ -235,7 +274,6 @@
 
 @media screen and (min-width: 1025px) {
     body {
-        padding-top: 20vh;
         overflow: hidden; /* Prevent scrolling on the body */
     }
 
@@ -253,6 +291,10 @@
         white-space: nowrap;
     }
 
+    body.initial-load {
+        padding-top: 24vh;
+    }
+
     .copyright {
     grid-column: 10 / 12;
     grid-row: 4; /* Place it in the last row */
@@ -264,7 +306,7 @@
         /* New styles for chat mode */
         body.chat-mode {
             grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-            padding-top: 13vh;
+            padding-top: 11vh; /* Slightly reduced top padding in chat mode */
             padding-left: 1%;
         }
 
@@ -319,16 +361,16 @@
         display: none !important;
     }
 
-    .back-button {
-        grid-column: 7 / 14;
-        grid-row: 6;
-        align-self: end;
-        justify-self: start;
-        text-decoration: underline;
-        cursor: pointer;
-        font-family: 'NeueHaasDisplay-Light', sans-serif;
-        font-size: 16px;
-    }
+/* Adjust back button positioning */
+.back-button {
+    position: fixed;
+    bottom: 24vh; /* Moved up from default position */
+    right: 24vh;
+    text-decoration: underline;
+    cursor: pointer;
+    font-family: 'NeueHaasDisplay-Light', sans-serif;
+    font-size: 16px;
+}
 
     .typing-cursor {
         display: inline-block;
@@ -349,6 +391,11 @@
     margin-left: 2px;
     vertical-align: bottom;
 }
+
+body {
+                padding-top: calc(24vh + 64px); /* Added navbar height to existing padding */
+            }
+        
 
 @keyframes blink {
     0% { opacity: 0; }
@@ -392,12 +439,16 @@
             transition: transform 0.3s ease;
         }
 
+
+
+
         .at-link:hover::before {
             transform: scaleX(1);
             transform-origin: bottom left;
         }
     }
 
+    
     .blog-link {
             margin-bottom: -1rem; /* Reduced spacing between blog and send me a mail */
         }
@@ -427,6 +478,8 @@
     body.chat-mode {
     row-gap: 0;
 }
+
+
 
     .ai-response {
         font-family: 'NeueHaasDisplay-Light', sans-serif;
@@ -461,6 +514,14 @@
     color: #CCCCCC;
 }
 
+body {
+    margin-top: 8vh; /* Reduced from 12vh */
+}
+            
+            .nav-bar {
+                height: 56px; /* Slightly smaller on mobile */
+            }
+
     .typing-cursor {
         display: inline-block;
         width: 1px;
@@ -491,10 +552,19 @@
     body.chat-mode .profile-image {
         display: none;
     }
+    body.chat-mode {
+        margin-top: 6vh;
+    }
 
     /* Initial load state */
     .initial-load .profile-image {
         opacity: 0;
+    }
+
+    .back-button {
+        position: fixed;
+        bottom: 3vh; /* Even higher on mobile */
+        right: 3vh;
     }
 
     .prompt {
@@ -560,7 +630,16 @@
     </style>
 </head>
 <body class="initial-load">
-    <div class="copyright">© 2024</div>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="#" class="nav-link">Lukas Kubiena</a>
+            <div class="right-links">
+                <a href="blog.html" class="nav-link">blog</a>
+                <a href="mailto:lukasmariakubiena@gmail.com" class="nav-link">contact</a>
+            </div>
+        </div>
+    </nav>
+    <div class="copyright"></div>
     <div class="hey-container">
         <div class="hey">
             <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
@@ -844,8 +923,11 @@ document.addEventListener('DOMContentLoaded', function() {
         function resetPromptTimer() {
             clearTimeout(promptTimer);
             promptTimer = setTimeout(() => {
-                if (!inChatMode) showPrompt('Press this to ask about me');
-            }, 10000);
+                if (!inChatMode && document.body.classList.contains('initial-load')) {
+                    document.body.classList.remove('initial-load'); // Remove initial load class
+                    showPrompt('Click this to ask about me', true);
+                }
+            }, 5000);
         }
 
         resetPromptTimer();
@@ -1202,9 +1284,11 @@ document.addEventListener('DOMContentLoaded', function() {
             hey.appendChild(cursor);
 
             if (isInitialLoad) {
-                content.forEach(el => el.style.opacity = '0');
-                copyright.style.opacity = '0';
-            }
+            content.forEach(el => el.style.opacity = '0');
+            copyright.style.opacity = '0';
+            // Start the prompt timer after initial animations
+            setTimeout(resetPromptTimer, 3000); // Start prompt timer after animations
+        }
 
             setTimeout(() => {
                 function typeChar() {
