@@ -545,14 +545,13 @@ body {
     </div>
 
     <script>
-                // At the beginning of your script
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get post ID from URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const postId = urlParams.get('post');
-            
+       document.addEventListener('DOMContentLoaded', function() {
+        // Get post ID from URL parameter first
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('post');
+        
+        function initializePage() {
             if (postId) {
-                // Convert postId to index (0-based)
                 const postIndex = parseInt(postId) - 1;
                 if (postIndex >= 0 && postIndex < posts.length) {
                     currentPost = postIndex;
@@ -561,27 +560,30 @@ body {
                     postCounter.textContent = `${currentPost + 1}/${posts.length}`;
                 }
             }
-        });
-        // Password protection script
-        const CORRECT_PASSWORD = '42'; // Change this to your desired password
-        
-        // Check if already authenticated
-        if (sessionStorage.getItem('blogAuthenticated') === 'true') {
-            showBlogContent();
         }
 
-        function checkPassword() {
+        // Check authentication
+        if (sessionStorage.getItem('blogAuthenticated') === 'true') {
+            showBlogContent();
+            initializePage();
+        }
+
+        // Update checkPassword function
+        window.checkPassword = function() {
             const input = document.getElementById('password-input');
             const errorMessage = document.getElementById('error-message');
             
             if (input.value === CORRECT_PASSWORD) {
                 sessionStorage.setItem('blogAuthenticated', 'true');
                 showBlogContent();
+                initializePage();
             } else {
                 errorMessage.style.display = 'block';
                 input.value = '';
             }
         }
+    }); 
+
 
 
 
