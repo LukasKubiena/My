@@ -602,7 +602,25 @@ body {
         let currentPost = 0;
         const posts = document.querySelectorAll('.blog-post');
         const postCounter = document.querySelector('.post-counter');
-        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // First check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('post');
+            
+            if (postId) {
+                const postIndex = parseInt(postId) - 1;
+                if (postIndex >= 0 && postIndex < posts.length) {
+                    // Hide all posts first
+                    posts.forEach(post => post.classList.remove('active'));
+                    // Show the requested post
+                    currentPost = postIndex;
+                    posts[currentPost].classList.add('active');
+                    postCounter.textContent = `${currentPost + 1}/${posts.length}`;
+                }
+            }
+        });
+
         function navigate(direction) {
             posts[currentPost].classList.remove('active');
             currentPost = (currentPost + direction + posts.length) % posts.length;
