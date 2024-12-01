@@ -371,7 +371,7 @@ body {
 </head>
 <body>
 <!-- Password Protection Overlay -->
-<div class="auth-overlay" id="auth-overlay">
+<!-- <div class="auth-overlay" id="auth-overlay">
     <div class="auth-container">
         <div class="auth-notice">
             <p>You're about to enter my personal blog.</p>
@@ -386,15 +386,15 @@ body {
         </div>
         <div class="error-message" id="error-message">Incorrect password</div>
     </div>
-</div>
+</div> -->
 
     <!-- Your existing blog content, wrapped in a div -->
-    <div id="blog-content" style="display: none;">
+    <div id="blog-content">
     <!-- Navigation Bar -->
     <nav class="nav-bar">
         <div class="nav-content">
-            <a href="index.html" class="home-link">← home</a>
-            <div class="post-counter">1/2</div>
+            <a href="index.html" class="home-link">← blogs</a>
+            <div class="post-counter">1/3</div>
         </div>
     </nav>
 
@@ -545,6 +545,23 @@ body {
     </div>
 
     <script>
+                // At the beginning of your script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get post ID from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('post');
+            
+            if (postId) {
+                // Convert postId to index (0-based)
+                const postIndex = parseInt(postId) - 1;
+                if (postIndex >= 0 && postIndex < posts.length) {
+                    currentPost = postIndex;
+                    posts.forEach(post => post.classList.remove('active'));
+                    posts[currentPost].classList.add('active');
+                    postCounter.textContent = `${currentPost + 1}/${posts.length}`;
+                }
+            }
+        });
         // Password protection script
         const CORRECT_PASSWORD = '42'; // Change this to your desired password
         
@@ -565,6 +582,8 @@ body {
                 input.value = '';
             }
         }
+
+
 
         function showBlogContent() {
             document.getElementById('auth-overlay').style.display = 'none';
