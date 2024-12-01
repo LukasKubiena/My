@@ -545,66 +545,21 @@ body {
     </div>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-        // Get post ID from URL parameter first
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('post');
-        
-        function initializePage() {
-            if (postId) {
-                const postIndex = parseInt(postId) - 1;
-                if (postIndex >= 0 && postIndex < posts.length) {
-                    currentPost = postIndex;
-                    posts.forEach(post => post.classList.remove('active'));
-                    posts[currentPost].classList.add('active');
-                    postCounter.textContent = `${currentPost + 1}/${posts.length}`;
-                }
-            }
-        }
-
-        // Check authentication
-        if (sessionStorage.getItem('blogAuthenticated') === 'true') {
-            showBlogContent();
-            initializePage();
-        }
-
-        // Update checkPassword function
-        window.checkPassword = function() {
-            const input = document.getElementById('password-input');
-            const errorMessage = document.getElementById('error-message');
-            
-            if (input.value === CORRECT_PASSWORD) {
-                sessionStorage.setItem('blogAuthenticated', 'true');
-                showBlogContent();
-                initializePage();
-            } else {
-                errorMessage.style.display = 'block';
-                input.value = '';
-            }
-        }
-    }); 
-
-
-
-
-        function showBlogContent() {
-            document.getElementById('auth-overlay').style.display = 'none';
-            document.getElementById('blog-content').style.display = 'block';
-        }
-
-        // Allow Enter key to submit
-        document.getElementById('password-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
-
-        let currentPost = 0;
+       let currentPost = 0;
         const posts = document.querySelectorAll('.blog-post');
         const postCounter = document.querySelector('.post-counter');
+        const audioPlayers = [
+            new Audio('audio01.mp3'),
+            new Audio('audio02.mp3'),
+            new Audio('audio03.mp3')
+        ];
+        let currentlyPlaying = null;
+        const timeDisplays = document.querySelectorAll('.time-display');
+        const progressBars = document.querySelectorAll('.progress-bar');
+        const playButtons = document.querySelectorAll('.play-button');
 
+        // Initialize based on URL parameter
         document.addEventListener('DOMContentLoaded', function() {
-            // First check URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('post');
             
@@ -635,18 +590,6 @@ body {
             if (e.key === 'ArrowRight') navigate(1);
         });
 
-        const audioPlayers = [
-        new Audio('audio01.mp3'),
-        new Audio('audio02.mp3'),
-        new Audio('audio03.mp3')  // Add this line
-    ];
-    
-    let currentlyPlaying = null;
-    
-    // Initialize time displays and progress bars
-    const timeDisplays = document.querySelectorAll('.time-display');
-    const progressBars = document.querySelectorAll('.progress-bar');
-    const playButtons = document.querySelectorAll('.play-button');
     
     // Format time in MM:SS
     function formatTime(seconds) {
