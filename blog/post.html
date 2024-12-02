@@ -576,19 +576,23 @@ body {
             }
         });
 
+        // Reset audio when navigating between posts
         function navigate(direction) {
+            // Reset any playing audio first
+            if (currentlyPlaying !== null) {
+                audioPlayers[currentlyPlaying].pause();
+                audioPlayers[currentlyPlaying].currentTime = 0;
+                playButtons[currentlyPlaying].textContent = 'listen';
+                currentlyPlaying = null;
+            }
+            
+            // Then handle navigation
             posts[currentPost].classList.remove('active');
             currentPost = (currentPost + direction + posts.length) % posts.length;
             posts[currentPost].classList.add('active');
             postCounter.textContent = `${currentPost + 1}/${posts.length}`;
             window.scrollTo(0, 0);
         }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') navigate(-1);
-            if (e.key === 'ArrowRight') navigate(1);
-        });
 
     
     // Format time in MM:SS
