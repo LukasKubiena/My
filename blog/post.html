@@ -586,11 +586,19 @@ body {
                 currentlyPlaying = null;
             }
             
-            // Then handle navigation
+            // Remove active class from current post
             posts[currentPost].classList.remove('active');
+            
+            // Calculate new post index
             currentPost = (currentPost + direction + posts.length) % posts.length;
+            
+            // Add active class to new post
             posts[currentPost].classList.add('active');
+            
+            // Update counter
             postCounter.textContent = `${currentPost + 1}/${posts.length}`;
+            
+            // Scroll to top
             window.scrollTo(0, 0);
         }
 
