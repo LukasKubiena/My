@@ -394,7 +394,7 @@ body {
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="index.html" class="home-link">← blogs</a>
-            <div class="post-counter">1/3</div>
+            <div class="post-counter">1/4</div>
         </div>
     </nav>
 
@@ -530,7 +530,55 @@ body {
                 <p>So once you find these things to care about, don't let your thoughts stop you from getting things done. If you are like me, they will always have something to criticise either way.</p>
             </div>
             <img src="img4.png" alt="Blog post image" class="blog-image">            
-            <div class="next-post" onclick="navigate(-2)">
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
+                <h2 class="next-title">Why →</h2>
+            </div>
+        </article>
+        <article class="blog-post">
+            <h1 class="blog-title">Why</h1>
+            <div class="audio-container">
+                <button class="play-button" onclick="togglePlay(3)">listen</button>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="progress-container" onclick="seek(event, 3)">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="blog-content">
+                <p>Sometime last year I let go off many of the support structures I had relied on for most of my life for all the wrong reasons. I was in the process of working up a lot of difficult things about my childhood - old wounds, wrong beliefs and so on. Around the same time, I had the pleasure of working in an environment where we were left with a lot of freedom on what we wanted to work on and how we wanted to be useful in the company.</p>
+        
+                <p>This and the removal of these early childhood introjections made me think quite a bit about my personal & professional identity. At this point, work had become an important part of my life, but defining a clear role proved to be a bit challenging for me.</p>
+        
+                <p>I always approached work from a very idealistic perspective. As you've maybe already read in some of my other blogs - and to use some of the overly generous words from my coworkers - the basis for what I do always originated from a love and care for life and all living things.</p>
+        
+                <p>This strong passion made it sometimes difficult to fit myself and all the energy that came with it, into a corporate title or framework part of corporate life. When I did, I felt like betraying the source of meaning that was driving it all. I simply didn't feel like "just a designer", or "just a researcher". I always wanted to do everything all at once. More often than not, my passion paralysed me to an extent where I got incapable of doing anything to begin with.</p>
+        
+                <p>The only thing that stayed consistent as my identity shifted and new sense of self grew, was the why behind it all, which is what I want to share in this little blog.</p>
+        
+                <p>What I'm going to explain is a belief that has been with me since all the way back to when I turned seventeen. It's a form of mantra that through all it's ups and downs, life ingrained so deeply into my being that to this day - as cheesy and naive as it may sound to you and definitely does to me - is difficult to imagine myself without it.</p>
+        
+                <p>The story goes something like this:</p>
+        
+                <p>When I was just about to turn seventeen, a lot of bad things happened to me and especially to someone very close to me - Pretty horrible things on a regular basis. Being so young, it really messed with the way I saw the world. During a time where most people get to explore themselves and the world around them, my days were spent worrying about what bad thing was going to happen next.</p>
+        
+                <p>I somewhat knew at the time that life simply couldn't be filled with so much bad stuff. Especially not happening to a single person in such short amount of time. I guessed that we were just unlucky and that my perception of life must have been extraordinary skewed by this series of shitty events.</p>
+        
+                <p>However, my ability to rationalise it away didn't change the fact that I was still left with this overwhelming feeling of us being surrounded by a kind of darkness. The usual sources of happiness, that were friends, family or other things, simply were not bright enough to distract from the things happening around us. Before all eventually turned to the better, 17 year old me came pretty close to losing all joy to live, fragile as I was back then.</p>
+        
+                <p>Even though I knew that all the other positive things in my life never left me, they didn't work anymore and I needed something different to pull me out of this state of despair and pessimism. It was the only time in my life where I felt that if things didn't change quickly, at some point even I would have no single ounce of hope or optimism left in my body.</p>
+        
+                <p>At the time one of the rare things to distract me from the bad reality of everyday life, was the fact that everything around me, all of the things that made my shitty days a little bit more bearable, were built by people no different from me. That gave me hope - This thought that in one way or the other so many people out there were trying really hard to make life a little bit better in their tiny corner of the world. They are doing things that make the difficult times a little easier to bear for all of us.</p>
+        
+                <p>So young and idealistic as I was, I decided there and then that I would spend the rest of my life, joining whoever's out there in trying to help solve difficult problems affecting many people, and in doing so hopefully creating beautiful and meaningful things along the way.</p>
+        
+                <p>I thought that if we could pour all our love, passion and care into building things that truly work and solve some of the problems we're all facing, we kind of create this little light. And we create it not only for ourselves but maybe for all the other people out there affected by the same problem.</p>
+        
+                <p>And maybe even someday, another seventeen year-old going through a dark phase in life, might just stumble across this thing that we built many years later. And without ever needing to know who or why it was made, it just so happens to come into their life at the right time, that it not only solves their problem, but that they also sense all this care and passion that went into it. And if we are really lucky, it turns into a source of light helping them a little through dark times. Just as it did for me.</p>
+        
+                <p>This thought has not left me since and it has become one of the most consistent sources of joy, meaning and happiness in my life. It not only got me out of my own darkness but also became a compass that has since guided my personal and professional decisions. - It is my why.</p>
+            </div>
+            <img src="img5.jpeg" alt="Blog post image" class="blog-image">            
+            <div class="next-post" onclick="navigate(1)">
                 <div class="next-label">Next</div>
                 <h2 class="next-title">Being a piece of it all →</h2>
             </div>
@@ -551,7 +599,8 @@ body {
         const audioPlayers = [
             new Audio('audio01.mp3'),
             new Audio('audio02.mp3'),
-            new Audio('audio03.mp3')
+            new Audio('audio03.mp3'),
+            new Audio('audio4.mp3')
         ];
         let currentlyPlaying = null;
         const timeDisplays = document.querySelectorAll('.time-display');
