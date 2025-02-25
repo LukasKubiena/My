@@ -92,10 +92,10 @@
 
         .banner-image {
             width: 100%;
-            aspect-ratio: 2 / 1;
+            aspect-ratio: 1 / 1;  /* Changed from 2/1 to 1/1 for square images */
             border-radius: 4px;
             object-fit: cover;
-            object-position: top center; /* This ensures the image is anchored to the top */
+            object-position: center;  /* Changed to center instead of top center */
             margin-bottom: 24px;
         }
 
@@ -148,6 +148,12 @@
     <!-- Blog Content -->
     <div class="blog-container">
         <div class="blog-grid">
+            <a href="post.html?post=4" class="blog-card">
+                <img src="ban4.png" alt="Why" class="banner-image">
+                <div class="post-date">Feb 25, 2025</div>
+                <h2 class="post-title">Why</h2>
+            </a>
+
             <a href="post.html?post=3" class="blog-card">
                 <img src="ban1.png" alt="Action" class="banner-image">
                 <div class="post-date">Nov 21, 2024</div>
@@ -164,11 +170,6 @@
                 <img src="ban3.png" alt="Being a piece of it all" class="banner-image">
                 <div class="post-date">Oct 15, 2024</div>
                 <h2 class="post-title">Being a piece of it all</h2>
-            </a>
-            <a href="post.html?post=4" class="blog-card">
-                <img src="ban4.png" alt="Why" class="banner-image">
-                <div class="post-date">Feb 25, 2025</div>
-                <h2 class="post-title">Why</h2>
             </a>
         </div>
     </div>
