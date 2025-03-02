@@ -394,7 +394,7 @@ body {
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="index.html" class="home-link">← blogs</a>
-            <div class="post-counter">1/4</div>
+            <div class="post-counter">1/5</div>
         </div>
     </nav>
 
@@ -580,6 +580,61 @@ body {
             <img src="img5.jpeg" alt="Blog post image" class="blog-image">            
             <div class="next-post" onclick="navigate(1)">
                 <div class="next-label">Next</div>
+                <h2 class="next-title">To us Polarised →</h2>
+            </div>
+        </article>
+        <article class="blog-post">
+            <h1 class="blog-title">To us Polarised</h1>
+            <div class="audio-container">
+                <button class="play-button" onclick="togglePlay(4)">listen</button>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="progress-container" onclick="seek(event, 4)">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="blog-content">
+                <p>I kinda have to be honest, for some reason I've been a little saddened by the news in the past few weeks. - More than usual. Not by anything particular, but just because it seems that some things happening on national levels are making us drift apart more and more, without us even having to do anything to contribute. It seems like some people really like us to stay polarised if not make it even worse, without solving any of your or my problems. So, keeping that in mind, I thought i'd just share a few things with all of you out there.</p>
+
+                <p>To those reading this blog and to those possibly affected by my work in the future:</p>
+                
+                <p>First (and especially to those at what some might call the very opposite sides of my beliefs) - I don't know what you're feeling right now, but I am sorry if in these times you are also as angry, frustrated, annoyed,… as I am, maybe for very different reasons.</p>
+
+                <p>At the end of the day, I would probably do you and your situation an injustice by saying I can relate to what you're going through in your life, as much as I wish I could.</p>
+
+                <p>But even in all this polarisation everyone's talking about, there's one thing I hope you and I both get to learn: That there's one thing that will always connect us no matter the times. The fact that we both know what it means to be happy, angry, sad... or whatever emotion you and I, separated by different life situations, might be feeling right now.</p>
+
+                <p>I may not always do what you believe is the right thing to do. I may not always share your opinion on certain topics and issues, and I might even argue harshly against your stance. I will, however, always be connected with you through at least some of the emotions that might be driving you - be it anger, fear, sadness, joy or else.</p>
+
+                <p>Who knows, maybe we might even be feeling the same emotion while believing completely opposite things.</p>
+
+                <p>You and I both know what it feels like to be sad.</p>
+
+                <p>You and I both know what it feels like to lose someone or something.</p>
+
+                <p>And you and I both hopefully know what it means to be happy, to laugh, or even to love someone dearly.</p>
+
+                <p>You and I are likely separated by very different life circumstances and experiences right now.</p>
+
+                <p>But to those life experiences that shaped who we are and especially to those that didn't need to be this way, that really could have been different, better, easier…</p>
+
+                <p>Let's work on those.</p>
+
+                <p>Why not try, each in our own little way and maybe even together one day, to leave this world in a better place than we found it - not just for you, not just for me, but for as many of us as possible, where possible.</p>
+
+                <p>And because I know some might be thinking "isn't that exactly what our world leaders think they're doing right now?" Yes - they probably are very much convinced that what they're doing is making the world better for their people or even everyone out there.</p>
+
+                <p>So to you and I - let's at least agree to do this a bit differently. That whatever we do - we will do so in way where we not only voice our disagreements about methods or directions we two have, but also always vouch for the uncontestably human nature of the other side's actions. This is a choice. And one I very much hope see you taking.</p>
+
+                <p>Because, I feel more certain than ever that this is the only way. If we can not get to the point, where after an argument we are not even capable of acknowledging the human nature of whoever we believe to be arguing against -
+                If we cannot highlight the other side's uncontestably human nature, then we dehumanise not only them but also ourselves and dishonour those important to us. It does not matter whether you are religious, spiritual or whatever - This is the least bit of human decency we should have left.</p>
+
+                <p>This is the very first step of failure in your and my quest in making the future truly happy, healthy and secure for the people who matter most to each of us.</p>
+
+                <p>Because at the end of the day no matter what choices we might make in our lives, there are things that will always connect us whether we like it or not: The fact that we all know what anger, fear, sadness, love and happiness feels like.</p>
+            </div>
+            <img src="img6.png" alt="Blog post image" class="blog-image">
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
                 <h2 class="next-title">Being a piece of it all →</h2>
             </div>
         </article>
@@ -600,7 +655,8 @@ body {
             new Audio('audio01.mp3'),
             new Audio('audio02.mp3'),
             new Audio('audio03.mp3'),
-            new Audio('audio4.mp3')
+            new Audio('audio4.mp3'),
+            new Audio('audio5.mp3')
         ];
         let currentlyPlaying = null;
         const timeDisplays = document.querySelectorAll('.time-display');
