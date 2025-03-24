@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Method - Lukas Kubiena</title>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+        }
+
+        :root {
+            --content-width: 680px;
+            --nav-height: 64px;
+            --page-padding: max(5vw, 24px);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            background: #ffffff;
+            line-height: 1.6;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        .right-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .blog-container {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: calc(var(--nav-height) + 64px) var(--page-padding) 64px;
+        }
+
+        .blog-content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .blog-content p {
+            margin: 0 0 32px 0;
+        }
+
+        .blog-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 0 0 64px 0;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --nav-height: 56px;
+            }
+
+            .blog-container {
+                padding-top: calc(var(--nav-height) + 40px);
+            }
+
+            .blog-content {
+                font-size: 17px;
+                line-height: 1.7;
+            }
+
+            .blog-image {
+                margin-bottom: 40px;
+            }
+
+            .nav-bar {
+                height: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="#" class="nav-link">Lukas Kubiena</a>
+            <div class="right-links">
+                <a href="method.html" class="nav-link">method</a>
+                <a href="animation.html" class="nav-link">animation</a>
+                <a href="./blog/index.html" class="nav-link">blog</a>
+                <a href="mailto:lukasmariakubiena@gmail.com" class="nav-link">contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="blog-container">
+        <article class="blog-post">
+            <img src="/api/placeholder/1200/400" alt="Method banner" class="blog-image">
+            
+            <div class="blog-content">
+                <p>I have always taken a humanistic lens on technology. People have lost excitement about the prospect of technology.</p>
+
+                <p>I am talking to researchers, politicians and industry stakeholders and try to understand what they care about and what problems affect them, and design the primitives for how their needs should get solved by tech.</p>
+
+                <p>I help teams build things that solve human problems by:</p>
+
+                <p>1. Identifying gaps between what's being built and what people actually need<br>
+                2. Translating complex technical concepts into clear, meaningful actions<br>
+                3. Ensuring projects stay connected to their core purpose</p>
+
+                <p>Think of it like being a quality check for humanity in tech development - I make sure we're building things that genuinely help people, not just technically impressive solutions looking for problems.</p>
+
+                <p>My background combines creative problem-solving with technical understanding, allowing me to bridge the gap between "what we can build" and "what we should build."</p>
+
+                <p>Concrete examples:</p>
+
+                <p>• Helped design democratic tools that actually engage citizens rather than just tick boxes<br>
+                • Guided development teams to create more intuitive, human-centered interfaces<br>
+                • Transformed abstract technical concepts into clear actionable plans</p>
+            </div>
+        </article>
+    </div>
+</body>
+</html>

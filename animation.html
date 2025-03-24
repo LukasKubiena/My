@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation - Lukas Kubiena</title>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+        }
+
+        :root {
+            --content-width: 680px;
+            --nav-height: 64px;
+            --page-padding: max(5vw, 24px);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            background: #ffffff;
+            line-height: 1.6;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        .right-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .blog-container {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: calc(var(--nav-height) + 64px) var(--page-padding) 64px;
+        }
+
+        .blog-content {
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .blog-content p {
+            margin: 0 0 32px 0;
+        }
+
+        .blog-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 0 0 64px 0;
+        }
+
+        .quote {
+            padding-left: 24px;
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+            margin: 32px 0;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --nav-height: 56px;
+            }
+
+            .blog-container {
+                padding-top: calc(var(--nav-height) + 40px);
+            }
+
+            .blog-content {
+                font-size: 17px;
+                line-height: 1.7;
+            }
+
+            .blog-image {
+                margin-bottom: 40px;
+            }
+
+            .nav-bar {
+                height: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="#" class="nav-link">Lukas Kubiena</a>
+            <div class="right-links">
+                <a href="method.html" class="nav-link">method</a>
+                <a href="animation.html" class="nav-link">animation</a>
+                <a href="./blog/index.html" class="nav-link">blog</a>
+                <a href="mailto:lukasmariakubiena@gmail.com" class="nav-link">contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="blog-container">
+        <article class="blog-post">
+            <img src="/api/placeholder/1200/400" alt="Animation banner" class="blog-image">
+            
+            <div class="blog-content">
+                <p>We look at paintings and not just photographs, because there are emotions and stories only paint can tell.</p>
+
+                <p>Animation makes every frame a painting.</p>
+
+                <p>Yet somehow we have this erroneous notion that animation only is for kids.</p>
+
+                <p>I think Sayoshi Kon, Hayoa Miyazaki, Hideki Anno, have shown otherwise.</p>
+
+                <p>I am founder of the animation studio Orca's Lair.</p>
+
+                <p>To quote one of the man's himself animation is about expression. And expression is:</p>
+
+                <div class="quote">
+                    <p>"basically the process of creating something that's missing,</p>
+
+                    <p>attempting to get an idea across to someone else... trying to make yourself whole at the same time...</p>
+
+                    <p>…for those who have a hard time relating to the people around them</p>
+
+                    <p>It's, at the very least, kind of like being able to pass something along</p>
+
+                    <p>to maintain a relationship between you and those people.</p>
+
+                    <p>That's what I think expression is...</p>
+
+                    <p>at least, for me it is…</p>
+
+                    <p>Anime and movies are ways I am able to continue relating to others…</p>
+
+                    <p>That's what I think."</p>
+                </div>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
