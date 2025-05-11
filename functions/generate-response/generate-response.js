@@ -6,42 +6,55 @@ const openai = new OpenAI({
 
 const resumeContext = `
 Lukas Kubiena
-lukasmariakubiena@gmail.com www.linkedin.com/in/lukas-kubiena +43 681 10599780
+lukasmariakubiena@gmail.com www.linkedin.com/in/lukas-kubiena +45 93 88 45 98
 
 Education
-Languages: German - native
-English - fluent, professional working proficiency (TOEFL ibT 119/120)
-
-Aarhus University
-2023-Now Cognitive Science, BA
-Engaged in a comprehensive Cognitive Science program at Aarhus University, delving into a multidisciplinary curriculum encompassing linguistics, biology, anthropology, computational neuroscience and artificial intelligence. Acquiring practical skills in programming (R and Python), statistical modelling, and empirical research design, alongside gaining a nuanced understanding of human cognition and communication. The theoretical knowledge and methodological training, particularly from courses like "Introduction to Experimental Methods, Statistics, and Programming" are preparing me for real-world applications of cognitive science. Throughout the upcoming semesters, I anticipate deepening my expertise in Data Analysis and enriching my previously acquired knowledge in interaction design through applied cognitive science.
+Aarhus University, Denmark
+2023 - Now Cognitive Science, BSc.
+Multidisciplinary degree in linguistics, biology, anthropology, neuroscience, and AI with 3.9 GPA. Skilled in R and Python for data science, specialising in Multilevel Statistical Modelling and Machine Learning for MEG & FMRI data. Completed intensive "Introduction to NLP and Generative AI" summer course.
 
 Albertus Magnus Private School
-2008-2021 Secondary education school type with emphasis on science
-Austrian high-school diploma: "Excellent Success". Graduated with 1.0 average in Mathematics, English, German and Descriptive Geometry. Pre-scientific thesis: "Autonomous driving with a special focus on the car manufacturer Tesla"
+2008 - 2021 Secondary education school type with emphasis on science
+Austrian high-school diploma: "Excellent Success". Graduated with 1.0 GPA in Mathematics, English, German and Descriptive Geometry. Pre-scientific thesis: "Autonomous driving with a special focus on the car manufacturer Tesla"
 
 Work Experience
-Dembrane Design Internship 
-01.2024 - Now UI/UX Design, User Research 
-Collaboratively turning requirements analysis and process diagrams into intuitive UX flows and functional UI patterns for one of the OpenAI democratic inputs into AI grant winners - Dembrane, building digital deliberation systems that turns thousands of challenging conversations into tools for AI alignment.
+Dembrane
+11.2024 - Now Research & Impact Lead
+Now Research & Impact Lead, managing relations with academic institutions, politicians and researchers. Contributed research insights to the company's open source transition, making our AI-powered ECHO platform publicly available under AGPL v3 license. Developed comprehensive impact measurement framework. Collaborated with OECD, EU Commission, and civic tech partners to establish Dembrane as the trusted AI solution for public participation, now used by 60+ government and institutional clients across Europe.
 
-Concept Feature Designs
-08.2022 - 08.2023 Wireframing, CAD-Design, UI/UX Case Studies
-Benefited from ADPList mentor sessions with Takahiro Kawaguchi, Director of UX Design at Reddit, known for his contributions to Airbnb's Design System. Developed multiple high fidelity designs and prototypes, in order to acquire industry needed knowledge about wireframing, useability testing and project development. Case study concepts include a mixed reality notes taking software, daily tasks structuring application and online service booking tool amongst others.
+Dembrane
+07.2024 - 11.2024 Design Researcher
+Lead internal audit evaluating AI-powered platform's societal impact, delivering executive-level findings that reshaped product roadmap and organisational vision to ensure measurable impact in the citizen participation sector.
+
+Dembrane
+01.2024 - 07.2024 UI/UX & Information Design Internship
+Designed core elements of Dembrane's AI-driven participation platform that scaled to 20+ clients across government and private sectors in six months. Incorporated findings from OpenAI's "Democratic Inputs to AI" grant research. Created intuitive UX flows that facilitated 450+ stakeholder conversations and positioned the company for 5x client growth. Contributed to product development securing European Horizon funding as part of a €3M EU research consortium, building AI-powered democratic participation tools.
+
+Student assistant at the Interacting Minds Center Aarhus (IMC)
+02.2024 - 01.2025 Front-end development, Research, Educational Workshops
+Developed "The Never Ending Story," an AI-powered installation that engaged 400+ citizens across Denmark in understanding AI's societal impact. Collaborated with 36 researchers from multiple disciplines to create an educational platform allowing participants to experiment with AI-generated text and images. Presented at seven national workshops in partnership with cultural institutions, culminating in a major exhibition at Science Museerne.
 
 Paramedic for St. Johns Accident Assistance
 10.2021 - 05.2022 Social Service, professional medical training
-Passed the official emergency paramedic exam with honors and spent eight months working in ambulance services like rescue missions as well as patient transfers. Operated in city wide vaccination- and covid test centers, in addition to working in a refugee daycare facility for ukrainian refugees.
+Certified emergency paramedic with honors. Eight months in ambulance services, including rescue missions and patient transfers. Worked in pandemic support centres and Ukrainian refugee daycare facility.
 
 Leading Student Representative
 11.2020 - 05.2021 Leadership, Project Management
-Initiated a unique school-wide tutoring system, quickly engaging 24 tutees in 48 weekly tuition hours across six subjects, benefiting 900+ students overall. Participation surged by 157% in a short span. Served as a key liaison between students and the SGA during the Covid pandemic, leading surveys on 163 upper-grade students' workload and well-being, with findings presented to school leaders. Introduced and championed a vertical greening system for classrooms to enhance sustainability and reduce the school's carbon footprint. Recognized by the principal with multiple awards for exemplary student representation.
+Led school-wide tutoring system with 24 tutors, 48 weekly hours, 6 subjects, benefiting 900+ students. As SGA liaison, surveyed 163 students on Covid-related issues. Introduced classroom greening. Received multiple awards for student representation.
 
-Kwizda Agro GmbH
-07.2018-08.2018 Engineering-Maintainance and Repair Internship
-Worked as intern in the engineering and maintainance section of Kwizda Agro GmbH Leobendorf. Daily tasks included restoring complex pipe nozzles back to working order, as well as general repairs in storage facilities.
+Languages: 
+German - native
+English - fluent, professional working proficiency (TOEFL ibT 119/120)
 
-Technical skills: Figma, Python, R Studio, HTML & CSS, Autodesk Fusion 360, Pixelmator, Adobe-Suite, Javascript & basic R3f, MicroStation CAD Software
+Technical skills:
+Figma
+Python
+R Studio
+HTML & CSS
+Autodesk Fusion 360
+Pixelmator, Adobe-Suite
+Javascript & basic R3f
+MicroStation CAD Software
 `;
 
 const systemPrompt = `

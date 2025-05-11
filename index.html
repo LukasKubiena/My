@@ -422,6 +422,59 @@ body {
         100% { transform: rotate(0deg); }
     }
 }
+    /* Add this to your existing CSS styles section */
+
+    .animated-umlaut {
+        position: relative;
+        display: inline-block;
+    }
+
+    .umlaut-dots {
+        position: absolute;
+        top: -2.5px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 1px;
+    }
+
+    .umlaut-dot {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(3px);
+        transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease; /* Add color transition */
+        font-size: 0.8em;
+        line-height: 1;
+        font-family: 'NeueHaasDisplay-Light', sans-serif;
+        height: 2px;
+        /* Remove the fixed color to inherit from parent */
+    }
+
+    .nav-link:hover .umlaut-dot {
+        /* Make sure dots are fully opaque when nav-link is hovered */
+        opacity: 1 !important;
+        color: inherit !important;
+    }
+
+    .umlaut-dot.appear {
+        opacity: 0.75; /* Regular opacity when not hovered */
+        transform: translateY(0);
+    }
+
+    /* Add a subtle bounce to each dot */
+    @keyframes dotBounce {
+        0% { transform: translateY(0); }
+        40% { transform: translateY(-1px); }
+        60% { transform: translateY(0.5px); }
+        100% { transform: translateY(0); }
+    }
+
+    .umlaut-dot.appear {
+        opacity: 0.75; /* Regular opacity */
+        transform: translateY(0);
+        animation: dotBounce 0.4s ease-in-out 0.1s;
+    }
 
     /* Hover effects for larger screens only */
     @media screen and (min-width: 1025px) {
@@ -756,6 +809,62 @@ body {
     // Run on load and resize
     window.addEventListener('load', alignProjectParagraph);
     window.addEventListener('resize', alignProjectParagraph);
+});
+
+// Add this JavaScript code at the end of your existing script section
+
+// Modified JavaScript to ensure dot colors match navigation text
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the nav link with "Lukas Kubiena" text
+    const nameLink = document.querySelector('.nav-link:first-child');
+    
+    if (nameLink) {
+        // Store the original text
+        const originalText = nameLink.textContent;
+        
+        // Add event listeners for hover
+        nameLink.addEventListener('mouseenter', function() {
+            // Replace with animated version
+            nameLink.innerHTML = 'Lukas Kubi<span class="animated-umlaut">e</span>na';
+            
+            // Get the element with the letter e
+            const eElement = nameLink.querySelector('.animated-umlaut');
+            
+            // Create umlaut dots
+            const dotContainer = document.createElement('span');
+            dotContainer.className = 'umlaut-dots';
+            
+            const leftDot = document.createElement('span');
+            leftDot.className = 'umlaut-dot left-dot';
+            leftDot.textContent = '·';
+            
+            const rightDot = document.createElement('span');
+            rightDot.className = 'umlaut-dot right-dot';
+            rightDot.textContent = '·';
+            
+            // Append dots to container
+            dotContainer.appendChild(leftDot);
+            dotContainer.appendChild(rightDot);
+            
+            // Append container to the e element
+            eElement.appendChild(dotContainer);
+            
+            // Trigger animations with a slight delay for the second dot
+            setTimeout(() => {
+                leftDot.classList.add('appear');
+            }, 100);
+            
+            setTimeout(() => {
+                rightDot.classList.add('appear');
+            }, 300);
+        });
+        
+        nameLink.addEventListener('mouseleave', function() {
+            // Return to original text
+            nameLink.textContent = originalText;
+        });
+    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {
