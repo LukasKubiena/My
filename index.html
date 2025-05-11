@@ -820,10 +820,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const nameLink = document.querySelector('.nav-link:first-child');
     
     if (nameLink) {
-        // Store the original text
+        // Store the original text and href
         const originalText = nameLink.textContent;
+        const originalHref = nameLink.getAttribute('href');
         
-        // Add event listeners for hover
+        // Add event listener for hover
         nameLink.addEventListener('mouseenter', function() {
             // Replace with animated version
             nameLink.innerHTML = 'Lukas Kubi<span class="animated-umlaut">e</span>na';
@@ -863,6 +864,16 @@ document.addEventListener('DOMContentLoaded', function() {
         nameLink.addEventListener('mouseleave', function() {
             // Return to original text
             nameLink.textContent = originalText;
+        });
+        
+        // Add click event listener that preserves navigation functionality
+        nameLink.addEventListener('click', function(e) {
+            // If href is "#", prevent default to avoid scroll to top
+            if (originalHref === "#") {
+                e.preventDefault();
+                window.location.href = "/"; // Navigate to home page
+            }
+            // Otherwise, let the default link behavior happen
         });
     }
 });
