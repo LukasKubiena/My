@@ -101,19 +101,6 @@
             cursor: pointer;
             display: inline-block;
             transform-origin: center;
-            /* Fixed width container to prevent layout shifts */
-            min-width: 280px;
-            white-space: nowrap;
-        }
-
-        .hey-text {
-            display: inline-block;
-        }
-
-        .comma {
-            display: inline-block;
-            transform-origin: center;
-            margin-left: 0; /* Remove any default margin */
         }
 
         @keyframes popOut {
@@ -143,6 +130,15 @@
         .comma-container {
             display: inline-block;
             padding-left: 2px; /* Adjust as needed for spacing */
+        }
+
+        .hey-text {
+            display: inline-block; /* Added to allow independent animation */
+        }
+
+        .comma {
+            display: inline-block;
+            transform-origin: center;
         }
 
         .hey.animate {
@@ -242,8 +238,6 @@
         grid-row: 2 / 3;
         align-self: start;
         margin-top: -0.2em;
-        /* Ensure consistent width */
-        min-width: 280px;
     }
 
     .blog-link {
@@ -254,9 +248,7 @@
         font-size: 40px;
         margin-left: 2rem;
         word-wrap: break-word;
-        max-width: 100%;
-        /* Maintain minimum width to prevent layout shifts */
-        min-width: 280px;
+        max-width: 80%;
     }
 
     .content-1 {
@@ -320,13 +312,10 @@
 
         .chat-mode .hey-container {
             grid-column: 4 / 7;
-            /* Maintain consistent width in chat mode */
-            min-width: 350px;
         }
 
         .chat-mode .hey {
             max-width: 100%;
-            min-width: 350px; /* Increased for chat mode */
         }
 
         .chat-mode .input-container,
@@ -574,14 +563,6 @@ body {
         position: relative;
     }
 
-    .hey {
-        /* Mobile responsive width handling */
-        min-width: auto;
-        width: 100%;
-        white-space: normal;
-        word-wrap: break-word;
-    }
-
     .chat-input::placeholder {
     font: inherit;
     color: #CCCCCC;
@@ -739,102 +720,106 @@ body {
         </div>
     </div>
     <script>
-        // Dynamic greeting system
+        // Dynamic greeting system for system messages
         function getSmartGreeting() {
             const now = new Date();
             const hour = now.getHours();
             const day = now.getDay(); // 0 = Sunday, 6 = Saturday
             const isWeekend = day === 0 || day === 6;
             
-            // Check if user has visited before
-            const hasVisited = localStorage.getItem('hasVisited');
-            const lastVisit = localStorage.getItem('lastVisit');
+            // Check visit history using in-memory variables since localStorage is not available
+            if (!window.visitData) {
+                window.visitData = {
+                    hasVisited: false,
+                    lastVisit: null,
+                    visitCount: 0
+                };
+            }
+            
             const today = now.toDateString();
             
             // Mark this visit
-            localStorage.setItem('hasVisited', 'true');
-            localStorage.setItem('lastVisit', today);
+            window.visitData.visitCount++;
+            const isReturnVisitor = window.visitData.hasVisited && window.visitData.lastVisit !== today;
+            const isSameDayReturn = window.visitData.hasVisited && window.visitData.lastVisit === today;
+            window.visitData.hasVisited = true;
+            window.visitData.lastVisit = today;
             
-            // Special holiday/date greetings (optional)
+            // Special holiday/date greetings
             const month = now.getMonth();
             const date = now.getDate();
             
             // New Year's Day
             if (month === 0 && date === 1) {
-                return "Happy New Year";
+                return "Happy New Year! Click here to ask about me";
             }
             
             // Christmas season
             if (month === 11 && date >= 20 && date <= 26) {
-                return "Happy holidays";
+                return "Happy holidays! Click here to ask about me";
             }
             
-            // Return visitor on same day
-            if (hasVisited && lastVisit === today) {
-                const welcomeBackMessages = [
-                    "Welcome back",
-                    "Good to see you again",
-                    "Hello again"
+            // Late night messages (22:00 - 5:59)
+            if (hour >= 22 || hour < 6) {
+                const lateMessages = [
+                    "Up late? Click here to ask about me",
+                    "Night owl? Click here to ask about me",
+                    "Late night browsing? Click here to ask about me",
+                    "Burning the midnight oil? Click here to ask about me"
                 ];
-                return welcomeBackMessages[Math.floor(Math.random() * welcomeBackMessages.length)];
+                return lateMessages[Math.floor(Math.random() * lateMessages.length)];
             }
             
-            // Return visitor different day
-            if (hasVisited && lastVisit !== today) {
-                return "Welcome back";
-            }
-            
-            // Time-based greetings for new visitors
-            if (hour >= 0 && hour < 6) {
-                const lateNightMessages = [
-                    "Still awake?",
-                    "Up late?",
-                ];
-                return lateNightMessages[Math.floor(Math.random() * lateNightMessages.length)];
-            }
-            
+            // Early morning (6:00 - 9:59)
             if (hour >= 6 && hour < 10) {
                 const morningMessages = [
-                    "Good morning",
-                    "Morning",
+                    "Good morning! Click here to ask about me",
+                    "Early bird! Click here to ask about me",
+                    "Morning! Click here to ask about me",
+                    "Rise and shine! Click here to ask about me"
                 ];
                 return morningMessages[Math.floor(Math.random() * morningMessages.length)];
             }
             
-            if (hour >= 22) {
-                const lateMessages = [
-                    "Good night!"
+            // Return visitor different day
+            if (isReturnVisitor) {
+                const welcomeBackMessages = [
+                    "Welcome back! Click here to ask about me",
+                    "Good to see you again! Click here to ask about me",
+                    "You're back! Click here to ask about me"
                 ];
-                return lateMessages[Math.floor(Math.random() * lateMessages.length)];
+                return welcomeBackMessages[Math.floor(Math.random() * welcomeBackMessages.length)];
+            }
+            
+            // Same day return visitor
+            if (isSameDayReturn && window.visitData.visitCount > 2) {
+                const sameDayMessages = [
+                    "Still here? Click here to ask about me",
+                    "Hello again! Click here to ask about me",
+                    "Back for more? Click here to ask about me"
+                ];
+                return sameDayMessages[Math.floor(Math.random() * sameDayMessages.length)];
             }
             
             // Weekend greetings
             if (isWeekend) {
                 const weekendMessages = [
-                    "Happy weekend",
+                    "Happy weekend! Click here to ask about me",
+                    "Weekend vibes! Click here to ask about me",
+                    "Enjoying your weekend? Click here to ask about me"
                 ];
                 return weekendMessages[Math.floor(Math.random() * weekendMessages.length)];
             }
             
             // Default greetings for regular hours
             const defaultMessages = [
-                "Hey",
-                "Hello",
-                "Welcome",
-                "Hi there"
+                "Curious about me? Click to ask",
+                "Got questions about me? Click here",
+                "Click to ask me anything about myself"
             ];
             
             return defaultMessages[Math.floor(Math.random() * defaultMessages.length)];
         }
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
 
         // Global escape key listener
         document.addEventListener('keydown', function(e) {
@@ -849,6 +834,15 @@ body {
                     }
                 }
             }
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
     
     
@@ -1034,10 +1028,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const comma = hey.querySelector('.comma');
         const cursor = hey.querySelector('.typing-cursor');
         const content = document.querySelectorAll('.content, .send-mail, .blog-link');
-        
-        // Get dynamic greeting
-        const greeting = getSmartGreeting();
-        
         // Disable the bounce animation initially
         hey.style.animation = 'none';
 
@@ -1048,22 +1038,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         function typeText(text, element, callback) {
             let i = 0;
+            element.textContent = ''; // Clear existing text
             element.style.opacity = '1'; // Make text visible before typing
-            
-            // Create cursor
-            const mobileCursor = document.createElement('span');
-            mobileCursor.className = 'typing-cursor';
-            
             function type() {
                 if (i < text.length) {
-                    // Set text content and add cursor
-                    element.textContent = text.substring(0, i + 1);
-                    element.appendChild(mobileCursor);
+                    element.textContent += text.charAt(i);
                     i++;
                     setTimeout(type, 150);
                 } else {
-                    // Remove cursor and call callback
-                    mobileCursor.remove();
                     callback();
                 }
             }
@@ -1089,6 +1071,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function showContent() {
+            cursor.style.display = 'none'; // Hide cursor after animations
+            
             // Show all content including the image
             content.forEach(el => {
                 el.style.opacity = '1';
@@ -1111,8 +1095,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             // Remove the initial-load class
             body.classList.remove('initial-load');
-            // Start the sequence with dynamic greeting
-            typeText(greeting, heyText, showComma);
+            // Start the sequence
+            typeText('Hey', heyText, showComma);
         }, 2000);
     }
 });
@@ -1131,9 +1115,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let promptTimer;
         let blinkInterval;
-
-        // Make inChatMode globally accessible for ESC key handler
-        window.inChatMode = false;
 
         function showPrompt(text, fadeIn = false) {
     clearTimeout(promptTimer);
@@ -1184,7 +1165,7 @@ document.addEventListener('DOMContentLoaded', function() {
             promptTimer = setTimeout(() => {
                 if (!inChatMode && document.body.classList.contains('initial-load')) {
                     document.body.classList.remove('initial-load'); // Remove initial load class
-                    showPrompt('Click this to ask about me', true);
+                    showPrompt(getSmartGreeting(), true); // Use dynamic greeting
                 }
             }, 5000);
         }
@@ -1250,7 +1231,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update the handleLongPress function to properly hide the image:
         function handleLongPress() {
     inChatMode = true;
-    window.inChatMode = true; // Make globally accessible
+    window.inChatMode = true; // Set global flag for escape key
 
     clearPreviousContent(true);
     console.log('Long press detected');
@@ -1430,7 +1411,7 @@ async function handleUserInput(userInput) {
 
         function resetPage() {
             inChatMode = false;
-            window.inChatMode = false; // Reset global state
+            window.inChatMode = false; // Clear global flag
             
             // Immediately hide the prompt and system message
             hidePrompt();
@@ -1442,11 +1423,8 @@ async function handleUserInput(userInput) {
             const backButton = document.querySelector('a[style*="text-decoration: underline"]');
             if (backButton) backButton.remove();
 
-            // Get fresh greeting for reset
-            const greeting = getSmartGreeting();
-
-            // Reset the Hey container with proper structure
-            hey.innerHTML = `<span class="hey-text">${greeting}</span><span class="comma">,</span>`;
+            // Reset the Hey container
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
 
@@ -1481,7 +1459,7 @@ async function handleUserInput(userInput) {
             messages = [];
         }
 
-        // Make resetPage globally accessible
+        // Make resetPage globally accessible for escape key
         window.resetPage = resetPage;
 
 
@@ -1530,9 +1508,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let cursor;
         let promptTimer;
 
-        // Make inChatMode globally accessible for ESC key handler
-        window.inChatMode = false;
-
         function toggleChatMode(enable) {
         if (enable) {
             copyright.classList.add('hidden');
@@ -1542,36 +1517,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
         function typeHey(isInitialLoad = true) {
-            // Get dynamic greeting
-            const greeting = getSmartGreeting();
-            
             hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
+            heyText.textContent = '';
             comma.style.opacity = '0';
+            let text = 'Hey,';
             let index = 0;
             cursor = document.createElement('span');
             cursor.className = 'typing-cursor';
+            hey.appendChild(cursor);
 
             if (isInitialLoad) {
             content.forEach(el => el.style.opacity = '0');
             copyright.style.opacity = '0';
-            setTimeout(resetPromptTimer, 3000);
+            // Start the prompt timer after initial animations
+            setTimeout(resetPromptTimer, 3000); // Start prompt timer after animations
         }
 
             setTimeout(() => {
                 function typeChar() {
-                    if (index < greeting.length) {
-                        // Set text content and add cursor
-                        heyText.textContent = greeting.substring(0, index + 1);
-                        heyText.appendChild(cursor);
+                    if (index < text.length) {
+                        if (index === text.length - 1) {
+                            comma.style.opacity = '1';
+                        } else {
+                            heyText.textContent += text[index];
+                        }
                         index++;
                         setTimeout(typeChar, 150);
                     } else {
-                        // Text complete - remove cursor and show comma
-                        cursor.remove();
-                        cursor = null;
-                        comma.style.opacity = '1';
                         setTimeout(() => {
                             playPopOutAnimation();
                         }, 100);
@@ -1595,6 +1569,10 @@ document.addEventListener('DOMContentLoaded', function() {
             void comma.offsetWidth;
             comma.style.animation = 'bellJingle 0.8s ease-in-out';
             setTimeout(() => {
+                if (cursor) {
+                    cursor.remove();
+                    cursor = null;
+                }
                 content.forEach(el => {
                     el.style.opacity = '1';
                     el.style.animation = 'fadeIn 1s ease-in';
@@ -1613,7 +1591,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(promptTimer);
             promptTimer = setTimeout(() => {
                 if (!inChatMode) {
-                    showPrompt('Click this to ask about me', true);
+                    showPrompt(getSmartGreeting(), true); // Use dynamic greeting
                 }
             }, 5000);
         }
@@ -1622,7 +1600,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function handleDesktopClick() {
             inChatMode = true;
-            window.inChatMode = true; // Make globally accessible
+            window.inChatMode = true; // Set global flag for escape key
             toggleChatMode(true)
             clearPreviousContent(true);
             hidePrompt();
@@ -1785,17 +1763,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function resetPage() {
             inChatMode = false;
-            window.inChatMode = false; // Reset global state
+            window.inChatMode = false; // Clear global flag
             toggleChatMode(false);
             document.body.classList.remove('chat-mode');
             
             hidePrompt();
             clearPreviousContent();
             
-            // Get fresh greeting for reset
-            const greeting = getSmartGreeting();
-            
-            hey.innerHTML = `<span class="hey-text">${greeting}</span><span class="comma">,</span>`;
+            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
             hey.style.cursor = 'pointer';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
@@ -1829,7 +1804,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resetPromptTimer();
         }
 
-        // Make resetPage globally accessible
+        // Make resetPage globally accessible for escape key
         window.resetPage = resetPage;
 
         function showPrompt(text, fadeIn = false) {
