@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Week Review</title>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('data:font/woff2;base64,') format('woff2');
+            font-weight: 300;
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('data:font/woff2;base64,') format('woff2');
+            font-weight: 500;
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Thin';
+            src: url('data:font/woff2;base64,') format('woff2');
+            font-weight: 100;
+        }
+
+        :root {
+            --box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.05),
+                0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+        }
+
+        body, body * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #000000;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        .right-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: calc(64px + 8vh);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto auto;
+            column-gap: 1.5rem;
+            row-gap: 2rem;
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        .title {
+            grid-column: 4 / 9;
+            grid-row: 1;
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 40px;
+            font-weight: 600;
+            align-self: start;
+            margin-top: -0.2em;
+            margin-bottom: 2rem;
+        }
+
+        .subtitle {
+            grid-column: 4 / 9;
+            grid-row: 2;
+            color: #666;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            margin-top: -3rem;
+            margin-bottom: 2rem;
+        }
+
+        .timer-display {
+            grid-column: 10 / 12;
+            grid-row: 1;
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 24px;
+            font-weight: 500;
+            text-align: right;
+            align-self: center;
+        }
+
+        .pillar-section {
+            grid-column: 4 / 12;
+            grid-row: 3;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .pillar {
+            padding: 0;
+        }
+
+        .pillar-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pillar-emoji {
+            font-size: 18px;
+        }
+
+        .question-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .question-label {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-weight: 300;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            background: #ffffff;
+            color: #000000;
+            line-height: 1.4;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        textarea::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .reading-section {
+            grid-column: 4 / 12;
+            grid-row: 4;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .reading-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reading-subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 2rem;
+            font-style: italic;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .resource-input {
+            padding: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0;
+            font-size: 13px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .resource-input:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .book-section {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding-top: 1.5rem;
+        }
+
+        .actions {
+            grid-column: 4 / 12;
+            grid-row: 5;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-start;
+            padding-top: 2rem;
+        }
+
+        .action-btn {
+            background: #000000;
+            color: #ffffff;
+            padding: 12px 24px;
+            border: none;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: underline;
+        }
+
+        .action-btn:hover {
+            background: #333333;
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: #000000;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: #000000;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Mobile responsive */
+        @media screen and (max-width: 1024px) {
+            .container {
+                display: flex;
+                flex-direction: column;
+                padding: 40px 24px;
+                margin-top: 64px;
+                max-width: none;
+            }
+
+            .title {
+                font-size: 36px;
+                margin-bottom: 0.5rem;
+            }
+
+            .subtitle {
+                margin-top: 0;
+                margin-bottom: 2rem;
+            }
+
+            .timer-display {
+                text-align: left;
+                margin-bottom: 2rem;
+                font-size: 20px;
+            }
+
+            .pillar-section {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                text-align: left;
+                width: fit-content;
+            }
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.6s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Timer animation */
+        .timer-pulse {
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="#" class="nav-link">Personal Week Review</a>
+            <div class="right-links">
+                <a href="#" class="nav-link" onclick="exportToText()">export</a>
+                <a href="#" class="nav-link" onclick="clearAll()">clear</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="title fade-in">Personal Week Review</div>
+        <div class="subtitle fade-in">C, Dembrane, Life • Sunday Session</div>
+        <div class="timer-display fade-in" id="timer">45:00</div>
+
+        <div class="pillar-section fade-in">
+            <!-- C Pillar -->
+            <div class="pillar">
+                <div class="pillar-title">
+                    <span class="pillar-emoji">🎯</span> C
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(i) what I tried</div>
+                    <textarea placeholder="What did you experiment with this week?"></textarea>
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(ii) what I felt</div>
+                    <textarea placeholder="How did it feel? What emotions came up?"></textarea>
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(iii) one micro-experiment for next week</div>
+                    <textarea placeholder="What small thing will you try next week?"></textarea>
+                </div>
+            </div>
+
+            <!-- Dembrane Pillar -->
+            <div class="pillar">
+                <div class="pillar-title">
+                    <span class="pillar-emoji">🏛️</span> Dembrane
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(i) what I tried</div>
+                    <textarea placeholder="What did you experiment with this week?"></textarea>
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(ii) what I felt</div>
+                    <textarea placeholder="How did it feel? What emotions came up?"></textarea>
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(iii) one micro-experiment for next week</div>
+                    <textarea placeholder="What small thing will you try next week?"></textarea>
+                </div>
+            </div>
+
+            <!-- Life Pillar -->
+            <div class="pillar">
+                <div class="pillar-title">
+                    <span class="pillar-emoji">🌱</span> Life
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(i) what I tried</div>
+                    <textarea placeholder="What did you experiment with this week?"></textarea>
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(ii) what I felt</div>
+                    <textarea placeholder="How did it feel? What emotions came up?"></textarea>
+                </div>
+                <div class="question-group">
+                    <div class="question-label">(iii) one micro-experiment for next week</div>
+                    <textarea placeholder="What small thing will you try next week?"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reading Section -->
+        <div class="reading-section fade-in">
+            <div class="reading-title">
+                <span class="pillar-emoji">📚</span> What I Read
+            </div>
+            <div class="reading-subtitle">
+                Every weekend I find 10 new resources I want to learn and one book I keep reading
+            </div>
+            
+            <div class="resources-grid">
+                <input type="text" class="resource-input" placeholder="Resource 1">
+                <input type="text" class="resource-input" placeholder="Resource 2">
+                <input type="text" class="resource-input" placeholder="Resource 3">
+                <input type="text" class="resource-input" placeholder="Resource 4">
+                <input type="text" class="resource-input" placeholder="Resource 5">
+                <input type="text" class="resource-input" placeholder="Resource 6">
+                <input type="text" class="resource-input" placeholder="Resource 7">
+                <input type="text" class="resource-input" placeholder="Resource 8">
+                <input type="text" class="resource-input" placeholder="Resource 9">
+                <input type="text" class="resource-input" placeholder="Resource 10">
+            </div>
+
+            <div class="book-section">
+                <div class="question-label">Current book I keep reading</div>
+                <textarea placeholder="What book are you currently working through? Any key insights this week?"></textarea>
+            </div>
+        </div>
+
+        <div class="actions fade-in">
+            <button class="action-btn" onclick="exportToText()">export as text</button>
+            <button class="action-btn secondary" onclick="startTimer()">start 45min timer</button>
+            <button class="action-btn secondary" onclick="clearAll()">clear all</button>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let timeLeft = 45 * 60; // 45 minutes in seconds
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (isRunning) {
+                timerEl.classList.add('timer-pulse');
+            } else {
+                timerEl.classList.remove('timer-pulse');
+            }
+        }
+
+        function startTimer() {
+            if (isRunning) {
+                // Pause
+                clearInterval(timerInterval);
+                isRunning = false;
+                updateTimerDisplay();
+            } else {
+                // Start
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        alert('⏰ 45 minutes are up! Great work on your weekly review.');
+                        timeLeft = 45 * 60;
+                        isRunning = false;
+                        updateTimerDisplay();
+                    }
+                }, 1000);
+                updateTimerDisplay();
+            }
+        }
+
+        function exportToText() {
+            let output = "# Personal Week Review\n\n";
+            
+            const pillars = ['C', 'Dembrane', 'Life'];
+            const textareas = document.querySelectorAll('textarea');
+            let textareaIndex = 0;
+            
+            pillars.forEach(pillar => {
+                output += `## ${pillar}\n\n`;
+                output += `**What I tried:** ${textareas[textareaIndex].value}\n\n`;
+                textareaIndex++;
+                output += `**What I felt:** ${textareas[textareaIndex].value}\n\n`;
+                textareaIndex++;
+                output += `**Micro-experiment for next week:** ${textareas[textareaIndex].value}\n\n`;
+                textareaIndex++;
+                output += "---\n\n";
+            });
+            
+            output += "## What I Read\n\n";
+            
+            const resources = document.querySelectorAll('.resource-input');
+            resources.forEach((resource, index) => {
+                if (resource.value.trim()) {
+                    output += `${index + 1}. ${resource.value}\n`;
+                }
+            });
+            
+            output += `\n**Current book:** ${textareas[textareaIndex].value}\n\n`;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(output).then(() => {
+                // Visual feedback
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 1000);
+            });
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all fields?')) {
+                document.querySelectorAll('textarea, input').forEach(field => {
+                    field.value = '';
+                });
+                // Visual feedback
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'cleared';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 1000);
+            }
+        }
+
+        // Auto-save to localStorage
+        function saveData() {
+            const data = {};
+            document.querySelectorAll('textarea, input').forEach((field, index) => {
+                data[index] = field.value;
+            });
+            localStorage.setItem('weeklyReview', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('weeklyReview') || '{}');
+            document.querySelectorAll('textarea, input').forEach((field, index) => {
+                if (data[index]) {
+                    field.value = data[index];
+                }
+            });
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(saveData, 30000);
+
+        // Load data on page load
+        window.addEventListener('load', loadData);
+
+        // Save data when fields change
+        document.addEventListener('input', saveData);
+
+        // Initialize timer display
+        updateTimerDisplay();
+
+        // Staggered fade-in animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.animationDelay = `${index * 0.1}s`;
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

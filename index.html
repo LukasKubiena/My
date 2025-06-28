@@ -720,6 +720,103 @@ body {
         </div>
     </div>
     <script>
+        // Dynamic greeting system
+        function getSmartGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+            const isWeekend = day === 0 || day === 6;
+            
+            // Check if user has visited before
+            const hasVisited = localStorage.getItem('hasVisited');
+            const lastVisit = localStorage.getItem('lastVisit');
+            const today = now.toDateString();
+            
+            // Mark this visit
+            localStorage.setItem('hasVisited', 'true');
+            localStorage.setItem('lastVisit', today);
+            
+            // Special holiday/date greetings (optional)
+            const month = now.getMonth();
+            const date = now.getDate();
+            
+            // New Year's Day
+            if (month === 0 && date === 1) {
+                return "Happy New Year";
+            }
+            
+            // Christmas season
+            if (month === 11 && date >= 20 && date <= 26) {
+                return "Happy holidays";
+            }
+            
+            // Return visitor on same day
+            if (hasVisited && lastVisit === today) {
+                const welcomeBackMessages = [
+                    "Welcome back",
+                    "Good to see you again",
+                    "Back so soon",
+                    "Hello again"
+                ];
+                return welcomeBackMessages[Math.floor(Math.random() * welcomeBackMessages.length)];
+            }
+            
+            // Return visitor different day
+            if (hasVisited && lastVisit !== today) {
+                return "Welcome back";
+            }
+            
+            // Time-based greetings for new visitors
+            if (hour >= 0 && hour < 6) {
+                const lateNightMessages = [
+                    "Still awake",
+                    "Up late",
+                    "Night owl",
+                    "Can't sleep"
+                ];
+                return lateNightMessages[Math.floor(Math.random() * lateNightMessages.length)];
+            }
+            
+            if (hour >= 6 && hour < 10) {
+                const morningMessages = [
+                    "Good morning",
+                    "Morning",
+                    "Early bird"
+                ];
+                return morningMessages[Math.floor(Math.random() * morningMessages.length)];
+            }
+            
+            if (hour >= 22) {
+                const lateMessages = [
+                    "Rest soon",
+                    "Getting late",
+                    "Time for rest",
+                    "Sleep well soon"
+                ];
+                return lateMessages[Math.floor(Math.random() * lateMessages.length)];
+            }
+            
+            // Weekend greetings
+            if (isWeekend) {
+                const weekendMessages = [
+                    "Happy weekend",
+                    "Weekend vibes",
+                    "Time to relax"
+                ];
+                return weekendMessages[Math.floor(Math.random() * weekendMessages.length)];
+            }
+            
+            // Default greetings for regular hours
+            const defaultMessages = [
+                "Hey",
+                "Hello",
+                "Welcome",
+                "Hi there"
+            ];
+            
+            return defaultMessages[Math.floor(Math.random() * defaultMessages.length)];
+        }
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -912,6 +1009,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const comma = hey.querySelector('.comma');
         const cursor = hey.querySelector('.typing-cursor');
         const content = document.querySelectorAll('.content, .send-mail, .blog-link');
+        
+        // Get dynamic greeting
+        const greeting = getSmartGreeting();
+        
         // Disable the bounce animation initially
         hey.style.animation = 'none';
 
@@ -922,14 +1023,22 @@ document.addEventListener('DOMContentLoaded', function() {
         
         function typeText(text, element, callback) {
             let i = 0;
-            element.textContent = ''; // Clear existing text
             element.style.opacity = '1'; // Make text visible before typing
+            
+            // Create cursor
+            const mobileCursor = document.createElement('span');
+            mobileCursor.className = 'typing-cursor';
+            
             function type() {
                 if (i < text.length) {
-                    element.textContent += text.charAt(i);
+                    // Set text content and add cursor
+                    element.textContent = text.substring(0, i + 1);
+                    element.appendChild(mobileCursor);
                     i++;
                     setTimeout(type, 150);
                 } else {
+                    // Remove cursor and call callback
+                    mobileCursor.remove();
                     callback();
                 }
             }
@@ -955,8 +1064,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function showContent() {
-            cursor.style.display = 'none'; // Hide cursor after animations
-            
             // Show all content including the image
             content.forEach(el => {
                 el.style.opacity = '1';
@@ -979,8 +1086,8 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             // Remove the initial-load class
             body.classList.remove('initial-load');
-            // Start the sequence
-            typeText('Hey', heyText, showComma);
+            // Start the sequence with dynamic greeting
+            typeText(greeting, heyText, showComma);
         }, 2000);
     }
 });
@@ -1305,8 +1412,11 @@ async function handleUserInput(userInput) {
             const backButton = document.querySelector('a[style*="text-decoration: underline"]');
             if (backButton) backButton.remove();
 
-            // Reset the Hey container
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+            // Get fresh greeting for reset
+            const greeting = getSmartGreeting();
+
+            // Reset the Hey container with proper structure
+            hey.innerHTML = `<span class="hey-text">${greeting}</span><span class="comma">,</span>`;
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
 
@@ -1396,35 +1506,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
         function typeHey(isInitialLoad = true) {
+            // Get dynamic greeting
+            const greeting = getSmartGreeting();
+            
             hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
-            heyText.textContent = '';
             comma.style.opacity = '0';
-            let text = 'Hey,';
             let index = 0;
             cursor = document.createElement('span');
             cursor.className = 'typing-cursor';
-            hey.appendChild(cursor);
 
             if (isInitialLoad) {
             content.forEach(el => el.style.opacity = '0');
             copyright.style.opacity = '0';
-            // Start the prompt timer after initial animations
-            setTimeout(resetPromptTimer, 3000); // Start prompt timer after animations
+            setTimeout(resetPromptTimer, 3000);
         }
 
             setTimeout(() => {
                 function typeChar() {
-                    if (index < text.length) {
-                        if (index === text.length - 1) {
-                            comma.style.opacity = '1';
-                        } else {
-                            heyText.textContent += text[index];
-                        }
+                    if (index < greeting.length) {
+                        // Set text content and add cursor
+                        heyText.textContent = greeting.substring(0, index + 1);
+                        heyText.appendChild(cursor);
                         index++;
                         setTimeout(typeChar, 150);
                     } else {
+                        // Text complete - remove cursor and show comma
+                        cursor.remove();
+                        cursor = null;
+                        comma.style.opacity = '1';
                         setTimeout(() => {
                             playPopOutAnimation();
                         }, 100);
@@ -1448,10 +1559,6 @@ document.addEventListener('DOMContentLoaded', function() {
             void comma.offsetWidth;
             comma.style.animation = 'bellJingle 0.8s ease-in-out';
             setTimeout(() => {
-                if (cursor) {
-                    cursor.remove();
-                    cursor = null;
-                }
                 content.forEach(el => {
                     el.style.opacity = '1';
                     el.style.animation = 'fadeIn 1s ease-in';
@@ -1460,7 +1567,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (profileImage) {
                     profileImage.classList.add('visible');
                 }
-                cop
                 copyright.style.opacity = '1';
                 copyright.style.animation = 'fadeIn 1s ease-in';
                 resetPromptTimer();
@@ -1648,7 +1754,10 @@ document.addEventListener('DOMContentLoaded', function() {
             hidePrompt();
             clearPreviousContent();
             
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+            // Get fresh greeting for reset
+            const greeting = getSmartGreeting();
+            
+            hey.innerHTML = `<span class="hey-text">${greeting}</span><span class="comma">,</span>`;
             hey.style.cursor = 'pointer';
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
