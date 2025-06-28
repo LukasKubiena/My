@@ -101,6 +101,19 @@
             cursor: pointer;
             display: inline-block;
             transform-origin: center;
+            /* Fixed width container to prevent layout shifts */
+            min-width: 280px;
+            white-space: nowrap;
+        }
+
+        .hey-text {
+            display: inline-block;
+        }
+
+        .comma {
+            display: inline-block;
+            transform-origin: center;
+            margin-left: 0; /* Remove any default margin */
         }
 
         @keyframes popOut {
@@ -130,15 +143,6 @@
         .comma-container {
             display: inline-block;
             padding-left: 2px; /* Adjust as needed for spacing */
-        }
-
-        .hey-text {
-            display: inline-block; /* Added to allow independent animation */
-        }
-
-        .comma {
-            display: inline-block;
-            transform-origin: center;
         }
 
         .hey.animate {
@@ -238,6 +242,8 @@
         grid-row: 2 / 3;
         align-self: start;
         margin-top: -0.2em;
+        /* Ensure consistent width */
+        min-width: 280px;
     }
 
     .blog-link {
@@ -248,7 +254,9 @@
         font-size: 40px;
         margin-left: 2rem;
         word-wrap: break-word;
-        max-width: 80%;
+        max-width: 100%;
+        /* Maintain minimum width to prevent layout shifts */
+        min-width: 280px;
     }
 
     .content-1 {
@@ -312,10 +320,13 @@
 
         .chat-mode .hey-container {
             grid-column: 4 / 7;
+            /* Maintain consistent width in chat mode */
+            min-width: 350px;
         }
 
         .chat-mode .hey {
             max-width: 100%;
+            min-width: 350px; /* Increased for chat mode */
         }
 
         .chat-mode .input-container,
@@ -563,6 +574,14 @@ body {
         position: relative;
     }
 
+    .hey {
+        /* Mobile responsive width handling */
+        min-width: auto;
+        width: 100%;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
     .chat-input::placeholder {
     font: inherit;
     color: #CCCCCC;
@@ -755,7 +774,6 @@ body {
                 const welcomeBackMessages = [
                     "Welcome back",
                     "Good to see you again",
-                    "Back so soon",
                     "Hello again"
                 ];
                 return welcomeBackMessages[Math.floor(Math.random() * welcomeBackMessages.length)];
@@ -769,10 +787,8 @@ body {
             // Time-based greetings for new visitors
             if (hour >= 0 && hour < 6) {
                 const lateNightMessages = [
-                    "Still awake",
-                    "Up late",
-                    "Night owl",
-                    "Can't sleep"
+                    "Still awake?",
+                    "Up late?",
                 ];
                 return lateNightMessages[Math.floor(Math.random() * lateNightMessages.length)];
             }
@@ -781,17 +797,13 @@ body {
                 const morningMessages = [
                     "Good morning",
                     "Morning",
-                    "Early bird"
                 ];
                 return morningMessages[Math.floor(Math.random() * morningMessages.length)];
             }
             
             if (hour >= 22) {
                 const lateMessages = [
-                    "Rest soon",
-                    "Getting late",
-                    "Time for rest",
-                    "Sleep well soon"
+                    "Good night!"
                 ];
                 return lateMessages[Math.floor(Math.random() * lateMessages.length)];
             }
@@ -800,8 +812,6 @@ body {
             if (isWeekend) {
                 const weekendMessages = [
                     "Happy weekend",
-                    "Weekend vibes",
-                    "Time to relax"
                 ];
                 return weekendMessages[Math.floor(Math.random() * weekendMessages.length)];
             }
@@ -824,6 +834,21 @@ body {
                     behavior: 'smooth'
                 });
             });
+        });
+
+        // Global escape key listener
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const inChatMode = document.body.classList.contains('chat-mode') || window.inChatMode;
+                if (inChatMode) {
+                    // Reset to home page
+                    if (typeof resetPage === 'function') {
+                        resetPage();
+                    } else if (typeof window.resetPage === 'function') {
+                        window.resetPage();
+                    }
+                }
+            }
         });
     
     
@@ -1107,6 +1132,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let promptTimer;
         let blinkInterval;
 
+        // Make inChatMode globally accessible for ESC key handler
+        window.inChatMode = false;
+
         function showPrompt(text, fadeIn = false) {
     clearTimeout(promptTimer);
     hidePrompt();
@@ -1222,6 +1250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update the handleLongPress function to properly hide the image:
         function handleLongPress() {
     inChatMode = true;
+    window.inChatMode = true; // Make globally accessible
 
     clearPreviousContent(true);
     console.log('Long press detected');
@@ -1401,6 +1430,7 @@ async function handleUserInput(userInput) {
 
         function resetPage() {
             inChatMode = false;
+            window.inChatMode = false; // Reset global state
             
             // Immediately hide the prompt and system message
             hidePrompt();
@@ -1451,6 +1481,9 @@ async function handleUserInput(userInput) {
             messages = [];
         }
 
+        // Make resetPage globally accessible
+        window.resetPage = resetPage;
+
 
 
         function playAnimation() {
@@ -1496,6 +1529,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let inChatMode = false;
         let cursor;
         let promptTimer;
+
+        // Make inChatMode globally accessible for ESC key handler
+        window.inChatMode = false;
 
         function toggleChatMode(enable) {
         if (enable) {
@@ -1586,6 +1622,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function handleDesktopClick() {
             inChatMode = true;
+            window.inChatMode = true; // Make globally accessible
             toggleChatMode(true)
             clearPreviousContent(true);
             hidePrompt();
@@ -1748,6 +1785,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function resetPage() {
             inChatMode = false;
+            window.inChatMode = false; // Reset global state
             toggleChatMode(false);
             document.body.classList.remove('chat-mode');
             
@@ -1790,6 +1828,9 @@ document.addEventListener('DOMContentLoaded', function() {
             playPopOutAnimation();
             resetPromptTimer();
         }
+
+        // Make resetPage globally accessible
+        window.resetPage = resetPage;
 
         function showPrompt(text, fadeIn = false) {
             hidePrompt();
