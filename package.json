@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "nodemailer": "^7.0.3",
     "openai": "^4.52.7"
   }
 }

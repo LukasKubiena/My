@@ -9,6 +9,10 @@
   included_files = ["node_modules/openai/**"]
   timeout = 30
 
+[functions.send-newsletter]
+  included_files = ["node_modules/nodemailer/**"]
+  timeout = 30
+
 # Add these redirect rules at the top of your redirects section
 [[redirects]]
   from = "http://*"

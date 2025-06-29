@@ -72,6 +72,88 @@
             padding: calc(var(--nav-height) + 64px) var(--page-padding) 64px;
         }
 
+        /* Newsletter Subscription */
+        .newsletter-section {
+            margin-bottom: 80px;
+            padding: 32px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            max-width: 400px;
+        }
+
+        .newsletter-form input[type="email"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .newsletter-form input[type="email"]:focus {
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .newsletter-form input[type="email"]::placeholder {
+            color: #999;
+        }
+
+        .newsletter-form button {
+            padding: 12px 24px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .newsletter-form button:hover {
+            opacity: 0.8;
+        }
+
+        .newsletter-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .newsletter-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .newsletter-success {
+            padding: 16px;
+            background: #f0f8f0;
+            border: 1px solid #d4e6d4;
+            border-radius: 4px;
+            color: #2d5a2d;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .newsletter-error {
+            padding: 16px;
+            background: #fdf2f2;
+            border: 1px solid #f5c6c6;
+            border-radius: 4px;
+            color: #a94442;
+            margin-top: 16px;
+            display: none;
+        }
+
         /* Blog Posts Grid */
         .blog-grid {
             display: grid;
@@ -92,10 +174,10 @@
 
         .banner-image {
             width: 100%;
-            aspect-ratio: 1 / 1;  /* Changed from 2/1 to 1/1 for square images */
+            aspect-ratio: 1 / 1;
             border-radius: 4px;
             object-fit: cover;
-            object-position: center;  /* Changed to center instead of top center */
+            object-position: center;
             margin-bottom: 24px;
         }
 
@@ -125,6 +207,20 @@
                 gap: 48px;
             }
 
+            .newsletter-section {
+                margin-bottom: 60px;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                align-items: stretch;
+                max-width: none;
+            }
+
+            .newsletter-form button {
+                margin-top: 8px;
+            }
+
             .banner-image {
                 height: 200px;
                 margin-bottom: 20px;
@@ -134,20 +230,22 @@
                 font-size: 22px;
             }
         }
-            /* Footer Style */
+
+        /* Footer Style */
         .footer {
-        max-width: var(--content-width);
-        margin: 0 auto;
-        padding: 24px var(--page-padding);
-        font-size: 14px;
-        color: #666;
-        text-align: center;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
+            max-width: var(--content-width);
+            margin: 0 auto;
+            padding: 24px var(--page-padding);
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
+
         .footer img {
-        vertical-align: middle;
-        margin-left: 4px;
-        height: 12px;
+            vertical-align: middle;
+            margin-left: 4px;
+            height: 12px;
         }
     </style>
 </head>
@@ -162,6 +260,29 @@
 
     <!-- Blog Content -->
     <div class="blog-container">
+        <!-- Newsletter Subscription -->
+        <div class="newsletter-section">
+            <div class="newsletter-text">Get notified when I publish something new</div>
+            <form class="newsletter-form" id="newsletterForm" name="newsletter" method="POST" data-netlify="true">
+                <input type="hidden" name="form-name" value="newsletter">
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="your@email.com" 
+                    required
+                    id="emailInput"
+                >
+                <button type="submit" id="subscribeBtn">Subscribe</button>
+            </form>
+            <div class="newsletter-success" id="successMessage">
+                Thanks for subscribing! You'll get an email when I publish something new.
+            </div>
+            <div class="newsletter-error" id="errorMessage">
+                Something went wrong. Please try again.
+            </div>
+        </div>
+
+        <!-- Blog Posts -->
         <div class="blog-grid">
             <a href="post.html?post=5" class="blog-card">
                 <img src="ban5.png" alt="Polarised" class="banner-image">
@@ -194,8 +315,75 @@
             </a>
         </div>
     </div>
+    
     <footer class="footer">
         Written in Europe with Care <img src="eu.svg" alt="EU Flag">
-      </footer>
+    </footer>
+
+    <script>
+        document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const emailInput = document.getElementById('emailInput');
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Disable button during submission
+            subscribeBtn.disabled = true;
+            subscribeBtn.textContent = 'Subscribing...';
+            
+            try {
+                const response = await fetch('/.netlify/functions/send-newsletter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'subscribe',
+                        email: emailInput.value
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    successMessage.style.display = 'block';
+                    emailInput.value = '';
+                    
+                    // Store subscription for potential future features
+                    if (typeof(Storage) !== "undefined") {
+                        localStorage.setItem('newsletter_subscribed', 'true');
+                        localStorage.setItem('newsletter_email', emailInput.value);
+                    }
+                } else {
+                    throw new Error(result.message || 'Subscription failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Something went wrong. Please try again.';
+            } finally {
+                // Re-enable button
+                subscribeBtn.disabled = false;
+                subscribeBtn.textContent = 'Subscribe';
+            }
+        });
+
+        // Optional: Check if user is already subscribed
+        if (typeof(Storage) !== "undefined" && localStorage.getItem('newsletter_subscribed') === 'true') {
+            const emailInput = document.getElementById('emailInput');
+            const subscribeBtn = document.getElementById('subscribeBtn');
+            emailInput.placeholder = 'Already subscribed ✓';
+            emailInput.disabled = true;
+            subscribeBtn.textContent = 'Subscribed';
+            subscribeBtn.disabled = true;
+        }
+    </script>
 </body>
 </html>
