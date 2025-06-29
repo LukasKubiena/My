@@ -1,107 +1,53 @@
-// functions/send-newsletter/send-newsletter.js
-// Simplified version for testing - replace your current function with this temporarily
+// test-gmail.js
+// Simple test to verify Gmail connection
+const nodemailer = require('nodemailer');
 
-let subscribers = [];
-
-exports.handler = async (event, context) => {
-  console.log('Newsletter function called with method:', event.httpMethod);
-  console.log('Environment check - GMAIL_USER exists:', !!process.env.GMAIL_USER);
-  console.log('Environment check - GMAIL_PASS exists:', !!process.env.GMAIL_PASS);
-  
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-  };
-
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod === 'POST') {
-    try {
-      console.log('Request body:', event.body);
-      const { action, email, blogTitle, blogUrl } = JSON.parse(event.body);
-      console.log('Parsed action:', action);
-
-      if (action === 'subscribe') {
-        if (!subscribers.includes(email)) {
-          subscribers.push(email);
-          console.log(`New subscriber: ${email}`);
-        }
-        
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({ 
-            success: true, 
-            message: 'Successfully subscribed!',
-            email: email
-          })
-        };
+async function testGmailConnection() {
+  try {
+    console.log('🧪 Testing Gmail connection...');
+    
+    // Replace these with your actual credentials for testing
+    const testUser = 'lukaskub16@gmail.com';
+    const testPass = 'kzvt tmfg seeg ubid'; // Replace with actual app password
+    
+    console.log('Creating transporter...');
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: testUser,
+        pass: testPass
       }
-
-      if (action === 'notify') {
-        console.log('Notify action called for:', blogTitle);
-        console.log('Current subscribers:', subscribers);
-        
-        // For now, just simulate sending without actually sending
-        // We'll add nodemailer back once we confirm this works
-        
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({ 
-            success: true, 
-            message: `Newsletter prepared for ${subscribers.length} subscribers`,
-            count: subscribers.length,
-            blogTitle: blogTitle,
-            blogUrl: blogUrl,
-            subscribers: subscribers
-          })
-        };
-      }
-
-      if (action === 'list') {
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({ 
-            success: true, 
-            count: subscribers.length,
-            subscribers: subscribers
-          })
-        };
-      }
-
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ 
-          success: false, 
-          message: 'Invalid action',
-          action: action
-        })
-      };
-
-    } catch (error) {
-      console.error('Newsletter function error:', error);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ 
-          success: false, 
-          message: 'Internal server error',
-          error: error.message,
-          stack: error.stack
-        })
-      };
+    });
+    
+    console.log('Verifying connection...');
+    await transporter.verify();
+    
+    console.log('✅ Gmail connection successful!');
+    console.log('Sending test email...');
+    
+    const info = await transporter.sendMail({
+      from: testUser,
+      to: testUser, // Send to yourself for testing
+      subject: 'Test Email from Newsletter Function',
+      text: 'This is a test email to verify Gmail connection works.',
+      html: '<p>This is a test email to verify Gmail connection works.</p>'
+    });
+    
+    console.log('✅ Test email sent successfully!');
+    console.log('Message ID:', info.messageId);
+    
+  } catch (error) {
+    console.error('❌ Gmail connection failed:');
+    console.error('Error code:', error.code);
+    console.error('Error message:', error.message);
+    
+    if (error.code === 'EAUTH') {
+      console.log('\n🔧 Authentication failed. Please check:');
+      console.log('1. 2-Step Verification is enabled');
+      console.log('2. App Password is correct (16 characters)');
+      console.log('3. Using the App Password, not your regular Gmail password');
     }
   }
+}
 
-  return {
-    statusCode: 405,
-    headers,
-    body: JSON.stringify({ message: 'Method not allowed' })
-  };
-};
+testGmailConnection();
