@@ -2,10 +2,12 @@
 const nodemailer = require('nodemailer');
 
 // In production, you'd want to use a proper database
-// For now, we'll use Netlify's built-in KV storage or a simple file approach
+// For now, we'll use a simple in-memory array
 let subscribers = [];
 
 exports.handler = async (event, context) => {
+  console.log('Newsletter function called with method:', event.httpMethod);
+  
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -19,9 +21,9 @@ exports.handler = async (event, context) => {
   if (event.httpMethod === 'POST') {
     try {
       const { action, email, blogTitle, blogUrl } = JSON.parse(event.body);
+      console.log('Action:', action);
 
       if (action === 'subscribe') {
-        // Add email to subscribers list
         if (!subscribers.includes(email)) {
           subscribers.push(email);
           console.log(`New subscriber: ${email}`);
@@ -38,17 +40,24 @@ exports.handler = async (event, context) => {
       }
 
       if (action === 'notify') {
-        // Configure email transporter
-        const transporter = nodemailer.createTransporter({
+        console.log(`Sending newsletter for: ${blogTitle} to ${subscribers.length} subscribers`);
+        
+        // Check environment variables
+        if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
+          throw new Error('Gmail credentials not configured. Please set GMAIL_USER and GMAIL_PASS environment variables.');
+        }
+
+        // FIXED: createTransport (not createTransporter)
+        const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
-            user: process.env.GMAIL_USER, // lukasmariakubiena@gmail.com
-            pass: process.env.GMAIL_PASS  // App-specific password
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS
           }
         });
 
         const mailOptions = {
-          from: 'lukasmariakubiena@gmail.com',
+          from: process.env.GMAIL_USER,
           subject: 'New blog post from Lukas',
           html: `
             <div style="font-family: 'NeueHaasDisplay-Light', Arial, sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6;">
@@ -67,6 +76,7 @@ exports.handler = async (event, context) => {
 
         // Send to all subscribers
         const emailPromises = subscribers.map(subscriberEmail => {
+          console.log(`Sending email to: ${subscriberEmail}`);
           return transporter.sendMail({
             ...mailOptions,
             to: subscriberEmail
@@ -74,30 +84,39 @@ exports.handler = async (event, context) => {
         });
 
         await Promise.all(emailPromises);
+        console.log(`✅ Successfully sent newsletter to ${subscribers.length} subscribers`);
 
         return {
           statusCode: 200,
           headers,
           body: JSON.stringify({ 
             success: true, 
-            message: `Notification sent to ${subscribers.length} subscribers`,
+            message: `Newsletter sent to ${subscribers.length} subscribers`,
             count: subscribers.length
           })
         };
       }
 
       if (action === 'list') {
-        // Optional: Get subscriber count (for admin use)
         return {
           statusCode: 200,
           headers,
           body: JSON.stringify({ 
             success: true, 
             count: subscribers.length,
-            subscribers: subscribers // Remove this in production for privacy
+            subscribers: subscribers
           })
         };
       }
+
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ 
+          success: false, 
+          message: 'Invalid action' 
+        })
+      };
 
     } catch (error) {
       console.error('Newsletter function error:', error);
