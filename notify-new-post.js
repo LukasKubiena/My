@@ -2,7 +2,8 @@
 // Run this script when you publish a new blog post
 
 async function notifySubscribers(blogTitle, blogUrl) {
-  const SITE_URL = 'https://lukaskubiena.com'; // Replace with your actual domain
+  // Make sure to include the full URL with protocol
+  const SITE_URL = 'https://lukaskubiena.com';
   
   try {
     console.log(`📧 Sending newsletter for: ${blogTitle}`);
@@ -64,9 +65,9 @@ const newPost = {
 };
 
 // Uncomment to send notification:
-// notifySubscribers(newPost.title, newPost.url);
+notifySubscribers(newPost.title, newPost.url);
 
 // Uncomment to check subscriber count:
-// getSubscriberCount();
+getSubscriberCount();
 
 module.exports = { notifySubscribers, getSubscriberCount };
