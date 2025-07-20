@@ -394,7 +394,7 @@ body {
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="index.html" class="home-link">← blogs</a>
-            <div class="post-counter">1/5</div>
+            <div class="post-counter">1/6</div>
         </div>
     </nav>
 
@@ -635,6 +635,56 @@ body {
             <img src="img6.png" alt="Blog post image" class="blog-image">
             <div class="next-post" onclick="navigate(1)">
                 <div class="next-label">Next</div>
+                <h2 class="next-title">Excellence vs. Greatness →</h2>
+            </div>
+        </article>
+        <article class="blog-post">
+            <h1 class="blog-title">Excellence vs. Greatness</h1>
+            <div class="audio-container">
+                <button class="play-button" onclick="togglePlay(5)">listen</button>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="progress-container" onclick="seek(event, 5)">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="blog-content">
+                <p>Steve Jobs once said:</p>
+
+                <p>"When you're a carpenter making a beautiful chest of drawers, you're not going to use a piece of plywood on the back, even though it faces the wall and nobody will ever see it. You'll know it's there, so you're going to use a beautiful piece of wood on the back. For you to sleep well at night, the aesthetic, the quality, has to be carried all the way through."</p>
+
+                <p>I think this is a great example. Not because Steve Jobs said it. But because there's two ways to see this carpenter:</p>
+
+                <p>One is to see him as someone who is afraid of producing a poor quality drawer, because his sense of self worth is tied to the thing he creates to an unhealthy extent. Maybe there is a young part inside of him that wants to use this thing he built as a vessel to fill a deep belonging of wanting to be known, seen, cherished, maybe even admired. This part insists on wanting the world to know that it was him who build it, who made this drawer great. When talking about the drawer he in fact, is talking about himself.</p>
+
+                <p>And then there's another way to look at this same carpenter. One that simply does it for the drawers sake.</p>
+
+                <p>It's that type of carpenter that pursues excellence for excellence sake, not to be one of the greats. He cares so much more about the thing he does, than who did it.</p>
+
+                <p>A carpenter striving for excellence, cannot put this chest of drawers out there without it having a nice back not because it would hurt his ego, but because it does injustice to excellence of the craft itself. The hundreds of years, and people contributing to this shared pile of knowledge, all that work that went into creating and growing the discipline of carpeting itself. A discipline that emerged to create things that improve people's quality of life.</p>
+
+                <p>Like him, I don't want to be one of the greats</p>
+
+                <p>I am not doing this creative stuff because I want people to remember me for it.</p>
+
+                <p>I want people to remember me as being a nice person ALTHOUGH i was doing all of this creative stuff.</p>
+
+                <p>I don't want to be remembered because the fact that I worked so hard or the things I created made me a good person.</p>
+
+                <p>But as someone who had great care for life and all living things, and put that care into all the things he did. Be it his personal or professional life.</p>
+
+                <p>Not to be confused with perfectionism. Perfection is hard to define and attain. But all the love and care you put into something. That is something you can measure, you can control; perfection is not.</p>
+
+                <p>So the quest shouldn't be about making things perfect but making them with great care.</p>
+
+                <p>Like Jony Ive, I believe that whether in service industry, product consumer, business or whatever, you immediately sense carelessness—when something is done just poorly put together.</p>
+
+                <p>Like Jony I believe, why then shouldn't we be able to also sense when great care is given into something?</p>
+
+                <p>When that beautiful piece of wood, was put on the back of the drawer.</p>
+            </div>
+            <img src="img7.jpeg" alt="Blog post image" class="blog-image">
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
                 <h2 class="next-title">Being a piece of it all →</h2>
             </div>
         </article>
@@ -656,7 +706,8 @@ body {
             new Audio('audio02.mp3'),
             new Audio('audio03.mp3'),
             new Audio('audio4.mp3'),
-            new Audio('audio5.mp3')
+            new Audio('audio5.mp3'),
+            new Audio('audio6.mp3')
         ];
         let currentlyPlaying = null;
         const timeDisplays = document.querySelectorAll('.time-display');

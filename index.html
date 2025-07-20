@@ -18,8 +18,8 @@
             src: url('NeueHaasDisplay-XThin.woff2') format('woff2');
         }
         :root {
-        --box-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.05),
-            0px 0px 1px 0px rgba(0, 0, 0, 0.25);
+            --box-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.05),
+                0px 0px 1px 0px rgba(0, 0, 0, 0.25);
         }
         body, body * {
             box-sizing: border-box;
@@ -35,7 +35,7 @@
             --row-gap: 2rem;
             row-gap: var(--row-gap);
             grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto auto auto auto; /* Added an extra row */
+            grid-template-rows: auto auto auto auto auto auto;
             column-gap: 1.5rem;
             padding-top: 11vh;
             max-width: 1400px;
@@ -82,12 +82,6 @@
             gap: 24px;
         }
 
-
-        .right-links {
-            display: flex;
-            gap: 1rem;
-        }
-
         .hey {
             color: #000000;
             font-family: 'NeueHaasDisplay-Medium', sans-serif;
@@ -118,9 +112,8 @@
         }
 
         .blog-link {
-            margin-bottom: -1rem; /* Reduced spacing between blog and send me a mail */
+            margin-bottom: -1rem;
         }
-
 
         .blog-link a {
             color: #000000;
@@ -129,11 +122,11 @@
 
         .comma-container {
             display: inline-block;
-            padding-left: 2px; /* Adjust as needed for spacing */
+            padding-left: 2px;
         }
 
         .hey-text {
-            display: inline-block; /* Added to allow independent animation */
+            display: inline-block;
         }
 
         .comma {
@@ -160,7 +153,7 @@
             grid-column: 7 / 9;
             grid-row: 4 / 6;
             text-align: justify;
-            margin-bottom: 12rem; /* Increase the margin here */
+            margin-bottom: 12rem;
         }
 
         .content-group {
@@ -186,14 +179,11 @@
             text-decoration: underline;
         }
 
-
-        /* General link styles */
         a {
             color: inherit;
             text-decoration: none;
         }
 
-        /* Style for the "send email" link */
         .send-mail a {
             color: #000000;
             text-decoration: underline;
@@ -206,481 +196,527 @@
         }
 
         @media screen and (min-width: 1025px) {
-    body {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto auto auto auto;
-        column-gap: 1.5rem;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .profile-image {
-    grid-column: 10 / 12;
-    grid-row: 2 / 4;  /* Match content-1's grid position */
-    width: 100%;
-    height: 100%;  /* Fill the grid area */
-    object-fit: cover;
-    border-radius: 4px;
-    margin: 0;
-    display: block;
-    opacity: 0;
-    transition: opacity 1s ease-in;
-}
-
-/* Add fade-in class to use in JavaScript */
-.profile-image.visible {
-    opacity: 1;
-}
-
-    .hey-container {
-        grid-column: 4 / 6;
-        grid-row: 2 / 3;
-        align-self: start;
-        margin-top: -0.2em;
-    }
-
-    .blog-link {
-            margin-bottom: -1rem; /* Reduced spacing between blog and send me a mail */
-        }
-
-    .hey {
-        font-size: 40px;
-        margin-left: 2rem;
-        word-wrap: break-word;
-        max-width: 80%;
-    }
-
-    .content-1 {
-        grid-column: 7 / 9;
-        grid-row: 2 / 4;
-    }
-
-    .content-2 {
-        grid-column: 7 / 9;
-        grid-row: 4 / 6;
-    }
-
-    .content-group {
-    grid-column: 10 / 12;
-    grid-row: 4 / 6;  /* Align with content-2 */
-    display: flex;
-    flex-direction: column;
-    gap: var(--row-gap);
-    margin-top: 0;  /* Remove any top margin */
-}
-
-}
-
-@media screen and (min-width: 1025px) {
-    body {
-        overflow: hidden; /* Prevent scrolling on the body */
-    }
-
-    .hey-container {
-        position: relative;
-        margin-bottom: 2rem;
-    }
-
-    .prompt {
-        position: absolute;
-        top: -40px;
-        left: 2rem;
-        color: #888;
-        font-size: 16px;
-        white-space: nowrap;
-    }
-
-    body.initial-load {
-        padding-top: 24vh;
-    }
-
-    .copyright {
-    grid-column: 10 / 12;
-    grid-row: 4; /* Place it in the last row */
-    text-align: right;
-    font-size: 0.9rem;
-    color: #888;
-    align-self: start; /* Align to the top of its grid cell */
-}
-        /* New styles for chat mode */
-        body.chat-mode {
-            grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-            padding-top: 11vh; /* Slightly reduced top padding in chat mode */
-            padding-left: 1%;
-        }
-
-        .chat-mode .hey-container {
-            grid-column: 4 / 7;
-        }
-
-        .chat-mode .hey {
-            max-width: 100%;
-        }
-
-        .chat-mode .input-container,
-        .chat-mode .chat-input {
-            width: 100%;
-            max-width: none;
-        }
-
-        .blog-link {
-            margin-bottom: -1rem; /* Reduced spacing between blog and send me a mail */
-        }
-
-    .chat-input {
-        font-family: 'NeueHaasDisplay-Medium', sans-serif;
-        font-size: 40px;
-        font-weight: 600;
-        width: 100%;
-        border: none;
-        background: transparent;
-        outline: none;
-        resize: none;
-        overflow: hidden;
-    }
-
-    .chat-input::placeholder {
-        color: #CCCCCC;
-        opacity: 1;
-    }
-
-    .ai-response {
-        grid-column: 7 / 14;
-        grid-row: 2 / 6;
-        align-self: start;
-        text-align: justify;
-        font-family: 'NeueHaasDisplay-Light', sans-serif;
-        font-size: 16px;
-        word-wrap: break-word;
-        max-width: 60%;
-        margin-left: 20%;
-    }
-
-    .hidden {
-        display: none !important;
-    }
-
-/* Adjust back button positioning */
-.back-button {
-    position: fixed;
-    bottom: 24vh; /* Moved up from default position */
-    right: 24vh;
-    text-decoration: underline;
-    cursor: pointer;
-    font-family: 'NeueHaasDisplay-Light', sans-serif;
-    font-size: 16px;
-}
-
-    .typing-cursor {
-        display: inline-block;
-        width: 1px;
-        height: 0.8em;
-        background-color: #000;
-        animation: blink 0.7s infinite;
-        margin-left: 2px;
-        vertical-align: baseline;
-    }
-
-    .typing-cursor {
-    display: inline-block;
-    width: 1px;
-    height: 1em;
-    background-color: black;
-    animation: blink 0.7s infinite;
-    margin-left: 2px;
-    vertical-align: bottom;
-}
-
-body {
-                padding-top: calc(24vh + 64px); /* Added navbar height to existing padding */
+            body {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+                grid-template-rows: auto auto auto auto auto auto;
+                column-gap: 1.5rem;
+                max-width: 1400px;
+                margin: 0 auto;
             }
-        
 
-@keyframes blink {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
-}
+            .profile-image {
+                grid-column: 10 / 12;
+                grid-row: 2 / 4;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 4px;
+                margin: 0;
+                display: block;
+                opacity: 0;
+                transition: opacity 1s ease-in;
+            }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+            .profile-image.visible {
+                opacity: 1;
+            }
 
-    @keyframes popOut {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
+            .hey-container {
+                grid-column: 4 / 6;
+                grid-row: 2 / 3;
+                align-self: start;
+                margin-top: -0.2em;
+            }
 
-    @keyframes bellJingle {
-        0% { transform: rotate(0deg); }
-        25% { transform: rotate(10deg); }
-        50% { transform: rotate(-8deg); }
-        75% { transform: rotate(6deg); }
-        100% { transform: rotate(0deg); }
-    }
-}
-    /* Add this to your existing CSS styles section */
+            .blog-link {
+                margin-bottom: -1rem;
+            }
 
-    .animated-umlaut {
-        position: relative;
-        display: inline-block;
-    }
+            .hey {
+                font-size: 40px;
+                margin-left: 2rem;
+                word-wrap: break-word;
+                max-width: 80%;
+            }
 
-    .umlaut-dots {
-        position: absolute;
-        top: -2.5px;
-        left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 1px;
-    }
+            .content-1 {
+                grid-column: 7 / 9;
+                grid-row: 2 / 4;
+            }
 
-    .umlaut-dot {
-        display: inline-block;
-        opacity: 0;
-        transform: translateY(3px);
-        transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease; /* Add color transition */
-        font-size: 0.8em;
-        line-height: 1;
-        font-family: 'NeueHaasDisplay-Light', sans-serif;
-        height: 2px;
-        /* Remove the fixed color to inherit from parent */
-    }
+            .content-2 {
+                grid-column: 7 / 9;
+                grid-row: 4 / 6;
+            }
 
-    .nav-link:hover .umlaut-dot {
-        /* Make sure dots are fully opaque when nav-link is hovered */
-        opacity: 1 !important;
-        color: inherit !important;
-    }
-
-    .umlaut-dot.appear {
-        opacity: 0.75; /* Regular opacity when not hovered */
-        transform: translateY(0);
-    }
-
-    /* Add a subtle bounce to each dot */
-    @keyframes dotBounce {
-        0% { transform: translateY(0); }
-        40% { transform: translateY(-1px); }
-        60% { transform: translateY(0.5px); }
-        100% { transform: translateY(0); }
-    }
-
-    .umlaut-dot.appear {
-        opacity: 0.75; /* Regular opacity */
-        transform: translateY(0);
-        animation: dotBounce 0.4s ease-in-out 0.1s;
-    }
-
-    /* Hover effects for larger screens only */
-    @media screen and (min-width: 1025px) {
-        .at-link::before {
-            content: "";
-            position: absolute;
-            z-index: -1;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #BFD4EA;
-            transform: scaleX(0);
-            transform-origin: bottom right;
-            transition: transform 0.3s ease;
+            .content-group {
+                grid-column: 10 / 12;
+                grid-row: 4 / 6;
+                display: flex;
+                flex-direction: column;
+                gap: var(--row-gap);
+                margin-top: 0;
+            }
         }
 
+        @media screen and (min-width: 1025px) {
+            body {
+                overflow: hidden;
+            }
 
+            .hey-container {
+                position: relative;
+                margin-bottom: 2rem;
+            }
 
+            .prompt {
+                position: absolute;
+                top: -40px;
+                left: 2rem;
+                color: #888;
+                font-size: 16px;
+                white-space: nowrap;
+            }
 
-        .at-link:hover::before {
-            transform: scaleX(1);
-            transform-origin: bottom left;
+            body.initial-load {
+                padding-top: 24vh;
+            }
+
+            .copyright {
+                grid-column: 10 / 12;
+                grid-row: 4;
+                text-align: right;
+                font-size: 0.9rem;
+                color: #888;
+                align-self: start;
+            }
+
+            body.chat-mode {
+                grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+                padding-top: 11vh;
+                padding-left: 1%;
+            }
+
+            .chat-mode .hey-container {
+                grid-column: 4 / 7;
+            }
+
+            .chat-mode .hey {
+                max-width: 100%;
+            }
+
+            .chat-mode .input-container,
+            .chat-mode .chat-input {
+                width: 100%;
+                max-width: none;
+            }
+
+            /* Follow mode styles */
+            body.follow-mode {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 64px 24px;
+                min-height: 100vh;
+            }
+
+            .follow-container {
+                max-width: 480px;
+                width: 100%;
+                text-align: center;
+            }
+
+            .follow-hey {
+                font-family: 'NeueHaasDisplay-Medium', sans-serif;
+                font-size: 40px;
+                font-weight: 600;
+                margin-bottom: 32px;
+                display: inline-block;
+                transform-origin: center;
+            }
+
+            .follow-hey.animate {
+                animation: popOut 0.3s ease-out;
+            }
+
+            .follow-hey.animate .comma {
+                animation: bellJingle 0.8s ease-in-out 0.3s;
+            }
+
+            .follow-text {
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 18px;
+                line-height: 1.6;
+                color: #333;
+                margin-bottom: 40px;
+            }
+
+            .follow-email-input {
+                font-family: 'NeueHaasDisplay-Medium', sans-serif;
+                font-size: 32px;
+                font-weight: 600;
+                width: 100%;
+                border: none;
+                background: transparent;
+                outline: none;
+                color: #000;
+                text-align: center;
+                padding: 16px 0;
+                border-bottom: 2px solid #ddd;
+                transition: border-color 0.3s ease;
+                margin-bottom: 40px;
+            }
+
+            .follow-email-input:focus {
+                border-color: #000;
+            }
+
+            .follow-email-input::placeholder {
+                color: #CCCCCC;
+                opacity: 1;
+            }
+
+            .follow-submit-button {
+                background: #000;
+                color: #fff;
+                border: none;
+                padding: 16px 48px;
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 16px;
+                cursor: pointer;
+                transition: opacity 0.3s ease;
+                margin-bottom: 40px;
+            }
+
+            .follow-submit-button:hover {
+                opacity: 0.8;
+            }
+
+            .follow-submit-button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .follow-back-link {
+                color: #666;
+                text-decoration: underline;
+                cursor: pointer;
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 16px;
+                transition: color 0.3s ease;
+            }
+
+            .follow-back-link:hover {
+                color: #000;
+            }
+
+            .follow-success {
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 18px;
+                color: #2d5a2d;
+                margin-bottom: 40px;
+            }
+
+            .typing-cursor {
+                display: inline-block;
+                width: 1px;
+                height: 1em;
+                background-color: black;
+                animation: blink 0.7s infinite;
+                margin-left: 2px;
+                vertical-align: bottom;
+            }
+
+            body {
+                padding-top: calc(24vh + 64px);
+            }
+
+            @keyframes blink {
+                0% { opacity: 0; }
+                50% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            .animated-umlaut {
+                position: relative;
+                display: inline-block;
+            }
+
+            .umlaut-dots {
+                position: absolute;
+                top: -2.5px;
+                left: 0;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                gap: 1px;
+            }
+
+            .umlaut-dot {
+                display: inline-block;
+                opacity: 0;
+                transform: translateY(3px);
+                transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+                font-size: 0.8em;
+                line-height: 1;
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                height: 2px;
+            }
+
+            .nav-link:hover .umlaut-dot {
+                opacity: 1 !important;
+                color: inherit !important;
+            }
+
+            .umlaut-dot.appear {
+                opacity: 0.75;
+                transform: translateY(0);
+            }
+
+            @keyframes dotBounce {
+                0% { transform: translateY(0); }
+                40% { transform: translateY(-1px); }
+                60% { transform: translateY(0.5px); }
+                100% { transform: translateY(0); }
+            }
+
+            .umlaut-dot.appear {
+                opacity: 0.75;
+                transform: translateY(0);
+                animation: dotBounce 0.4s ease-in-out 0.1s;
+            }
+
+            @media screen and (min-width: 1025px) {
+                .at-link::before {
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: #BFD4EA;
+                    transform: scaleX(0);
+                    transform-origin: bottom right;
+                    transition: transform 0.3s ease;
+                }
+
+                .at-link:hover::before {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
+            }
+
+            .personal-website {
+                color: #000000;
+                text-align: left;
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 16px;
+                font-weight: 300;
+                transform-origin: top left;
+                transform: rotate(-90deg) translateX(-100%);
+                white-space: nowrap;
+            }
         }
-    }
-    
 
-    
-    .blog-link {
-            margin-bottom: -1rem; /* Reduced spacing between blog and send me a mail */
-        }
-
-        .personal-website {
-            color: #000000;
-            text-align: left;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            transform-origin: top left;
-            transform: rotate(-90deg) translateX(-100%);
-            white-space: nowrap;
-        }
-
-
-        
         @media screen and (max-width: 1024px) {
-    body {
-        display: flex;
-        flex-direction: column;
-        padding: 40px;
-        margin-top: 12vh;
-        box-sizing: border-box;
-    }
-
-    body.chat-mode {
-    row-gap: 0;
-}
-
-
-
-    .ai-response {
-        font-family: 'NeueHaasDisplay-Light', sans-serif;
-        font-size: 18px;
-        line-height: 1.5;
-        max-width: 100%;
-        margin-left: 0;
-        text-align: left;
-        cursor: pointer;
-    }
-
-    .initial-load .comma {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-    .hey, .content, .send-mail {
-        width: 100%;
-        margin-left: 0;
-        padding-left: 0;
-    }
-
-    .hey-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        position: relative;
-    }
-
-    .chat-input::placeholder {
-    font: inherit;
-    color: #CCCCCC;
-}
-
-body {
-    margin-top: 8vh; /* Reduced from 12vh */
-}
-            
-            .nav-bar {
-                height: 56px; /* Slightly smaller on mobile */
+            body {
+                display: flex;
+                flex-direction: column;
+                padding: 40px;
+                margin-top: 12vh;
+                box-sizing: border-box;
             }
 
-    .typing-cursor {
-        display: inline-block;
-        width: 1px;
-        height: 0.8em; /* Adjust to match text height */
-        background-color: #000;
-        animation: blink 0.7s infinite;
-        margin-left: 2px;
-        vertical-align: baseline; /* Align with text baseline */
-    }
+            .right-links {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 8px;
+                position: relative;
+            }
 
-    .profile-image {
-        width: 100%;
-        height: auto;
-        margin: 2rem 0;
-        grid-column: 1 / -1;
-        grid-row: auto;
-        opacity: 0;
-        transition: opacity 1s ease-in;
-        display: block;  /* Ensure image is block-level */
-        max-width: 100%; /* Ensure image doesn't overflow */
-    }
-    
-    .profile-image.visible {
-        opacity: 1;
-    }
+            .follow-mode {
+                padding: 20px;
+                margin-top: 8vh;
+            }
 
-    /* Hide image in chat mode */
-    body.chat-mode .profile-image {
-        display: none;
-    }
-    body.chat-mode {
-        margin-top: 6vh;
-    }
+            .follow-container {
+                max-width: 100%;
+                padding: 0 20px;
+            }
 
-    /* Initial load state */
-    .initial-load .profile-image {
-        opacity: 0;
-    }
+            .follow-hey {
+                font-size: 36px;
+                margin-bottom: 24px;
+            }
 
-    .back-button {
-        position: fixed;
-        bottom: 3vh; /* Even higher on mobile */
-        right: 3vh;
-    }
+            .follow-text {
+                font-size: 18px;
+                line-height: 1.5;
+                margin-bottom: 32px;
+            }
 
-    .prompt {
-        position: absolute;
-        top: -44px; /* Adjust this value as needed */
-        left: 0;
-        color: #888;
-        font-size: 16px;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-    }
+            .follow-email-input {
+                font-size: 28px;
+                margin-bottom: 32px;
+            }
 
-    .hey {
-        font-size: 36px;
-        text-align: left;
-        opacity: 1;
-        transition: transform 0.5s ease-out;
-    }
-    
+            .follow-submit-button {
+                width: 100%;
+                padding: 16px 24px;
+                margin-bottom: 32px;
+            }
 
+            body.chat-mode {
+                row-gap: 0;
+            }
 
-    /* Adjust the space between user input and AI output */
-    .user-input,
-    .ai-output {
-        margin-top: 4px; /* Reduce the space */
-        margin-bottom: 4px; /* Reduce the space */
-    }
+            .ai-response {
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 18px;
+                line-height: 1.5;
+                max-width: 100%;
+                margin-left: 0;
+                text-align: left;
+                cursor: pointer;
+            }
 
-    .content, .send-mail, .blog-link {
-        font-size: 18px;
-        line-height: 1.5;
-        margin-bottom: 20px;
-        text-align: left;
-        opacity: 0;
-        transition: opacity 1s ease-in;
-    }
+            .initial-load .comma {
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
 
+            .hey, .content, .send-mail {
+                width: 100%;
+                margin-left: 0;
+                padding-left: 0;
+            }
 
-    .content.visible, .send-mail.visible, .blog-link.visible {
-        opacity: 1;
-    }
+            .hey-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                position: relative;
+            }
 
-    .chat-input::placeholder {
-        color: #CCCCCC;
-        font-family: 'NeueHaasDisplay-Medium', sans-serif;
-        font-size: 36px;
-        font-weight: 600;
-        opacity: 1; /* Firefox */
-    }
+            .chat-input::placeholder {
+                font: inherit;
+                color: #CCCCCC;
+            }
 
+            body {
+                margin-top: 8vh;
+            }
 
-    @keyframes blink {
-        0% { opacity: 0; }
-        50% { opacity: 1; }
-        100% { opacity: 0; }
-    }
+            .nav-bar {
+                height: 56px;
+            }
 
-    /* Hide elements not needed on mobile */
-    header, .side-group, ._24, .personal-website, .project-row, .project-image-container, .project-row-right, .project-image-container-2, .project-info, .project-paragraph-2, .copyright {
-        display: none;
-    }
-}
+            .typing-cursor {
+                display: inline-block;
+                width: 1px;
+                height: 0.8em;
+                background-color: #000;
+                animation: blink 0.7s infinite;
+                margin-left: 2px;
+                vertical-align: baseline;
+            }
+
+            .profile-image {
+                width: 100%;
+                height: auto;
+                margin: 2rem 0;
+                grid-column: 1 / -1;
+                grid-row: auto;
+                opacity: 0;
+                transition: opacity 1s ease-in;
+                display: block;
+                max-width: 100%;
+            }
+
+            .profile-image.visible {
+                opacity: 1;
+            }
+
+            body.chat-mode .profile-image {
+                display: none;
+            }
+
+            body.chat-mode {
+                margin-top: 6vh;
+            }
+
+            .initial-load .profile-image {
+                opacity: 0;
+            }
+
+            .back-button {
+                position: fixed;
+                bottom: 3vh;
+                right: 3vh;
+            }
+
+            .prompt {
+                position: absolute;
+                top: -44px;
+                left: 0;
+                color: #888;
+                font-size: 16px;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+
+            .hey {
+                font-size: 36px;
+                text-align: left;
+                opacity: 1;
+                transition: transform 0.5s ease-out;
+            }
+
+            .user-input,
+            .ai-output {
+                margin-top: 4px;
+                margin-bottom: 4px;
+            }
+
+            .content, .send-mail, .blog-link {
+                font-size: 18px;
+                line-height: 1.5;
+                margin-bottom: 20px;
+                text-align: left;
+                opacity: 0;
+                transition: opacity 1s ease-in;
+            }
+
+            .content.visible, .send-mail.visible, .blog-link.visible {
+                opacity: 1;
+            }
+
+            .chat-input::placeholder {
+                color: #CCCCCC;
+                font-family: 'NeueHaasDisplay-Medium', sans-serif;
+                font-size: 36px;
+                font-weight: 600;
+                opacity: 1;
+            }
+
+            @keyframes blink {
+                0% { opacity: 0; }
+                50% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+
+            header, .side-group, ._24, .personal-website, .project-row, .project-image-container, .project-row-right, .project-image-container-2, .project-info, .project-paragraph-2, .copyright {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="initial-load">
@@ -688,10 +724,9 @@ body {
         <div class="nav-content">
             <a href="#" class="nav-link">Lukas Kubiena</a>
             <div class="right-links">
-                <!-- <a href="method.html" class="nav-link">method</a>
-                <a href="animation.html" class="nav-link">animation</a> -->
                 <a href="./blog/index.html" class="nav-link">blog</a>
                 <a href="mailto:lukasmariakubiena@gmail.com" class="nav-link">contact</a>
+                <a href="#" class="nav-link follow-me-trigger">follow me</a>
             </div>
         </div>
     </nav>
@@ -724,10 +759,9 @@ body {
         function getSmartGreeting() {
             const now = new Date();
             const hour = now.getHours();
-            const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+            const day = now.getDay();
             const isWeekend = day === 0 || day === 6;
             
-            // Check visit history using in-memory variables since localStorage is not available
             if (!window.visitData) {
                 window.visitData = {
                     hasVisited: false,
@@ -738,83 +772,76 @@ body {
             
             const today = now.toDateString();
             
-            // Mark this visit
             window.visitData.visitCount++;
             const isReturnVisitor = window.visitData.hasVisited && window.visitData.lastVisit !== today;
             const isSameDayReturn = window.visitData.hasVisited && window.visitData.lastVisit === today;
             window.visitData.hasVisited = true;
             window.visitData.lastVisit = today;
             
-            // Special holiday/date greetings
             const month = now.getMonth();
             const date = now.getDate();
             
-            // New Year's Day
             if (month === 0 && date === 1) {
-                return "Happy New Year! Click here to ask about me";
+                return "Happy New Year! Want to ask something about me?";
             }
             
-            // Christmas season
             if (month === 11 && date >= 20 && date <= 26) {
-                return "Happy holidays! Click here to ask about me";
+                return "Happy holidays! Want to ask something about me?";
             }
             
-            // Late night messages (22:00 - 5:59)
             if (hour >= 22 || hour < 6) {
                 const lateMessages = [
-                    "Up late? Click here to ask about me",
-                    "Night owl? Click here to ask about me",
-                    "Late night browsing? Click here to ask about me",
-                    "Burning the midnight oil? Click here to ask about me"
+                    "Up late? Want to ask something about me?",
+                    "Night owl? Click to ask about me",
+                    "Late night browsing? Ask me something",
+                    "Burning the midnight oil? Want to chat about me?"
                 ];
                 return lateMessages[Math.floor(Math.random() * lateMessages.length)];
             }
             
-            // Early morning (6:00 - 9:59)
             if (hour >= 6 && hour < 10) {
                 const morningMessages = [
-                    "Good morning! Click here to ask about me",
-                    "Early bird! Click here to ask about me",
-                    "Morning! Click here to ask about me",
-                    "Rise and shine! Click here to ask about me"
+                    "Good morning! Want to ask something about me?",
+                    "Early bird! Click to learn about me",
+                    "Morning! Curious about something?",
+                    "Rise and shine! Want to ask about me?"
                 ];
                 return morningMessages[Math.floor(Math.random() * morningMessages.length)];
             }
             
-            // Return visitor different day
             if (isReturnVisitor) {
                 const welcomeBackMessages = [
-                    "Welcome back! Click here to ask about me",
-                    "Good to see you again! Click here to ask about me",
-                    "You're back! Click here to ask about me"
+                    "Welcome back! Want to ask something new about me?",
+                    "Good to see you again! Curious about anything?",
+                    "You're back! Want to learn more about me?"
                 ];
                 return welcomeBackMessages[Math.floor(Math.random() * welcomeBackMessages.length)];
             }
             
-            // Same day return visitor
             if (isSameDayReturn && window.visitData.visitCount > 2) {
                 const sameDayMessages = [
-                    "Still here? Click here to ask about me",
-                    "Hello again! Click here to ask about me",
-                    "Back for more? Click here to ask about me"
+                    "Still here? Want to ask something else about me?",
+                    "Hello again! Got more questions about me?",
+                    "Back for more? Click to ask about me"
                 ];
                 return sameDayMessages[Math.floor(Math.random() * sameDayMessages.length)];
             }
             
-            // Weekend greetings
             if (isWeekend) {
                 const weekendMessages = [
-                    "Happy weekend! Click here to ask about me",
-                    "Weekend vibes! Click here to ask about me",
-                    "Enjoying your weekend? Click here to ask about me"
+                    "Happy weekend! Want to ask something about me?",
+                    "Weekend vibes! Curious about me?",
+                    "Enjoying your weekend? Want to learn about me?"
                 ];
                 return weekendMessages[Math.floor(Math.random() * weekendMessages.length)];
             }
             
-            // Default greetings for regular hours
             const defaultMessages = [
+                "Want to ask something about me?",
                 "Curious about me? Click to ask",
                 "Got questions about me? Click here",
+                "Want to learn more about me?",
+                "Wondering about something? Ask me",
                 "Click to ask me anything about myself"
             ];
             
@@ -825,12 +852,19 @@ body {
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 const inChatMode = document.body.classList.contains('chat-mode') || window.inChatMode;
+                const inFollowMode = document.body.classList.contains('follow-mode') || window.inFollowMode;
+                
                 if (inChatMode) {
-                    // Reset to home page
                     if (typeof resetPage === 'function') {
                         resetPage();
                     } else if (typeof window.resetPage === 'function') {
                         window.resetPage();
+                    }
+                } else if (inFollowMode) {
+                    if (typeof closeFollowMode === 'function') {
+                        closeFollowMode();
+                    } else if (typeof window.closeFollowMode === 'function') {
+                        window.closeFollowMode();
                     }
                 }
             }
@@ -844,7 +878,6 @@ body {
                 });
             });
         });
-    
     
         document.addEventListener('DOMContentLoaded', function() {
             const logo = document.getElementById('logo');
@@ -883,17 +916,17 @@ body {
                 }
     
                 if (contactIntersecting || projectsIntersecting) {
-                    contact.style.color = '#FFFFFF'; // Turn white
-                    projects.style.color = '#FFFFFF'; // Turn white
+                    contact.style.color = '#FFFFFF';
+                    projects.style.color = '#FFFFFF';
                 } else {
-                    contact.style.color = '#000000'; // Turn black
-                    projects.style.color = '#000000'; // Turn black
+                    contact.style.color = '#000000';
+                    projects.style.color = '#000000';
                 }
             }
     
             window.addEventListener('scroll', checkIntersection);
             window.addEventListener('resize', checkIntersection);
-            checkIntersection(); // Initial check
+            checkIntersection();
         });
     
         document.addEventListener('DOMContentLoaded', function() {
@@ -901,963 +934,1086 @@ body {
     
             function playAnimation() {
                 hey.classList.remove('animate');
-                void hey.offsetWidth; // Trigger reflow
+                void hey.offsetWidth;
                 hey.classList.add('animate');
             }
     
-            // Play animation on page load
             playAnimation();
     
-            // Play animation on hover
             hey.addEventListener('mouseenter', playAnimation);
         });
+
         document.addEventListener('DOMContentLoaded', function() {
-    function alignProjectParagraph() {
-        const hey = document.querySelector('.hey');
-        const projectParagraph = document.querySelector('.project-paragraph');
-        const heyRect = hey.getBoundingClientRect();
-        const paragraphRect = projectParagraph.getBoundingClientRect();
-        
-        const difference = heyRect.left - paragraphRect.left;
-        projectParagraph.style.paddingLeft = `${difference}px`;
-    }
+            function alignProjectParagraph() {
+                const hey = document.querySelector('.hey');
+                const projectParagraph = document.querySelector('.project-paragraph');
+                const heyRect = hey.getBoundingClientRect();
+                const paragraphRect = projectParagraph.getBoundingClientRect();
+                
+                const difference = heyRect.left - paragraphRect.left;
+                projectParagraph.style.paddingLeft = `${difference}px`;
+            }
 
-    // Run on load and resize
-    window.addEventListener('load', alignProjectParagraph);
-    window.addEventListener('resize', alignProjectParagraph);
-});
-
-// Add this JavaScript code at the end of your existing script section
-
-// Modified JavaScript to ensure dot colors match navigation text
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Get the nav link with "Lukas Kubiena" text
-    const nameLink = document.querySelector('.nav-link:first-child');
-    
-    if (nameLink) {
-        // Store the original text and href
-        const originalText = nameLink.textContent;
-        const originalHref = nameLink.getAttribute('href');
-        
-        // Add event listener for hover
-        nameLink.addEventListener('mouseenter', function() {
-            // Replace with animated version
-            nameLink.innerHTML = 'Lukas Kubi<span class="animated-umlaut">e</span>na';
-            
-            // Get the element with the letter e
-            const eElement = nameLink.querySelector('.animated-umlaut');
-            
-            // Create umlaut dots
-            const dotContainer = document.createElement('span');
-            dotContainer.className = 'umlaut-dots';
-            
-            const leftDot = document.createElement('span');
-            leftDot.className = 'umlaut-dot left-dot';
-            leftDot.textContent = '·';
-            
-            const rightDot = document.createElement('span');
-            rightDot.className = 'umlaut-dot right-dot';
-            rightDot.textContent = '·';
-            
-            // Append dots to container
-            dotContainer.appendChild(leftDot);
-            dotContainer.appendChild(rightDot);
-            
-            // Append container to the e element
-            eElement.appendChild(dotContainer);
-            
-            // Trigger animations with a slight delay for the second dot
-            setTimeout(() => {
-                leftDot.classList.add('appear');
-            }, 100);
-            
-            setTimeout(() => {
-                rightDot.classList.add('appear');
-            }, 300);
+            window.addEventListener('load', alignProjectParagraph);
+            window.addEventListener('resize', alignProjectParagraph);
         });
-        
-        nameLink.addEventListener('mouseleave', function() {
-            // Return to original text
-            nameLink.textContent = originalText;
-        });
-        
-        // Add click event listener that preserves navigation functionality
-        nameLink.addEventListener('click', function(e) {
-            // If href is "#", prevent default to avoid scroll to top
-            if (originalHref === "#") {
-                e.preventDefault();
-                window.location.href = "/"; // Navigate to home page
-            }
-            // Otherwise, let the default link behavior happen
-        });
-    }
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    const hey = document.querySelector('.hey');
-
-    function playAnimation() {
-        hey.classList.remove('animate');
-        void hey.offsetWidth; // Trigger reflow
-        hey.classList.add('animate');
-    }
-
-    // Play animation on page load
-    playAnimation();
-
-    // Play animation on tap (for mobile)
-    hey.addEventListener('touchstart', function(e) {
-        e.preventDefault(); // Prevent default touch behavior
-        playAnimation();
-    });
-
-    // For desktop, keep the hover functionality
-    if (window.matchMedia("(min-width: 1025px)").matches) {
-        hey.addEventListener('mouseenter', playAnimation);
-    }
-});
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth <= 1024) {
-        const body = document.body;
-        const hey = document.querySelector('.hey');
-        const heyText = hey.querySelector('.hey-text');
-        const comma = hey.querySelector('.comma');
-        const cursor = hey.querySelector('.typing-cursor');
-        const content = document.querySelectorAll('.content, .send-mail, .blog-link');
-        // Disable the bounce animation initially
-        hey.style.animation = 'none';
-
-        // Hide content and hey text initially, but keep cursor visible
-        content.forEach(el => el.style.opacity = '0');
-        heyText.style.opacity = '0';
-        comma.style.opacity = '0';
-        
-        function typeText(text, element, callback) {
-            let i = 0;
-            element.textContent = ''; // Clear existing text
-            element.style.opacity = '1'; // Make text visible before typing
-            function type() {
-                if (i < text.length) {
-                    element.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(type, 150);
-                } else {
-                    callback();
-                }
-            }
-            type();
-        }
-
-        function showComma() {
-            comma.style.opacity = '1';
-            playPopOutAnimation();
-        }
-
-        function playPopOutAnimation() {
-            hey.style.animation = '';
-            hey.classList.add('animate');
-            setTimeout(playCommaAnimation, 300); // Delay comma animation to match pop-out
-        }
-
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth; // Trigger reflow
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-            setTimeout(showContent, 800); // Wait for comma animation to finish
-        }
-
-        function showContent() {
-            cursor.style.display = 'none'; // Hide cursor after animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameLink = document.querySelector('.nav-link:first-child');
             
-            // Show all content including the image
-            content.forEach(el => {
-                el.style.opacity = '1';
-                el.style.transition = 'opacity 1s ease-in';
-            });
-            
-            // Explicitly handle the profile image
-            const profileImage = document.querySelector('.profile-image');
-            if (profileImage) {
-                profileImage.style.display = 'block';  // Ensure image is displayed
-                profileImage.style.opacity = '0';      // Start hidden
-                setTimeout(() => {
-                    profileImage.style.opacity = '1';   // Fade in
-                    profileImage.style.transition = 'opacity 1s ease-in';
-                }, 100);
-            }
-        }
-
-        // Delay the entire animation sequence by 2 seconds
-        setTimeout(() => {
-            // Remove the initial-load class
-            body.classList.remove('initial-load');
-            // Start the sequence
-            typeText('Hey', heyText, showComma);
-        }, 2000);
-    }
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.innerWidth <= 1024) {
-        let hey = document.querySelector('.hey');
-        let heyText = hey.querySelector('.hey-text');
-        let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail, .blog-link'); // Added blog-link here
-        let longPressTimer;
-        let isLongPress = false;
-        let messages = [];
-        let promptShown = false;
-        let inChatMode = false;
-        let promptTimer;
-        let blinkInterval;
-
-        function showPrompt(text, fadeIn = false) {
-    clearTimeout(promptTimer);
-    hidePrompt();
-    
-    let promptContainer = document.createElement('div');
-    promptContainer.className = 'prompt';
-    hey.parentNode.insertBefore(promptContainer, hey);
-    
-    promptContainer.textContent = text;
-    
-    if (fadeIn) {
-        promptContainer.style.opacity = '0';
-        promptContainer.style.transition = 'opacity 1s ease-in';
-        setTimeout(() => {
-            promptContainer.style.opacity = '1';
-        }, 10);
-    } else {
-        promptContainer.style.opacity = '1';
-    }
-    promptContainer.style.cursor = 'pointer';
-    
-    promptContainer.addEventListener('click', () => {
-        if (inChatMode) {
-            handleLongPress();
-        }
-    });
-}
-
-        function hidePrompt() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                // Set the opacity to 0 to start the fade-out effect
-                promptContainer.style.transition = 'opacity 0.3s ease-out';
-                promptContainer.style.opacity = '0';
-
-                // Remove the element after the transition ends
-                setTimeout(() => {
-                    promptContainer.remove();
-                    promptShown = false;
-                }, 500); // Match the timeout with the duration of the opacity transition
-            }
-        }
-
-
-        function resetPromptTimer() {
-            clearTimeout(promptTimer);
-            promptTimer = setTimeout(() => {
-                if (!inChatMode && document.body.classList.contains('initial-load')) {
-                    document.body.classList.remove('initial-load'); // Remove initial load class
-                    showPrompt(getSmartGreeting(), true); // Use dynamic greeting
-                }
-            }, 5000);
-        }
-
-        resetPromptTimer();
-        // Check if vibration is supported
-        // Check if vibration is supported
-        let canVibrate = 'vibrate' in navigator;
-
-        function tryVibrate(duration) {
-            if (canVibrate) {
-                return new Promise((resolve, reject) => {
-                    try {
-                        navigator.vibrate(duration);
-                        console.log("Vibration command sent successfully");
-                        resolve(true);
-                    } catch (error) {
-                        console.error("Error when trying to vibrate:", error);
-                        reject(error);
+            if (nameLink) {
+                const originalText = nameLink.textContent;
+                const originalHref = nameLink.getAttribute('href');
+                
+                nameLink.addEventListener('mouseenter', function() {
+                    nameLink.innerHTML = 'Lukas Kubi<span class="animated-umlaut">e</span>na';
+                    
+                    const eElement = nameLink.querySelector('.animated-umlaut');
+                    
+                    const dotContainer = document.createElement('span');
+                    dotContainer.className = 'umlaut-dots';
+                    
+                    const leftDot = document.createElement('span');
+                    leftDot.className = 'umlaut-dot left-dot';
+                    leftDot.textContent = '·';
+                    
+                    const rightDot = document.createElement('span');
+                    rightDot.className = 'umlaut-dot right-dot';
+                    rightDot.textContent = '·';
+                    
+                    dotContainer.appendChild(leftDot);
+                    dotContainer.appendChild(rightDot);
+                    
+                    eElement.appendChild(dotContainer);
+                    
+                    setTimeout(() => {
+                        leftDot.classList.add('appear');
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        rightDot.classList.add('appear');
+                    }, 300);
+                });
+                
+                nameLink.addEventListener('mouseleave', function() {
+                    nameLink.textContent = originalText;
+                });
+                
+                nameLink.addEventListener('click', function(e) {
+                    if (originalHref === "#") {
+                        e.preventDefault();
+                        window.location.href = "/";
                     }
                 });
-            } else {
-                console.log("Vibration not supported on this device");
-                return Promise.resolve(false);
-            }
-        }
-
-        hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                tryVibrate(50)
-                    .then(success => {
-                        if (success) {
-                            console.log('Long press vibration successful');
-                        } else {
-                            console.log('Long press vibration not supported or failed');
-                        }
-                        handleLongPress();
-                    })
-                    .catch(error => console.error('Vibration error:', error));
-            }, 800);
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress && !inChatMode) {
-                tryVibrate(25)
-                    .then(success => {
-                        if (success) {
-                            console.log('Short vibration successful');
-                        } else {
-                            console.log('Short vibration not supported or failed');
-                        }
-                        playAnimation();
-                        playCommaAnimation();
-                    })
-                    .catch(error => console.error('Vibration error:', error));
             }
         });
 
+        document.addEventListener('DOMContentLoaded', function() {
+            const hey = document.querySelector('.hey');
 
-        // Update the handleLongPress function to properly hide the image:
-        function handleLongPress() {
-    inChatMode = true;
-    window.inChatMode = true; // Set global flag for escape key
+            function playAnimation() {
+                hey.classList.remove('animate');
+                void hey.offsetWidth;
+                hey.classList.add('animate');
+            }
 
-    clearPreviousContent(true);
-    console.log('Long press detected');
-    
-    heyText.textContent = '';
-    hey.innerHTML = ''; // Clear existing content
-    comma.style.display = 'none';
-    
-    // Add this block here to hide content and image
-    content.forEach(el => el.style.display = 'none');
-    const profileImage = document.querySelector('.profile-image');
-    if (profileImage) {
-        profileImage.style.display = 'none';
-    }
-    
-    const input = document.createElement('textarea');
-    input.className = 'chat-input';
-    input.placeholder = 'Ask...';
-    input.style.font = window.getComputedStyle(hey).font;
-    input.style.border = 'none';
-    input.style.background = 'transparent';
-    input.style.outline = 'none';
-    input.style.width = '100%';
-    input.style.resize = 'none';
-    input.style.height = 'auto';
-    input.style.overflow = 'hidden';
-    input.style.caretColor = 'black';
-    heyText.appendChild(input);
-    hey.appendChild(input);
+            playAnimation();
 
-    // Force the keyboard to appear
-    input.readOnly = false;
-    input.focus();
-    input.click();
-
-    showPrompt('Tap enter to send');
-
-    input.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = this.scrollHeight + 'px';
-    });
-
-    content.forEach(el => el.style.display = 'none');
-
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            const userInput = input.value;
-            handleUserInput(userInput);
-        }
-    });
-
-    addBackButton();
-
-    // Allow tapping on the hey area to refocus the input
-    hey.addEventListener('touchstart', function(e) {
-        if (inChatMode) {
-            e.preventDefault();
-            input.focus();
-        }
-    });
-}
-
-function clearPreviousContent(keepPrompt = false) {
-    const contentContainer = document.querySelector('.content-1').parentNode;
-    const previousResponses = contentContainer.querySelectorAll('.ai-response');
-    previousResponses.forEach(response => response.remove());
-    
-
-    
-    const chatInputs = document.querySelectorAll('.chat-input');
-    chatInputs.forEach(input => input.remove());
-    
-    if (!keepPrompt) {
-        hidePrompt();
-    }
-}
-
-// Add this function to toggle chat mode
-function toggleChatMode(enable) {
-    if (enable) {
-        document.body.classList.add('chat-mode');
-    } else {
-        document.body.classList.remove('chat-mode');
-    }
-}
-
-function addBackButton() {
-    let backButton = document.querySelector('a[style*="text-decoration: underline"]');
-    if (!backButton) {
-        backButton = document.createElement('a');
-        backButton.textContent = 'back';
-        backButton.style.textDecoration = 'underline';
-        backButton.style.display = 'block';
-        backButton.style.marginTop = 'var(--row-gap)';
-        backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
-        backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
-        backButton.style.cursor = 'pointer';
-        
-        backButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            resetPage();
-        });
-        
-        const contentContainer = document.querySelector('.content-1').parentNode;
-        contentContainer.appendChild(backButton);
-    }
-}
-
-async function handleUserInput(userInput) {
-    clearPreviousContent(true);
-    
-    if (hey.textContent !== userInput) {
-        hey.textContent = userInput;
-    }
-    
-    hidePrompt();
-    showPrompt('Tap here for a new question', true);
-    
-    // Ensure back button is present
-    addBackButton();
-    
-    const aiResponse = await generateAIResponse(userInput);
-    
-    const contentContainer = document.querySelector('.content-1').parentNode;
-    const responseElement = document.createElement('div');
-    responseElement.className = 'ai-response';
-    responseElement.style.maxWidth = '100%';
-    responseElement.style.marginLeft = '0';
-    responseElement.style.textAlign = 'left';
-    responseElement.style.cursor = 'pointer';
-    responseElement.addEventListener('click', handleLongPress);
-    
-    contentContainer.insertBefore(responseElement, contentContainer.lastChild);
-
-        // Change the insertion point to be after the hey element
-        const heyContainer = document.querySelector('.hey-container');
-    heyContainer.insertAdjacentElement('afterend', responseElement);
-    
-    const words = aiResponse.split(' ');
-    let i = 0;
-    const intervalId = setInterval(() => {
-        if (i < words.length) {
-            responseElement.textContent += words[i] + ' ';
-            i++;
-        } else {
-            clearInterval(intervalId);
-        }
-    }, 120);
-}
-
-        async function generateAIResponse(userInput) {
-    messages.push({ "role": "user", "content": userInput });
-
-    try {
-        const response = await fetch('/.netlify/functions/generate-response', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userInput, messages })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const aiResponse = data.response;
-        messages.push({ "role": "assistant", "content": aiResponse });
-        return aiResponse;
-    } catch (error) {
-        console.error('Error:', error);
-        return "I'm sorry, I couldn't generate a response at this time.";
-    }
-}
-
-        function resetPage() {
-            inChatMode = false;
-            window.inChatMode = false; // Clear global flag
-            
-            // Immediately hide the prompt and system message
-            hidePrompt();
-            const systemMessage = document.querySelector('.system-message');
-            if (systemMessage) systemMessage.remove();
-
-            // Clear previous content and remove back button
-            clearPreviousContent();
-            const backButton = document.querySelector('a[style*="text-decoration: underline"]');
-            if (backButton) backButton.remove();
-
-            // Reset the Hey container
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-
-            // Show all content including image
-            content.forEach(el => {
-                el.style.display = 'block';
-                el.style.opacity = '1';
+            hey.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                playAnimation();
             });
 
-            // Explicitly handle the profile image
-            const profileImage = document.querySelector('.profile-image');
-            if (profileImage) {
-                profileImage.style.display = 'block';
-                profileImage.style.opacity = '1';
-            }
-
-            // Remove any AI responses
-            const aiResponses = document.querySelectorAll('.ai-response');
-            aiResponses.forEach(response => response.remove());
-
-            // Remove any chat inputs
-            const chatInputs = document.querySelectorAll('.chat-input');
-            chatInputs.forEach(input => input.remove());
-
-            // Ensure animations play after content is updated
-            setTimeout(() => {
-                playAnimation();
-                playCommaAnimation();
-            }, 10);
-
-            resetPromptTimer();
-            messages = [];
-        }
-
-        // Make resetPage globally accessible for escape key
-        window.resetPage = resetPage;
-
-
-
-        function playAnimation() {
-            hey.classList.remove('animate');
-            void hey.offsetWidth;
-            hey.classList.add('animate');
-        }
-
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth; // Trigger reflow
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-        }
-
-        hey.addEventListener('touchstart', function(e) {
-            isLongPress = false;
-            longPressTimer = setTimeout(() => {
-                isLongPress = true;
-                handleLongPress();
-            }, 500); // Adjusted delay for long press detection
-        });
-
-        hey.addEventListener('touchend', function(e) {
-            clearTimeout(longPressTimer);
-            if (!isLongPress) {
-                // Ignore quick taps
-                e.preventDefault();
+            if (window.matchMedia("(min-width: 1025px)").matches) {
+                hey.addEventListener('mouseenter', playAnimation);
             }
         });
-    }
-});
-// Desktop-specific JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
-    
-    if (isDesktop) {
-        const hey = document.querySelector('.hey');
-        let heyText = hey.querySelector('.hey-text');
-        let comma = hey.querySelector('.comma');
-        const content = document.querySelectorAll('.content, .send-mail, .blog-link'); // Added blog-link here
-        const copyright = document.querySelector('.copyright');
-        let messages = [];
-        let inChatMode = false;
-        let cursor;
-        let promptTimer;
 
-        function toggleChatMode(enable) {
-        if (enable) {
-            copyright.classList.add('hidden');
-        } else {
-            copyright.classList.remove('hidden');
-        }
-    }
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 1024) {
+                const body = document.body;
+                const hey = document.querySelector('.hey');
+                const heyText = hey.querySelector('.hey-text');
+                const comma = hey.querySelector('.comma');
+                const cursor = hey.querySelector('.typing-cursor');
+                const content = document.querySelectorAll('.content, .send-mail, .blog-link');
+                hey.style.animation = 'none';
 
-        function typeHey(isInitialLoad = true) {
-            hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-            heyText.textContent = '';
-            comma.style.opacity = '0';
-            let text = 'Hey,';
-            let index = 0;
-            cursor = document.createElement('span');
-            cursor.className = 'typing-cursor';
-            hey.appendChild(cursor);
-
-            if (isInitialLoad) {
-            content.forEach(el => el.style.opacity = '0');
-            copyright.style.opacity = '0';
-            // Start the prompt timer after initial animations
-            setTimeout(resetPromptTimer, 3000); // Start prompt timer after animations
-        }
-
-            setTimeout(() => {
-                function typeChar() {
-                    if (index < text.length) {
-                        if (index === text.length - 1) {
-                            comma.style.opacity = '1';
+                content.forEach(el => el.style.opacity = '0');
+                heyText.style.opacity = '0';
+                comma.style.opacity = '0';
+                
+                function typeText(text, element, callback) {
+                    let i = 0;
+                    element.textContent = '';
+                    element.style.opacity = '1';
+                    function type() {
+                        if (i < text.length) {
+                            element.textContent += text.charAt(i);
+                            i++;
+                            setTimeout(type, 150);
                         } else {
-                            heyText.textContent += text[index];
+                            callback();
                         }
-                        index++;
-                        setTimeout(typeChar, 150);
-                    } else {
+                    }
+                    type();
+                }
+
+                function showComma() {
+                    comma.style.opacity = '1';
+                    playPopOutAnimation();
+                }
+
+                function playPopOutAnimation() {
+                    hey.style.animation = '';
+                    hey.classList.add('animate');
+                    setTimeout(playCommaAnimation, 300);
+                }
+
+                function playCommaAnimation() {
+                    comma.style.animation = 'none';
+                    void comma.offsetWidth;
+                    comma.style.animation = 'bellJingle 0.8s ease-in-out';
+                    setTimeout(showContent, 800);
+                }
+
+                function showContent() {
+                    cursor.style.display = 'none';
+                    
+                    content.forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.transition = 'opacity 1s ease-in';
+                    });
+                    
+                    const profileImage = document.querySelector('.profile-image');
+                    if (profileImage) {
+                        profileImage.style.display = 'block';
+                        profileImage.style.opacity = '0';
                         setTimeout(() => {
-                            playPopOutAnimation();
+                            profileImage.style.opacity = '1';
+                            profileImage.style.transition = 'opacity 1s ease-in';
                         }, 100);
                     }
                 }
-                typeChar();
-            }, 2000);
-        }
 
-        function playPopOutAnimation() {
-            hey.style.animation = 'none';
-            void hey.offsetWidth;
-            hey.style.animation = 'popOut 0.3s ease-out';
-            setTimeout(() => {
-                playCommaAnimation();
-            }, 300);
-        }
+                setTimeout(() => {
+                    body.classList.remove('initial-load');
+                    typeText('Hey', heyText, showComma);
+                }, 2000);
+            }
+        });
 
-        function playCommaAnimation() {
-            comma.style.animation = 'none';
-            void comma.offsetWidth;
-            comma.style.animation = 'bellJingle 0.8s ease-in-out';
-            setTimeout(() => {
-                if (cursor) {
-                    cursor.remove();
-                    cursor = null;
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 1024) {
+                let hey = document.querySelector('.hey');
+                let heyText = hey.querySelector('.hey-text');
+                let comma = hey.querySelector('.comma');
+                const content = document.querySelectorAll('.content, .send-mail, .blog-link');
+                let longPressTimer;
+                let isLongPress = false;
+                let messages = [];
+                let promptShown = false;
+                let inChatMode = false;
+                let promptTimer;
+                let blinkInterval;
+
+                function showPrompt(text, fadeIn = false) {
+                    clearTimeout(promptTimer);
+                    hidePrompt();
+                    
+                    let promptContainer = document.createElement('div');
+                    promptContainer.className = 'prompt';
+                    hey.parentNode.insertBefore(promptContainer, hey);
+                    
+                    promptContainer.textContent = text;
+                    
+                    if (fadeIn) {
+                        promptContainer.style.opacity = '0';
+                        promptContainer.style.transition = 'opacity 1s ease-in';
+                        setTimeout(() => {
+                            promptContainer.style.opacity = '1';
+                        }, 10);
+                    } else {
+                        promptContainer.style.opacity = '1';
+                    }
+                    promptContainer.style.cursor = 'pointer';
+                    
+                    promptContainer.addEventListener('click', () => {
+                        if (inChatMode) {
+                            handleLongPress();
+                        }
+                    });
                 }
-                content.forEach(el => {
-                    el.style.opacity = '1';
-                    el.style.animation = 'fadeIn 1s ease-in';
+
+                function hidePrompt() {
+                    const promptContainer = document.querySelector('.prompt');
+                    if (promptContainer) {
+                        promptContainer.style.transition = 'opacity 0.3s ease-out';
+                        promptContainer.style.opacity = '0';
+
+                        setTimeout(() => {
+                            promptContainer.remove();
+                            promptShown = false;
+                        }, 500);
+                    }
+                }
+
+                function resetPromptTimer() {
+                    clearTimeout(promptTimer);
+                    promptTimer = setTimeout(() => {
+                        if (!inChatMode && document.body.classList.contains('initial-load')) {
+                            document.body.classList.remove('initial-load');
+                            showPrompt(getSmartGreeting(), true);
+                        }
+                    }, 5000);
+                }
+
+                resetPromptTimer();
+
+                let canVibrate = 'vibrate' in navigator;
+
+                function tryVibrate(duration) {
+                    if (canVibrate) {
+                        return new Promise((resolve, reject) => {
+                            try {
+                                navigator.vibrate(duration);
+                                console.log("Vibration command sent successfully");
+                                resolve(true);
+                            } catch (error) {
+                                console.error("Error when trying to vibrate:", error);
+                                reject(error);
+                            }
+                        });
+                    } else {
+                        console.log("Vibration not supported on this device");
+                        return Promise.resolve(false);
+                    }
+                }
+
+                hey.addEventListener('touchstart', function(e) {
+                    isLongPress = false;
+                    longPressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        tryVibrate(50)
+                            .then(success => {
+                                if (success) {
+                                    console.log('Long press vibration successful');
+                                } else {
+                                    console.log('Long press vibration not supported or failed');
+                                }
+                                handleLongPress();
+                            })
+                            .catch(error => console.error('Vibration error:', error));
+                    }, 800);
                 });
+
+                hey.addEventListener('touchend', function(e) {
+                    clearTimeout(longPressTimer);
+                    if (!isLongPress && !inChatMode) {
+                        tryVibrate(25)
+                            .then(success => {
+                                if (success) {
+                                    console.log('Short vibration successful');
+                                } else {
+                                    console.log('Short vibration not supported or failed');
+                                }
+                                playAnimation();
+                                playCommaAnimation();
+                            })
+                            .catch(error => console.error('Vibration error:', error));
+                    }
+                });
+
+                function handleLongPress() {
+                    inChatMode = true;
+                    window.inChatMode = true;
+
+                    clearPreviousContent(true);
+                    console.log('Long press detected');
+                    
+                    heyText.textContent = '';
+                    hey.innerHTML = '';
+                    comma.style.display = 'none';
+                    
+                    content.forEach(el => el.style.display = 'none');
+                    const profileImage = document.querySelector('.profile-image');
+                    if (profileImage) {
+                        profileImage.style.display = 'none';
+                    }
+                    
+                    const input = document.createElement('textarea');
+                    input.className = 'chat-input';
+                    input.placeholder = 'Ask...';
+                    input.style.font = window.getComputedStyle(hey).font;
+                    input.style.border = 'none';
+                    input.style.background = 'transparent';
+                    input.style.outline = 'none';
+                    input.style.width = '100%';
+                    input.style.resize = 'none';
+                    input.style.height = 'auto';
+                    input.style.overflow = 'hidden';
+                    input.style.caretColor = 'black';
+                    heyText.appendChild(input);
+                    hey.appendChild(input);
+
+                    input.readOnly = false;
+                    input.focus();
+                    input.click();
+
+                    showPrompt('Tap enter to send');
+
+                    input.addEventListener('input', function() {
+                        this.style.height = 'auto';
+                        this.style.height = this.scrollHeight + 'px';
+                    });
+
+                    content.forEach(el => el.style.display = 'none');
+
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            const userInput = input.value;
+                            handleUserInput(userInput);
+                        }
+                    });
+
+                    addBackButton();
+
+                    hey.addEventListener('touchstart', function(e) {
+                        if (inChatMode) {
+                            e.preventDefault();
+                            input.focus();
+                        }
+                    });
+                }
+
+                function clearPreviousContent(keepPrompt = false) {
+                    const contentContainer = document.querySelector('.content-1').parentNode;
+                    const previousResponses = contentContainer.querySelectorAll('.ai-response');
+                    previousResponses.forEach(response => response.remove());
+                    
+                    const chatInputs = document.querySelectorAll('.chat-input');
+                    chatInputs.forEach(input => input.remove());
+                    
+                    if (!keepPrompt) {
+                        hidePrompt();
+                    }
+                }
+
+                function toggleChatMode(enable) {
+                    if (enable) {
+                        document.body.classList.add('chat-mode');
+                    } else {
+                        document.body.classList.remove('chat-mode');
+                    }
+                }
+
+                function addBackButton() {
+                    let backButton = document.querySelector('a[style*="text-decoration: underline"]');
+                    if (!backButton) {
+                        backButton = document.createElement('a');
+                        backButton.textContent = 'back';
+                        backButton.style.textDecoration = 'underline';
+                        backButton.style.display = 'block';
+                        backButton.style.marginTop = 'var(--row-gap)';
+                        backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
+                        backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
+                        backButton.style.cursor = 'pointer';
+                        
+                        backButton.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            resetPage();
+                        });
+                        
+                        const contentContainer = document.querySelector('.content-1').parentNode;
+                        contentContainer.appendChild(backButton);
+                    }
+                }
+
+                async function handleUserInput(userInput) {
+                    clearPreviousContent(true);
+                    
+                    if (hey.textContent !== userInput) {
+                        hey.textContent = userInput;
+                    }
+                    
+                    hidePrompt();
+                    showPrompt('Tap here for a new question', true);
+                    
+                    addBackButton();
+                    
+                    const aiResponse = await generateAIResponse(userInput);
+                    
+                    const contentContainer = document.querySelector('.content-1').parentNode;
+                    const responseElement = document.createElement('div');
+                    responseElement.className = 'ai-response';
+                    responseElement.style.maxWidth = '100%';
+                    responseElement.style.marginLeft = '0';
+                    responseElement.style.textAlign = 'left';
+                    responseElement.style.cursor = 'pointer';
+                    responseElement.addEventListener('click', handleLongPress);
+                    
+                    contentContainer.insertBefore(responseElement, contentContainer.lastChild);
+
+                    const heyContainer = document.querySelector('.hey-container');
+                    heyContainer.insertAdjacentElement('afterend', responseElement);
+                    
+                    const words = aiResponse.split(' ');
+                    let i = 0;
+                    const intervalId = setInterval(() => {
+                        if (i < words.length) {
+                            responseElement.textContent += words[i] + ' ';
+                            i++;
+                        } else {
+                            clearInterval(intervalId);
+                        }
+                    }, 120);
+                }
+
+                async function generateAIResponse(userInput) {
+                    messages.push({ "role": "user", "content": userInput });
+
+                    try {
+                        const response = await fetch('/.netlify/functions/generate-response', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ userInput, messages })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        const aiResponse = data.response;
+                        messages.push({ "role": "assistant", "content": aiResponse });
+                        return aiResponse;
+                    } catch (error) {
+                        console.error('Error:', error);
+                        return "I'm sorry, I couldn't generate a response at this time.";
+                    }
+                }
+
+                function resetPage() {
+                    inChatMode = false;
+                    window.inChatMode = false;
+                    
+                    hidePrompt();
+                    const systemMessage = document.querySelector('.system-message');
+                    if (systemMessage) systemMessage.remove();
+
+                    clearPreviousContent();
+                    const backButton = document.querySelector('a[style*="text-decoration: underline"]');
+                    if (backButton) backButton.remove();
+
+                    hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+                    heyText = hey.querySelector('.hey-text');
+                    comma = hey.querySelector('.comma');
+
+                    content.forEach(el => {
+                        el.style.display = 'block';
+                        el.style.opacity = '1';
+                    });
+
+                    const profileImage = document.querySelector('.profile-image');
+                    if (profileImage) {
+                        profileImage.style.display = 'block';
+                        profileImage.style.opacity = '1';
+                    }
+
+                    const aiResponses = document.querySelectorAll('.ai-response');
+                    aiResponses.forEach(response => response.remove());
+
+                    const chatInputs = document.querySelectorAll('.chat-input');
+                    chatInputs.forEach(input => input.remove());
+
+                    setTimeout(() => {
+                        playAnimation();
+                        playCommaAnimation();
+                    }, 10);
+
+                    resetPromptTimer();
+                    messages = [];
+                }
+
+                window.resetPage = resetPage;
+
+                function playAnimation() {
+                    hey.classList.remove('animate');
+                    void hey.offsetWidth;
+                    hey.classList.add('animate');
+                }
+
+                function playCommaAnimation() {
+                    comma.style.animation = 'none';
+                    void comma.offsetWidth;
+                    comma.style.animation = 'bellJingle 0.8s ease-in-out';
+                }
+
+                hey.addEventListener('touchstart', function(e) {
+                    isLongPress = false;
+                    longPressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        handleLongPress();
+                    }, 500);
+                });
+
+                hey.addEventListener('touchend', function(e) {
+                    clearTimeout(longPressTimer);
+                    if (!isLongPress) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        });
+
+        // Desktop-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
+            
+            if (isDesktop) {
+                const hey = document.querySelector('.hey');
+                let heyText = hey.querySelector('.hey-text');
+                let comma = hey.querySelector('.comma');
+                const content = document.querySelectorAll('.content, .send-mail, .blog-link');
+                const copyright = document.querySelector('.copyright');
+                let messages = [];
+                let inChatMode = false;
+                let cursor;
+                let promptTimer;
+
+                function toggleChatMode(enable) {
+                    if (enable) {
+                        copyright.classList.add('hidden');
+                    } else {
+                        copyright.classList.remove('hidden');
+                    }
+                }
+
+                function typeHey(isInitialLoad = true) {
+                    hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
+                    heyText = hey.querySelector('.hey-text');
+                    comma = hey.querySelector('.comma');
+                    heyText.textContent = '';
+                    comma.style.opacity = '0';
+                    let text = 'Hey,';
+                    let index = 0;
+                    cursor = document.createElement('span');
+                    cursor.className = 'typing-cursor';
+                    hey.appendChild(cursor);
+
+                    if (isInitialLoad) {
+                        content.forEach(el => el.style.opacity = '0');
+                        copyright.style.opacity = '0';
+                        setTimeout(resetPromptTimer, 3000);
+                    }
+
+                    setTimeout(() => {
+                        function typeChar() {
+                            if (index < text.length) {
+                                if (index === text.length - 1) {
+                                    comma.style.opacity = '1';
+                                } else {
+                                    heyText.textContent += text[index];
+                                }
+                                index++;
+                                setTimeout(typeChar, 150);
+                            } else {
+                                setTimeout(() => {
+                                    playPopOutAnimation();
+                                }, 100);
+                            }
+                        }
+                        typeChar();
+                    }, 2000);
+                }
+
+                function playPopOutAnimation() {
+                    hey.style.animation = 'none';
+                    void hey.offsetWidth;
+                    hey.style.animation = 'popOut 0.3s ease-out';
+                    setTimeout(() => {
+                        playCommaAnimation();
+                    }, 300);
+                }
+
+                function playCommaAnimation() {
+                    comma.style.animation = 'none';
+                    void comma.offsetWidth;
+                    comma.style.animation = 'bellJingle 0.8s ease-in-out';
+                    setTimeout(() => {
+                        if (cursor) {
+                            cursor.remove();
+                            cursor = null;
+                        }
+                        content.forEach(el => {
+                            el.style.opacity = '1';
+                            el.style.animation = 'fadeIn 1s ease-in';
+                        });
+                        const profileImage = document.querySelector('.profile-image');
+                        if (profileImage) {
+                            profileImage.classList.add('visible');
+                        }
+                        copyright.style.opacity = '1';
+                        copyright.style.animation = 'fadeIn 1s ease-in';
+                        resetPromptTimer();
+                    }, 800);
+                }
+
+                function resetPromptTimer() {
+                    clearTimeout(promptTimer);
+                    promptTimer = setTimeout(() => {
+                        if (!inChatMode) {
+                            showPrompt(getSmartGreeting(), true);
+                        }
+                    }, 5000);
+                }
+
+                typeHey();
+
+                function handleDesktopClick() {
+                    inChatMode = true;
+                    window.inChatMode = true;
+                    toggleChatMode(true);
+                    clearPreviousContent(true);
+                    hidePrompt();
+                    document.body.classList.add('chat-mode');
+                    
+                    hey.innerHTML = '';
+                    hey.style.cursor = 'text';
+                    
+                    const inputContainer = document.createElement('div');
+                    inputContainer.className = 'input-container';
+                    inputContainer.style.width = '100%';
+                    inputContainer.style.height = '100%';
+                    inputContainer.style.position = 'relative';
+                    
+                    const input = document.createElement('textarea');
+                    input.className = 'chat-input';
+                    input.placeholder = 'Ask...';
+                    input.style.width = '100%';
+                    input.style.height = '100%';
+                    input.style.resize = 'none';
+                    input.style.overflow = 'hidden';
+                    input.style.border = 'none';
+                    input.style.background = 'transparent';
+                    input.style.outline = 'none';
+                    input.style.font = window.getComputedStyle(hey).font;
+
+                    const profileImage = document.querySelector('.profile-image');
+                    if (profileImage) {
+                        profileImage.style.display = 'none';
+                    }
+                    
+                    inputContainer.appendChild(input);
+                    hey.appendChild(inputContainer);
+                    
+                    showPrompt('Press Enter to send', true);
+                    
+                    input.addEventListener('input', function() {
+                        this.style.height = 'auto';
+                        this.style.height = (this.scrollHeight) + 'px';
+                    });
+                    
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            const userInput = input.value;
+                            handleUserInput(userInput);
+                        }
+                    });
+                    
+                    hey.addEventListener('click', function(e) {
+                        if (inChatMode) {
+                            input.focus();
+                        }
+                    });
+                    
+                    const aiResponse = document.querySelector('.ai-response');
+                    if (aiResponse) {
+                        aiResponse.style.display = 'none';
+                    }
+
+                    content.forEach(el => el.style.display = 'none');
+                    addBackButton();
+                    
+                    input.focus();
+                }
+                
+                async function handleUserInput(userInput) {
+                    hey.textContent = userInput;
+                    hey.style.cursor = 'pointer';
+                    
+                    hidePrompt();
+                    showPrompt('Click here for a new question', true);
+                    
+                    const aiResponse = await generateAIResponse(userInput);
+                    
+                    const contentContainer = document.querySelector('.content-1').parentNode;
+                    const previousResponse = contentContainer.querySelector('.ai-response');
+                    if (previousResponse) previousResponse.remove();
+                    
+                    const responseElement = document.createElement('div');
+                    responseElement.className = 'ai-response';
+                    responseElement.style.maxWidth = '60%';
+                    responseElement.style.marginLeft = '20%';
+                    responseElement.style.cursor = 'pointer';
+                    
+                    contentContainer.insertBefore(responseElement, copyright);
+                    
+                    const words = aiResponse.split(' ');
+                    let i = 0;
+                    const intervalId = setInterval(() => {
+                        if (i < words.length) {
+                            responseElement.textContent += words[i] + ' ';
+                            i++;
+                        } else {
+                            clearInterval(intervalId);
+                            addBackButton();
+                        }
+                    }, 120);
+                }
+                
+                async function generateAIResponse(userInput) {
+                    messages.push({ "role": "user", "content": userInput });
+
+                    try {
+                        const response = await fetch('/.netlify/functions/generate-response', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ userInput, messages })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        const aiResponse = data.response;
+                        messages.push({ "role": "assistant", "content": aiResponse });
+                        return aiResponse;
+                    } catch (error) {
+                        console.error('Error:', error);
+                        return "I'm sorry, I couldn't generate a response at this time.";
+                    }
+                }
+
+                function clearPreviousContent(keepPrompt = false) {
+                    const contentContainer = document.querySelector('.content-1').parentNode;
+                    const previousResponse = contentContainer.querySelector('.ai-response');
+                    if (previousResponse) previousResponse.remove();
+                    const existingBackButton = contentContainer.querySelector('.back-button');
+                    if (existingBackButton) existingBackButton.remove();
+                    if (!keepPrompt) {
+                        hidePrompt();
+                    }
+                }
+
+                function addBackButton() {
+                    let backButton = document.querySelector('.back-button');
+                    if (!backButton) {
+                        backButton = document.createElement('a');
+                        backButton.textContent = 'back';
+                        backButton.className = 'back-button';
+                        backButton.style.display = 'block';
+                        backButton.style.textAlign = 'right';
+                        backButton.style.width = '60%';
+                        backButton.style.marginLeft = '20%';
+                        backButton.style.cursor = 'pointer';
+                        
+                        backButton.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            resetPage();
+                        });
+                        
+                        const contentContainer = document.querySelector('.content-1').parentNode;
+                        contentContainer.insertBefore(backButton, copyright);
+                    }
+                }
+
+                function resetPage() {
+                    inChatMode = false;
+                    window.inChatMode = false;
+                    toggleChatMode(false);
+                    document.body.classList.remove('chat-mode');
+                    
+                    hidePrompt();
+                    clearPreviousContent();
+                    
+                    hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+                    hey.style.cursor = 'pointer';
+                    heyText = hey.querySelector('.hey-text');
+                    comma = hey.querySelector('.comma');
+
+                    content.forEach(el => {
+                        el.style.display = '';
+                        el.style.opacity = '0';
+                    });
+                    
+                    const profileImage = document.querySelector('.profile-image');
+                    if (profileImage) {
+                        profileImage.style.display = '';
+                        profileImage.classList.remove('visible');
+                    }
+
+                    setTimeout(() => {
+                        content.forEach(el => {
+                            el.style.opacity = '1';
+                            el.style.animation = 'fadeIn 1s ease-in';
+                        });
+                        if (profileImage) {
+                            profileImage.classList.add('visible');
+                        }
+                    }, 100);
+                    
+                    copyright.style.opacity = '1';
+                    messages = [];
+                    
+                    playPopOutAnimation();
+                    resetPromptTimer();
+                }
+
+                window.resetPage = resetPage;
+
+                function showPrompt(text, fadeIn = false) {
+                    hidePrompt();
+                    
+                    let promptContainer = document.createElement('div');
+                    promptContainer.className = 'prompt';
+                    hey.parentNode.insertBefore(promptContainer, hey);
+                    
+                    promptContainer.textContent = text;
+                    
+                    if (fadeIn) {
+                        promptContainer.style.opacity = '0';
+                        promptContainer.style.transition = 'opacity 0.5s ease-in';
+                        setTimeout(() => {
+                            promptContainer.style.opacity = '1';
+                        }, 10);
+                    } else {
+                        promptContainer.style.opacity = '1';
+                    }
+                }
+
+                function hidePrompt() {
+                    const promptContainer = document.querySelector('.prompt');
+                    if (promptContainer) {
+                        promptContainer.style.transition = 'opacity 0.5s ease-out';
+                        promptContainer.style.opacity = '0';
+                        setTimeout(() => {
+                            promptContainer.remove();
+                        }, 500);
+                    }
+                }
+
+                hey.addEventListener('click', function() {
+                    if (!inChatMode) {
+                        handleDesktopClick();
+                    } else {
+                        const input = hey.querySelector('.chat-input');
+                        if (input) {
+                            input.focus();
+                        } else {
+                            handleDesktopClick();
+                        }
+                    }
+                });
+
+                hey.addEventListener('mouseenter', function() {
+                    if (!inChatMode) {
+                        playPopOutAnimation();
+                    }
+                });
+            }
+        });
+
+        // Follow Me Mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const followMeTrigger = document.querySelector('.follow-me-trigger');
+            let inFollowMode = false;
+
+            followMeTrigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                openFollowMode();
+            });
+
+            function openFollowMode() {
+                inFollowMode = true;
+                window.inFollowMode = true;
+                
+                // Hide all existing content
+                const allContent = document.querySelectorAll('.hey-container, .content, .send-mail, .blog-link, .profile-image, .copyright, .content-group');
+                allContent.forEach(el => el.style.display = 'none');
+
+                // Add follow mode class
+                document.body.classList.add('follow-mode');
+
+                // Create follow container
+                const followContainer = document.createElement('div');
+                followContainer.className = 'follow-container';
+                
+                // Create follow content
+                followContainer.innerHTML = `
+                    <div class="follow-hey animate">
+                        <span class="hey-text">Hey</span><span class="comma">,</span>
+                    </div>
+                    <p class="follow-text">
+                        Want to stay in touch? I'll keep you updated on what I'm working on — new projects, thoughts, and things I find interesting.
+                    </p>
+                    <form class="follow-email-form" id="followEmailForm">
+                        <input 
+                            type="email" 
+                            class="follow-email-input" 
+                            placeholder="your email"
+                            required
+                            id="followEmailInput"
+                        >
+                        <button type="submit" class="follow-submit-button">let's stay connected</button>
+                        <a href="#" class="follow-back-link">back</a>
+                    </form>
+                `;
+
+                document.body.appendChild(followContainer);
+
+                // Animate the Hey
+                const followHey = followContainer.querySelector('.follow-hey');
+                setTimeout(() => {
+                    followHey.classList.add('animate');
+                }, 100);
+
+                // Focus on email input
+                const emailInput = document.getElementById('followEmailInput');
+                setTimeout(() => {
+                    emailInput.focus();
+                }, 300);
+
+                // Handle form submission
+                const form = document.getElementById('followEmailForm');
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await handleFollowSubmission(emailInput);
+                });
+
+                // Handle Enter key on email input
+                emailInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                });
+
+                // Handle back link
+                const backLink = followContainer.querySelector('.follow-back-link');
+                backLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    closeFollowMode();
+                });
+            }
+
+            async function handleFollowSubmission(emailInput) {
+                const email = emailInput.value.trim();
+                if (!email) return;
+
+                const submitButton = document.querySelector('.follow-submit-button');
+                
+                submitButton.disabled = true;
+                const originalText = submitButton.textContent;
+                submitButton.textContent = 'connecting...';
+
+                try {
+                    const response = await fetch('/.netlify/functions/send-newsletter', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'subscribe',
+                            email: email
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        // Show success state
+                        const followText = document.querySelector('.follow-text');
+                        followText.innerHTML = `<span class="follow-success">Thanks! We're now connected. I'll be in touch soon with updates on what I'm working on.</span>`;
+                        emailInput.value = '';
+                        emailInput.placeholder = 'connected ✓';
+                        emailInput.disabled = true;
+                        submitButton.style.display = 'none';
+                        
+                        // Auto-close after 3 seconds
+                        setTimeout(() => {
+                            closeFollowMode();
+                        }, 3000);
+                    } else {
+                        throw new Error(result.message || 'Subscription failed');
+                    }
+                } catch (error) {
+                    console.error('Follow mode subscription error:', error);
+                    const followText = document.querySelector('.follow-text');
+                    const errorMsg = document.createElement('p');
+                    errorMsg.style.color = '#a94442';
+                    errorMsg.textContent = 'Something went wrong. Please try again.';
+                    followText.appendChild(errorMsg);
+                    
+                    setTimeout(() => {
+                        errorMsg.remove();
+                    }, 3000);
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                }
+            }
+
+            function closeFollowMode() {
+                inFollowMode = false;
+                window.inFollowMode = false;
+                
+                // Remove follow mode class
+                document.body.classList.remove('follow-mode');
+                
+                // Remove follow container
+                const followContainer = document.querySelector('.follow-container');
+                if (followContainer) followContainer.remove();
+
+                // Show all content again
+                const allContent = document.querySelectorAll('.hey-container, .content, .send-mail, .blog-link, .content-group');
+                allContent.forEach(el => {
+                    el.style.display = '';
+                    el.style.opacity = '1';
+                });
+
                 const profileImage = document.querySelector('.profile-image');
                 if (profileImage) {
+                    profileImage.style.display = '';
                     profileImage.classList.add('visible');
                 }
-                copyright.style.opacity = '1';
-                copyright.style.animation = 'fadeIn 1s ease-in';
-                resetPromptTimer();
-            }, 800);
-        }
 
-        function resetPromptTimer() {
-            clearTimeout(promptTimer);
-            promptTimer = setTimeout(() => {
-                if (!inChatMode) {
-                    showPrompt(getSmartGreeting(), true); // Use dynamic greeting
-                }
-            }, 5000);
-        }
-
-        typeHey();
-
-        function handleDesktopClick() {
-            inChatMode = true;
-            window.inChatMode = true; // Set global flag for escape key
-            toggleChatMode(true)
-            clearPreviousContent(true);
-            hidePrompt();
-            document.body.classList.add('chat-mode');  // Add this line
-            
-            hey.innerHTML = '';
-            hey.style.cursor = 'text';
-            
-            const inputContainer = document.createElement('div');
-            inputContainer.className = 'input-container';
-            inputContainer.style.width = '100%';
-            inputContainer.style.height = '100%';
-            inputContainer.style.position = 'relative';
-            
-            const input = document.createElement('textarea');
-            input.className = 'chat-input';
-            input.placeholder = 'Ask...';
-            input.style.width = '100%';
-            input.style.height = '100%';
-            input.style.resize = 'none';
-            input.style.overflow = 'hidden';
-            input.style.border = 'none';
-            input.style.background = 'transparent';
-            input.style.outline = 'none';
-            input.style.font = window.getComputedStyle(hey).font;
-
-               // Hide image along with other content
-            const profileImage = document.querySelector('.profile-image');
-            if (profileImage) {
-                profileImage.style.display = 'none';
-            }
-            
-            inputContainer.appendChild(input);
-            hey.appendChild(inputContainer);
-            
-            showPrompt('Press Enter to send', true);
-            
-            input.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-            });
-            
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const userInput = input.value;
-                    handleUserInput(userInput);
-                }
-            });
-            
-            hey.addEventListener('click', function(e) {
-                if (inChatMode) {
-                    input.focus();
-                }
-            });
-            
-            const aiResponse = document.querySelector('.ai-response');
-            if (aiResponse) {
-                aiResponse.style.display = 'none';
-            }
-
-            content.forEach(el => el.style.display = 'none');
-            addBackButton();
-            
-            input.focus();
-        }
-        
-        async function handleUserInput(userInput) {
-            hey.textContent = userInput;
-            hey.style.cursor = 'pointer';
-            
-            hidePrompt();
-            showPrompt('Click here for a new question', true);
-            
-            const aiResponse = await generateAIResponse(userInput);
-            
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('.ai-response');
-            if (previousResponse) previousResponse.remove();
-            
-            const responseElement = document.createElement('div');
-            responseElement.className = 'ai-response';
-            responseElement.style.maxWidth = '60%';
-            responseElement.style.marginLeft = '20%';
-            responseElement.style.cursor = 'pointer';
-            
-            contentContainer.insertBefore(responseElement, copyright);
-            
-            const words = aiResponse.split(' ');
-            let i = 0;
-            const intervalId = setInterval(() => {
-                if (i < words.length) {
-                    responseElement.textContent += words[i] + ' ';
-                    i++;
-                } else {
-                    clearInterval(intervalId);
-                    addBackButton();
-                }
-            }, 120);
-        }
-        
-        async function generateAIResponse(userInput) {
-            messages.push({ "role": "user", "content": userInput });
-
-            try {
-                const response = await fetch('/.netlify/functions/generate-response', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ userInput, messages })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                const copyright = document.querySelector('.copyright');
+                if (copyright) {
+                    copyright.style.display = '';
+                    copyright.classList.remove('hidden');
                 }
 
-                const data = await response.json();
-                const aiResponse = data.response;
-                messages.push({ "role": "assistant", "content": aiResponse });
-                return aiResponse;
-            } catch (error) {
-                console.error('Error:', error);
-                return "I'm sorry, I couldn't generate a response at this time.";
-            }
-        }
-
-        function clearPreviousContent(keepPrompt = false) {
-            const contentContainer = document.querySelector('.content-1').parentNode;
-            const previousResponse = contentContainer.querySelector('.ai-response');
-            if (previousResponse) previousResponse.remove();
-            const existingBackButton = contentContainer.querySelector('.back-button');
-            if (existingBackButton) existingBackButton.remove();
-            if (!keepPrompt) {
-                hidePrompt();
-            }
-        }
-
-        function addBackButton() {
-            let backButton = document.querySelector('.back-button');
-            if (!backButton) {
-                backButton = document.createElement('a');
-                backButton.textContent = 'back';
-                backButton.className = 'back-button';
-                backButton.style.display = 'block';
-                backButton.style.textAlign = 'right';
-                backButton.style.width = '60%';
-                backButton.style.marginLeft = '20%';
-                backButton.style.cursor = 'pointer';
-                
-                backButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    resetPage();
-                });
-                
-                const contentContainer = document.querySelector('.content-1').parentNode;
-                contentContainer.insertBefore(backButton, copyright);
-            }
-        }
-
-        function resetPage() {
-            inChatMode = false;
-            window.inChatMode = false; // Clear global flag
-            toggleChatMode(false);
-            document.body.classList.remove('chat-mode');
-            
-            hidePrompt();
-            clearPreviousContent();
-            
-            hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
-            hey.style.cursor = 'pointer';
-            heyText = hey.querySelector('.hey-text');
-            comma = hey.querySelector('.comma');
-
-            // Reset all content including image
-            content.forEach(el => {
-                el.style.display = '';
-                el.style.opacity = '0';
-            });
-            
-            const profileImage = document.querySelector('.profile-image');
-            if (profileImage) {
-                profileImage.style.display = '';
-                profileImage.classList.remove('visible');
-            }
-
-            setTimeout(() => {
-                content.forEach(el => {
-                    el.style.opacity = '1';
-                    el.style.animation = 'fadeIn 1s ease-in';
-                });
-                if (profileImage) {
-                    profileImage.classList.add('visible');
-                }
-            }, 100);
-            
-            copyright.style.opacity = '1';
-            messages = [];
-            
-            playPopOutAnimation();
-            resetPromptTimer();
-        }
-
-        // Make resetPage globally accessible for escape key
-        window.resetPage = resetPage;
-
-        function showPrompt(text, fadeIn = false) {
-            hidePrompt();
-            
-            let promptContainer = document.createElement('div');
-            promptContainer.className = 'prompt';
-            hey.parentNode.insertBefore(promptContainer, hey);
-            
-            promptContainer.textContent = text;
-            
-            if (fadeIn) {
-                promptContainer.style.opacity = '0';
-                promptContainer.style.transition = 'opacity 0.5s ease-in';
-                setTimeout(() => {
-                    promptContainer.style.opacity = '1';
-                }, 10);
-            } else {
-                promptContainer.style.opacity = '1';
-            }
-        }
-
-        function hidePrompt() {
-            const promptContainer = document.querySelector('.prompt');
-            if (promptContainer) {
-                promptContainer.style.transition = 'opacity 0.5s ease-out';
-                promptContainer.style.opacity = '0';
-                setTimeout(() => {
-                    promptContainer.remove();
-                }, 500);
-            }
-        }
-
-        hey.addEventListener('click', function() {
-            if (!inChatMode) {
-                handleDesktopClick();
-            } else {
-                const input = hey.querySelector('.chat-input');
-                if (input) {
-                    input.focus();
-                } else {
-                    handleDesktopClick();
+                // Play hey animation
+                const hey = document.querySelector('.hey');
+                if (hey) {
+                    setTimeout(() => {
+                        hey.classList.remove('animate');
+                        void hey.offsetWidth;
+                        hey.classList.add('animate');
+                    }, 10);
                 }
             }
+
+            window.closeFollowMode = closeFollowMode;
         });
-
-        hey.addEventListener('mouseenter', function() {
-            if (!inChatMode) {
-                playPopOutAnimation();
-            }
-        });
-    }
-});
     </script>
 </body>
 </html>

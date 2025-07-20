@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Overview - Lukas Kubiena</title>
+    <title>Blog - Lukas Kubiena</title>
     <style>
         @font-face {
             font-family: 'NeueHaasDisplay-Light';
@@ -72,11 +72,11 @@
             padding: calc(var(--nav-height) + 64px) var(--page-padding) 64px;
         }
 
-        /* Newsletter Subscription */
+        /* Newsletter Subscription - Moved to bottom */
         .newsletter-section {
-            margin-bottom: 80px;
-            padding: 32px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 80px;
+            padding: 48px 0 32px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .newsletter-form {
@@ -208,7 +208,7 @@
             }
 
             .newsletter-section {
-                margin-bottom: 60px;
+                margin-top: 60px;
             }
 
             .newsletter-form {
@@ -260,28 +260,6 @@
 
     <!-- Blog Content -->
     <div class="blog-container">
-        <!-- Newsletter Subscription -->
-        <div class="newsletter-section">
-            <div class="newsletter-text">Get notified when I publish something new</div>
-            <form class="newsletter-form" id="newsletterForm" name="newsletter" method="POST" data-netlify="true">
-                <input type="hidden" name="form-name" value="newsletter">
-                <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="your@email.com" 
-                    required
-                    id="emailInput"
-                >
-                <button type="submit" id="subscribeBtn">Subscribe</button>
-            </form>
-            <div class="newsletter-success" id="successMessage">
-                Thanks for subscribing! You'll get an email when I publish something new.
-            </div>
-            <div class="newsletter-error" id="errorMessage">
-                Something went wrong. Please try again.
-            </div>
-        </div>
-
         <!-- Blog Posts -->
         <div class="blog-grid">
             <a href="post.html?post=5" class="blog-card">
@@ -313,6 +291,28 @@
                 <div class="post-date">Oct 15, 2024</div>
                 <h2 class="post-title">Being a piece of it all</h2>
             </a>
+        </div>
+
+        <!-- Newsletter Subscription moved to bottom -->
+        <div class="newsletter-section">
+            <div class="newsletter-text">Get notified when I publish something new</div>
+            <form class="newsletter-form" id="newsletterForm" name="newsletter" method="POST" data-netlify="true">
+                <input type="hidden" name="form-name" value="newsletter">
+                <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="your@email.com" 
+                    required
+                    id="emailInput"
+                >
+                <button type="submit" id="subscribeBtn">Subscribe</button>
+            </form>
+            <div class="newsletter-success" id="successMessage">
+                Thanks for subscribing! You'll get an email when I publish something new.
+            </div>
+            <div class="newsletter-error" id="errorMessage">
+                Something went wrong. Please try again.
+            </div>
         </div>
     </div>
     
