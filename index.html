@@ -312,112 +312,162 @@
                 max-width: none;
             }
 
-            /* Follow mode styles */
-            body.follow-mode {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 64px 24px;
-                min-height: 100vh;
-            }
+                    /* Follow mode styles */
+        body.follow-mode {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 64px 24px;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+        }
 
-            .follow-container {
-                max-width: 480px;
-                width: 100%;
-                text-align: center;
-            }
+        .follow-container {
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            background: #ffffff;
+            padding: 48px 40px;
+            border-radius: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            animation: followSlideIn 0.4s ease-out;
+        }
 
-            .follow-hey {
-                font-family: 'NeueHaasDisplay-Medium', sans-serif;
-                font-size: 40px;
-                font-weight: 600;
-                margin-bottom: 32px;
-                display: inline-block;
-                transform-origin: center;
+        @keyframes followSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
             }
-
-            .follow-hey.animate {
-                animation: popOut 0.3s ease-out;
-            }
-
-            .follow-hey.animate .comma {
-                animation: bellJingle 0.8s ease-in-out 0.3s;
-            }
-
-            .follow-text {
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 18px;
-                line-height: 1.6;
-                color: #333;
-                margin-bottom: 40px;
-            }
-
-            .follow-email-input {
-                font-family: 'NeueHaasDisplay-Medium', sans-serif;
-                font-size: 32px;
-                font-weight: 600;
-                width: 100%;
-                border: none;
-                background: transparent;
-                outline: none;
-                color: #000;
-                text-align: center;
-                padding: 16px 0;
-                border-bottom: 2px solid #ddd;
-                transition: border-color 0.3s ease;
-                margin-bottom: 40px;
-            }
-
-            .follow-email-input:focus {
-                border-color: #000;
-            }
-
-            .follow-email-input::placeholder {
-                color: #CCCCCC;
+            to {
                 opacity: 1;
+                transform: translateY(0) scale(1);
             }
+        }
 
-            .follow-submit-button {
-                background: #000;
-                color: #fff;
-                border: none;
-                padding: 16px 48px;
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 16px;
-                cursor: pointer;
-                transition: opacity 0.3s ease;
-                margin-bottom: 40px;
-            }
+        .follow-hey {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: inline-block;
+            transform-origin: center;
+        }
 
-            .follow-submit-button:hover {
-                opacity: 0.8;
-            }
+        .follow-hey.animate {
+            animation: popOut 0.3s ease-out;
+        }
 
-            .follow-submit-button:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
+        .follow-hey.animate .comma {
+            animation: bellJingle 0.8s ease-in-out 0.3s;
+        }
 
-            .follow-back-link {
-                color: #666;
-                text-decoration: underline;
-                cursor: pointer;
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 16px;
-                transition: color 0.3s ease;
-            }
+        .follow-text {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-            .follow-back-link:hover {
-                color: #000;
-            }
+        .follow-email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-            .follow-success {
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 18px;
-                color: #2d5a2d;
-                margin-bottom: 40px;
-            }
+        .follow-email-input {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: #fff;
+            outline: none;
+            color: #000;
+            text-align: left;
+            padding: 16px 20px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .follow-email-input:focus {
+            border-color: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .follow-email-input::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+
+        .follow-submit-button {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 16px 32px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            font-weight: 400;
+        }
+
+        .follow-submit-button:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        .follow-submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .follow-back-link {
+            color: #666;
+            text-decoration: underline;
+            cursor: pointer;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .follow-back-link:hover {
+            color: #000;
+        }
+
+        .follow-success {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            color: #2d5a2d;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f0f8f0;
+            border: 1px solid #d4e6d4;
+            border-radius: 4px;
+        }
+
+        .follow-error {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            color: #a94442;
+            margin-top: 8px;
+            padding: 12px;
+            background: #fdf2f2;
+            border: 1px solid #f5c6c6;
+            border-radius: 4px;
+        }
 
             .typing-cursor {
                 display: inline-block;
@@ -1852,30 +1902,51 @@
                 // Add follow mode class
                 document.body.classList.add('follow-mode');
 
+                // Check if user is already subscribed
+                const isAlreadySubscribed = typeof(Storage) !== "undefined" && localStorage.getItem('newsletter_subscribed') === 'true';
+                const storedEmail = typeof(Storage) !== "undefined" ? localStorage.getItem('newsletter_email') : '';
+
                 // Create follow container
                 const followContainer = document.createElement('div');
                 followContainer.className = 'follow-container';
                 
-                // Create follow content
-                followContainer.innerHTML = `
-                    <div class="follow-hey animate">
-                        <span class="hey-text">Hey</span><span class="comma">,</span>
-                    </div>
-                    <p class="follow-text">
-                        Want to stay in touch? I'll keep you updated on what I'm working on — new projects, thoughts, and things I find interesting.
-                    </p>
-                    <form class="follow-email-form" id="followEmailForm">
-                        <input 
-                            type="email" 
-                            class="follow-email-input" 
-                            placeholder="your email"
-                            required
-                            id="followEmailInput"
-                        >
-                        <button type="submit" class="follow-submit-button">let's stay connected</button>
+                // Create follow content based on subscription status
+                if (isAlreadySubscribed) {
+                    followContainer.innerHTML = `
+                        <div class="follow-hey animate">
+                            <span class="hey-text">Hey</span><span class="comma">,</span>
+                        </div>
+                        <p class="follow-text">
+                            You're already subscribed! I'll keep you updated on what I'm working on.
+                        </p>
+                        <div class="follow-success">
+                            Thanks for staying connected! You'll hear from me soon.
+                        </div>
                         <a href="#" class="follow-back-link">back</a>
-                    </form>
-                `;
+                    `;
+                } else {
+                    followContainer.innerHTML = `
+                        <div class="follow-hey animate">
+                            <span class="hey-text">Hey</span><span class="comma">,</span>
+                        </div>
+                        <p class="follow-text">
+                            Want to stay in touch? I'll keep you updated on what I'm working on — new projects, thoughts, and things I find interesting.
+                        </p>
+                        <form class="follow-email-form" id="followEmailForm">
+                            <input 
+                                type="email" 
+                                class="follow-email-input" 
+                                placeholder="your email"
+                                required
+                                id="followEmailInput"
+                                value="${storedEmail}"
+                            >
+                            <button type="submit" class="follow-submit-button">let's stay connected</button>
+                            <div class="follow-error" id="followErrorMessage" style="display: none;"></div>
+                            <a href="#" class="follow-back-link">back</a>
+                        </form>
+                    `;
+                }
 
                 document.body.appendChild(followContainer);
 
@@ -1885,26 +1956,29 @@
                     followHey.classList.add('animate');
                 }, 100);
 
-                // Focus on email input
-                const emailInput = document.getElementById('followEmailInput');
-                setTimeout(() => {
-                    emailInput.focus();
-                }, 300);
+                // Only set up form handlers if not already subscribed
+                if (!isAlreadySubscribed) {
+                    // Focus on email input
+                    const emailInput = document.getElementById('followEmailInput');
+                    setTimeout(() => {
+                        emailInput.focus();
+                    }, 300);
 
-                // Handle form submission
-                const form = document.getElementById('followEmailForm');
-                form.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    await handleFollowSubmission(emailInput);
-                });
-
-                // Handle Enter key on email input
-                emailInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
+                    // Handle form submission
+                    const form = document.getElementById('followEmailForm');
+                    form.addEventListener('submit', async function(e) {
                         e.preventDefault();
-                        form.dispatchEvent(new Event('submit'));
-                    }
-                });
+                        await handleFollowSubmission(emailInput);
+                    });
+
+                    // Handle Enter key on email input
+                    emailInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            form.dispatchEvent(new Event('submit'));
+                        }
+                    });
+                }
 
                 // Handle back link
                 const backLink = followContainer.querySelector('.follow-back-link');
@@ -1919,6 +1993,10 @@
                 if (!email) return;
 
                 const submitButton = document.querySelector('.follow-submit-button');
+                const errorMessage = document.getElementById('followErrorMessage');
+                
+                // Hide any previous error
+                errorMessage.style.display = 'none';
                 
                 submitButton.disabled = true;
                 const originalText = submitButton.textContent;
@@ -1947,6 +2025,12 @@
                         emailInput.disabled = true;
                         submitButton.style.display = 'none';
                         
+                        // Store subscription locally
+                        if (typeof(Storage) !== "undefined") {
+                            localStorage.setItem('newsletter_subscribed', 'true');
+                            localStorage.setItem('newsletter_email', email);
+                        }
+                        
                         // Auto-close after 3 seconds
                         setTimeout(() => {
                             closeFollowMode();
@@ -1956,15 +2040,8 @@
                     }
                 } catch (error) {
                     console.error('Follow mode subscription error:', error);
-                    const followText = document.querySelector('.follow-text');
-                    const errorMsg = document.createElement('p');
-                    errorMsg.style.color = '#a94442';
-                    errorMsg.textContent = 'Something went wrong. Please try again.';
-                    followText.appendChild(errorMsg);
-                    
-                    setTimeout(() => {
-                        errorMsg.remove();
-                    }, 3000);
+                    errorMessage.textContent = 'Something went wrong. Please try again.';
+                    errorMessage.style.display = 'block';
                 } finally {
                     submitButton.disabled = false;
                     submitButton.textContent = originalText;
