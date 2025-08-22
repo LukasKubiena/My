@@ -176,6 +176,173 @@
             font-size: 14px;
         }
 
+        /* Blog Popup Modal */
+        .blog-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .blog-popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .blog-popup-container {
+            background: #ffffff;
+            padding: 48px 40px;
+            border-radius: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s ease;
+        }
+
+        .blog-popup-overlay.show .blog-popup-container {
+            transform: translateY(0) scale(1);
+        }
+
+        .blog-popup-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #000;
+        }
+
+        .blog-popup-text {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .blog-popup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .blog-popup-input {
+            padding: 16px 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .blog-popup-input:focus {
+            border-color: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .blog-popup-input::placeholder {
+            color: #999;
+        }
+
+        .blog-popup-button {
+            padding: 16px 32px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 400;
+        }
+
+        .blog-popup-button:hover:not(:disabled) {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        .blog-popup-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .blog-popup-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            line-height: 1;
+        }
+
+        .blog-popup-close:hover {
+            color: #000;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .blog-popup-success {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            color: #2d5a2d;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: #f0f8f0;
+            border: 1px solid #d4e6d4;
+            border-radius: 4px;
+        }
+
+        .blog-popup-error {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 14px;
+            color: #a94442;
+            margin-top: 8px;
+            padding: 12px;
+            background: #fdf2f2;
+            border: 1px solid #f5c6c6;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .blog-popup-container {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+
+            .blog-popup-title {
+                font-size: 22px;
+            }
+
+            .blog-popup-text {
+                font-size: 15px;
+            }
+        }
+
         /* Blog Posts Grid */
         .blog-grid {
             display: grid;
@@ -350,6 +517,33 @@
         Written in Europe with Care <img src="eu.svg" alt="EU Flag">
     </footer>
 
+    <!-- Blog Popup Modal -->
+    <div class="blog-popup-overlay" id="blogPopup">
+        <div class="blog-popup-container">
+            <button class="blog-popup-close" id="blogPopupClose">&times;</button>
+            <div class="blog-popup-title">Stay in the loop</div>
+            <div class="blog-popup-text">
+                Get notified when I publish new thoughts and ideas. No spam, just meaningful updates.
+            </div>
+            <form class="blog-popup-form" id="blogPopupForm">
+                <input 
+                    type="email" 
+                    class="blog-popup-input" 
+                    placeholder="your@email.com" 
+                    required
+                    id="blogPopupInput"
+                >
+                <button type="submit" class="blog-popup-button" id="blogPopupButton">Subscribe</button>
+            </form>
+            <div class="blog-popup-success" id="blogPopupSuccess" style="display: none;">
+                Thanks for subscribing! You'll get an email when I publish something new.
+            </div>
+            <div class="blog-popup-error" id="blogPopupError" style="display: none;">
+                Something went wrong. Please try again.
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -430,6 +624,110 @@
             if (typeof(Storage) !== "undefined" && localStorage.getItem('newsletter_subscribed') === 'true') {
                 updateSubscriptionUI(true);
             }
+        });
+
+        // Blog Popup Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogPopup = document.getElementById('blogPopup');
+            const blogPopupClose = document.getElementById('blogPopupClose');
+            const blogPopupForm = document.getElementById('blogPopupForm');
+            const blogPopupInput = document.getElementById('blogPopupInput');
+            const blogPopupButton = document.getElementById('blogPopupButton');
+            const blogPopupSuccess = document.getElementById('blogPopupSuccess');
+            const blogPopupError = document.getElementById('blogPopupError');
+
+            // Check if user has already seen the popup or is subscribed
+            const hasSeenPopup = localStorage.getItem('blog_popup_seen') === 'true';
+            const isSubscribed = localStorage.getItem('newsletter_subscribed') === 'true';
+
+            // Show popup after 10 seconds if user hasn't seen it and isn't subscribed
+            if (!hasSeenPopup && !isSubscribed) {
+                setTimeout(() => {
+                    blogPopup.classList.add('show');
+                    blogPopupInput.focus();
+                }, 10000); // 10 seconds
+            }
+
+            // Close popup
+            function closePopup() {
+                blogPopup.classList.remove('show');
+                localStorage.setItem('blog_popup_seen', 'true');
+            }
+
+            // Close button event
+            blogPopupClose.addEventListener('click', closePopup);
+
+            // Close on overlay click
+            blogPopup.addEventListener('click', function(e) {
+                if (e.target === blogPopup) {
+                    closePopup();
+                }
+            });
+
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && blogPopup.classList.contains('show')) {
+                    closePopup();
+                }
+            });
+
+            // Handle popup form submission
+            blogPopupForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Hide previous messages
+                blogPopupSuccess.style.display = 'none';
+                blogPopupError.style.display = 'none';
+                
+                // Disable button during submission
+                blogPopupButton.disabled = true;
+                blogPopupButton.textContent = 'Subscribing...';
+                
+                try {
+                    const response = await fetch('/.netlify/functions/send-newsletter', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            action: 'subscribe',
+                            email: blogPopupInput.value
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                        // Show success state
+                        blogPopupForm.style.display = 'none';
+                        blogPopupSuccess.style.display = 'block';
+                        
+                        // Store subscription locally
+                        if (typeof(Storage) !== "undefined") {
+                            localStorage.setItem('newsletter_subscribed', 'true');
+                            localStorage.setItem('newsletter_email', blogPopupInput.value);
+                        }
+                        
+                        // Update main newsletter form if it exists
+                        updateSubscriptionUI(true);
+                        
+                        // Close popup after 3 seconds
+                        setTimeout(() => {
+                            closePopup();
+                        }, 3000);
+                    } else {
+                        throw new Error(result.message || 'Subscription failed');
+                    }
+                } catch (error) {
+                    console.error('Blog popup subscription error:', error);
+                    blogPopupError.style.display = 'block';
+                    blogPopupError.textContent = 'Something went wrong. Please try again.';
+                } finally {
+                    // Re-enable button
+                    blogPopupButton.disabled = false;
+                    blogPopupButton.textContent = 'Subscribe';
+                }
+            });
         });
     </script>
 </body>
