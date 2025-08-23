@@ -394,18 +394,102 @@ body {
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="index.html" class="home-link">← blogs</a>
-            <div class="post-counter">1/6</div>
+            <div class="post-counter">1/8</div>
         </div>
     </nav>
 
     <!-- Blog Content -->
     <div class="blog-container">
         <article class="blog-post active">
-            <h1 class="blog-title">Being a piece of it all</h1>
+            <h1 class="blog-title">Maximum delight, Maximum Rejection</h1>
             <div class="audio-container">
                 <button class="play-button" onclick="togglePlay(0)">listen</button>
                 <div class="time-display">0:00 / 0:00</div>
                 <div class="progress-container" onclick="seek(event, 0)">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="blog-content">
+                <p>There's a fun challenge I like to do every now and then.</p>
+
+                <p>Every invention lives on a curve. Somewhere along the curve lies a strange point of providing people & the world with maximum delight, right before maximum rejection. Let me give you a concrete example:</p>
+
+                <p>You are a designer/engineer that can time travel back to the turn of the century. Somewhere between 1995 and 2005.</p>
+
+                <p>Given your current knowledge you have all of these products that might have already matured. Take the Mouse for example.</p>
+
+                <p>Today, you have n plus iterations of the Mouse. At what n could you bring it back in time without people rejecting it for it being "too" far fetched or incompatible with the rest of the technology landscape?</p>
+
+                <p>(Tony Fadell build book, example of team that tried to build smartphone too early)</p>
+
+                <p>Because maybe if you would bring today's mouse to a point where there already was a similar interface to today's one, they would not reject it for being too modern. And you would bring a better, more delightful product to people at an earlier point.</p>
+
+                <p>Or another example:</p>
+
+                <p>Could the iPhone have been invented five years earlier, without people rejecting the idea because it is too foreign?</p>
+
+                <p>At what point does that become a fact? Is it 2006? 2005? 1999? 98?</p>
+
+                <p>Because the next iteration would be so asymptotic to what you actually need now that you don't want it. Here is where the really big innovations live.</p>
+
+                <p>Because if you manage to build towards that point, you make a way better product way earlier.</p>
+
+                <p>But if you push a design too far forward on this curve, people won't or even can't want it. Not because it's bad, but because it is too far from what exists currently.</p>
+
+                <p>But right before that point, there's the furthest you can go while people still say yes. Maximum delight, maximum rejection, sitting right next to each other.</p>
+
+                <p>It is the local maxima on this innovation curve.</p>
+
+                <p>I call this the maximum delight before maximum rejection product. And I really hope you get lucky enough to build one.</p>
+            </div>
+            <img src="img8.jpeg" alt="Blog post image" class="blog-image">            
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
+                <h2 class="next-title">Build a lightbulb →</h2>
+            </div>
+        </article>
+
+        <article class="blog-post">
+            <h1 class="blog-title">Build a lightbulb</h1>
+            <div class="audio-container">
+                <button class="play-button" onclick="togglePlay(1)">listen</button>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="progress-container" onclick="seek(event, 1)">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="blog-content">
+                <p>I love to go back in time and watch old product launches. The iPhone, the polaroid SX70, the Ford.</p>
+
+                <p>And if you back in time long enough, there comes a point where someone walked on a stage and presented a new product. That product literally being the lightbulb.</p>
+
+                <p>When we talk about product launches there quite literally is not a more difficult bar to beat. Not Salesforce, but something as fundamental as the lightbulb.</p>
+
+                <p>Those were the kind of products being announced at that time that propelled society forward immeasurably.</p>
+
+                <p>Now, for many reasons, it is obviously very difficult to invent something as changing as the lightbulb.</p>
+
+                <p>Trying to reach that bar, and finding innovations like this is very difficult. The lightbulb was as much of a innovation geschuldet due to a accompining breakthrough in physics as it was a new consumer product.</p>
+
+                <p>And nowadays, we have more and more competing ideas about what we think every one of us needs, while the need for light - being something probably few were opposed to at the time.</p>
+
+                <p>So when I'm saying can you create the lightbulb, I'm not saying can you create a new paradigm in physics that eventually leads us to the lightbulb.</p>
+
+                <p>I'm saying that when you walk up on that stage, can you present something that solves such a huge fundamental human problem, with something in a way as simple as a lightbulb?</p>
+            </div>
+            <img src="img9.jpeg" alt="Blog post image" class="blog-image">            
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
+                <h2 class="next-title">Being a piece of it all →</h2>
+            </div>
+        </article>
+
+        <article class="blog-post">
+            <h1 class="blog-title">Being a piece of it all</h1>
+            <div class="audio-container">
+                <button class="play-button" onclick="togglePlay(2)">listen</button>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="progress-container" onclick="seek(event, 2)">
                     <div class="progress-bar"></div>
                 </div>
             </div>
@@ -442,9 +526,9 @@ body {
         <article class="blog-post">
             <h1 class="blog-title">Care</h1>
             <div class="audio-container">
-                <button class="play-button" onclick="togglePlay(1)">listen</button>
+                <button class="play-button" onclick="togglePlay(3)">listen</button>
                 <div class="time-display">0:00 / 0:00</div>
-                <div class="progress-container" onclick="seek(event, 1)">
+                <div class="progress-container" onclick="seek(event, 3)">
                     <div class="progress-bar"></div>
                 </div>
             </div>
@@ -486,9 +570,9 @@ body {
         <article class="blog-post">
             <h1 class="blog-title">Action</h1>
             <div class="audio-container">
-                <button class="play-button" onclick="togglePlay(2)">listen</button>
+                <button class="play-button" onclick="togglePlay(4)">listen</button>
                 <div class="time-display">0:00 / 0:00</div>
-                <div class="progress-container" onclick="seek(event, 2)">
+                <div class="progress-container" onclick="seek(event, 4)">
                     <div class="progress-bar"></div>
                 </div>
             </div>
@@ -538,9 +622,9 @@ body {
         <article class="blog-post">
             <h1 class="blog-title">Why</h1>
             <div class="audio-container">
-                <button class="play-button" onclick="togglePlay(3)">listen</button>
+                <button class="play-button" onclick="togglePlay(5)">listen</button>
                 <div class="time-display">0:00 / 0:00</div>
-                <div class="progress-container" onclick="seek(event, 3)">
+                <div class="progress-container" onclick="seek(event, 5)">
                     <div class="progress-bar"></div>
                 </div>
             </div>
@@ -586,9 +670,9 @@ body {
         <article class="blog-post">
             <h1 class="blog-title">To us Polarised</h1>
             <div class="audio-container">
-                <button class="play-button" onclick="togglePlay(4)">listen</button>
+                <button class="play-button" onclick="togglePlay(6)">listen</button>
                 <div class="time-display">0:00 / 0:00</div>
-                <div class="progress-container" onclick="seek(event, 4)">
+                <div class="progress-container" onclick="seek(event, 6)">
                     <div class="progress-bar"></div>
                 </div>
             </div>
@@ -641,9 +725,9 @@ body {
         <article class="blog-post">
             <h1 class="blog-title">Excellence vs. Greatness</h1>
             <div class="audio-container">
-                <button class="play-button" onclick="togglePlay(5)">listen</button>
+                <button class="play-button" onclick="togglePlay(7)">listen</button>
                 <div class="time-display">0:00 / 0:00</div>
-                <div class="progress-container" onclick="seek(event, 5)">
+                <div class="progress-container" onclick="seek(event, 7)">
                     <div class="progress-bar"></div>
                 </div>
             </div>
@@ -685,7 +769,7 @@ body {
             <img src="img7.jpeg" alt="Blog post image" class="blog-image">
             <div class="next-post" onclick="navigate(1)">
                 <div class="next-label">Next</div>
-                <h2 class="next-title">Being a piece of it all →</h2>
+                <h2 class="next-title">Maximum delight, Maximum Rejection →</h2>
             </div>
         </article>
     </div>
@@ -702,6 +786,8 @@ body {
         const posts = document.querySelectorAll('.blog-post');
         const postCounter = document.querySelector('.post-counter');
         const audioPlayers = [
+            new Audio('audio7.mp3'),
+            new Audio('audio8.mp3'),
             new Audio('audio01.mp3'),
             new Audio('audio02.mp3'),
             new Audio('audio03.mp3'),
