@@ -198,24 +198,18 @@
         @media screen and (min-width: 1025px) {
             body {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-                grid-template-rows: auto auto auto auto auto auto;
-                column-gap: 1.5rem;
+                grid-template-columns: 120px 1fr 1fr 1fr 120px;
+                grid-template-rows: auto 1fr auto;
+                column-gap: 3rem;
+                row-gap: 4rem;
                 max-width: 1400px;
                 margin: 0 auto;
+                padding: 100px 80px 60px 80px;
+                min-height: 100vh;
             }
 
             .profile-image {
-                grid-column: 10 / 12;
-                grid-row: 2 / 4;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: 4px;
-                margin: 0;
-                display: block;
-                opacity: 0;
-                transition: opacity 1s ease-in;
+                display: none;
             }
 
             .profile-image.visible {
@@ -223,40 +217,102 @@
             }
 
             .hey-container {
-                grid-column: 4 / 6;
+                grid-column: 2 / 3;
                 grid-row: 2 / 3;
                 align-self: start;
-                margin-top: -0.2em;
+                margin-top: 0;
             }
 
             .blog-link {
-                margin-bottom: -1rem;
+                margin-bottom: 0;
             }
 
             .hey {
                 font-size: 40px;
-                margin-left: 2rem;
+                margin-left: 0;
                 word-wrap: break-word;
-                max-width: 80%;
+                max-width: 100%;
+            }
+
+            .hey-dash {
+                display: block;
+                margin-top: 0.5rem;
+                opacity: 0;
+                transition: opacity 0.3s ease-in;
+            }
+
+            .hey-dash.visible {
+                opacity: 1;
             }
 
             .content-1 {
-                grid-column: 7 / 9;
-                grid-row: 2 / 4;
+                grid-column: 2 / 3;
+                grid-row: 2 / 3;
+                align-self: end;
+                text-align: justify;
             }
 
             .content-2 {
-                grid-column: 7 / 9;
-                grid-row: 4 / 6;
+                grid-column: 3 / 4;
+                grid-row: 2 / 3;
+                align-self: end;
+                text-align: justify;
+                margin-bottom: 0;
             }
 
             .content-group {
-                grid-column: 10 / 12;
-                grid-row: 4 / 6;
+                grid-column: 4 / 5;
+                grid-row: 2 / 3;
                 display: flex;
                 flex-direction: column;
-                gap: var(--row-gap);
+                gap: 1.5rem;
                 margin-top: 0;
+                align-self: end;
+            }
+
+            .year-left {
+                position: fixed;
+                left: 40px;
+                top: 50%;
+                transform: translateY(-50%) rotate(-90deg);
+                font-size: 14px;
+                color: #000;
+                transform-origin: center;
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                letter-spacing: 0.05em;
+            }
+
+            .year-right {
+                position: fixed;
+                right: 40px;
+                top: 120px;
+                font-size: 14px;
+                color: #000;
+                font-style: italic;
+            }
+
+            .location-info {
+                grid-column: 2 / 3;
+                grid-row: 3 / 4;
+                font-size: 14px;
+                color: #000;
+                align-self: end;
+            }
+
+            .location-info::before {
+                content: '—';
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .care-europe {
+                grid-column: 4 / 5;
+                grid-row: 3 / 4;
+                text-align: right;
+                font-size: 14px;
+                color: #000;
+                align-self: end;
             }
         }
 
@@ -265,41 +321,35 @@
                 overflow: hidden;
             }
 
+            body.initial-load {
+                padding-top: 100px;
+            }
+
             .hey-container {
                 position: relative;
-                margin-bottom: 2rem;
+                margin-bottom: 0;
             }
 
             .prompt {
                 position: absolute;
                 top: -40px;
-                left: 2rem;
+                left: 0;
                 color: #888;
                 font-size: 16px;
                 white-space: nowrap;
             }
 
-            body.initial-load {
-                padding-top: 24vh;
-            }
-
             .copyright {
-                grid-column: 10 / 12;
-                grid-row: 4;
-                text-align: right;
-                font-size: 0.9rem;
-                color: #888;
-                align-self: start;
+                display: none;
             }
 
             body.chat-mode {
-                grid-template-columns: 1fr 1fr 1fr 1fr 2fr 2fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-                padding-top: 11vh;
-                padding-left: 1%;
+                grid-template-columns: 120px 2fr 1fr 1fr 120px;
+                padding-top: 100px;
             }
 
             .chat-mode .hey-container {
-                grid-column: 4 / 7;
+                grid-column: 2 / 3;
             }
 
             .chat-mode .hey {
@@ -310,6 +360,13 @@
             .chat-mode .chat-input {
                 width: 100%;
                 max-width: none;
+            }
+
+            .chat-mode .year-left,
+            .chat-mode .year-right,
+            .chat-mode .location-info,
+            .chat-mode .care-europe {
+                display: none;
             }
 
 
@@ -324,9 +381,6 @@
                 vertical-align: bottom;
             }
 
-            body {
-                padding-top: calc(24vh + 64px);
-            }
 
             @keyframes blink {
                 0% { opacity: 0; }
@@ -428,6 +482,14 @@
                 padding: 40px;
                 margin-top: 12vh;
                 box-sizing: border-box;
+            }
+
+            .year-left,
+            .year-right,
+            .location-info,
+            .care-europe,
+            .hey-dash {
+                display: none;
             }
 
             .right-links {
@@ -625,10 +687,13 @@
         </div>
     </nav>
     <div class="copyright"></div>
+    <div class="year-left">Personal Website</div>
+    <div class="year-right">2025</div>
     <div class="hey-container">
         <div class="hey">
             <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
         </div>
+        <div class="hey-dash">—</div>
     </div>
     <div class="content content-1">
         I'm Lukas. Currently, I work on enabling organisations to make better decisions by scaling the natural efficiency of small-group dialogue to hundreds of people <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. As Brand & Product Marketing Lead, I make sure our tools are grounded in the stories and experiences of the people they're designed for.
@@ -647,6 +712,12 @@
         <div class="send-mail">
             <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
         </div>
+    </div>
+    <div class="location-info">
+        Vienna<br>Wednesday, 25.October.2023
+    </div>
+    <div class="care-europe">
+        with care from europe
     </div>
     <script>
         // Dynamic greeting system for system messages
@@ -1290,7 +1361,9 @@
                     const backButton = document.querySelector('a[style*="text-decoration: underline"]');
                     if (backButton) backButton.remove();
 
-                    hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+                    const heyContainer = document.querySelector('.hey-container');
+                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash">—</div>';
+                    hey = heyContainer.querySelector('.hey');
                     heyText = hey.querySelector('.hey-text');
                     comma = hey.querySelector('.comma');
 
@@ -1427,6 +1500,11 @@
                         if (cursor) {
                             cursor.remove();
                             cursor = null;
+                        }
+                        // Show the dash on desktop
+                        const heyDash = document.querySelector('.hey-dash');
+                        if (heyDash && window.innerWidth > 1024) {
+                            heyDash.classList.add('visible');
                         }
                         content.forEach(el => {
                             el.style.opacity = '1';
@@ -1618,10 +1696,18 @@
                     hidePrompt();
                     clearPreviousContent();
                     
-                    hey.innerHTML = '<span class="hey-text">Hey</span><span class="comma">,</span>';
+                    const heyContainer = document.querySelector('.hey-container');
+                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash">—</div>';
+                    const newHey = heyContainer.querySelector('.hey');
+                    hey = newHey;
                     hey.style.cursor = 'pointer';
                     heyText = hey.querySelector('.hey-text');
                     comma = hey.querySelector('.comma');
+                    
+                    const heyDash = document.querySelector('.hey-dash');
+                    if (heyDash && window.innerWidth > 1024) {
+                        heyDash.classList.add('visible');
+                    }
 
                     content.forEach(el => {
                         el.style.display = '';
