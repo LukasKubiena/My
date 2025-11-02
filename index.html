@@ -1046,16 +1046,11 @@
                 }
 
                 function resetPromptTimer() {
-                    clearTimeout(promptTimer);
-                    promptTimer = setTimeout(() => {
-                        if (!inChatMode && document.body.classList.contains('initial-load')) {
-                            document.body.classList.remove('initial-load');
-                            showPrompt(getSmartGreeting(), true);
-                        }
-                    }, 5000);
+                    // Disabled - no automatic prompts
                 }
 
-                resetPromptTimer();
+                // Disabled - no automatic prompts
+                // resetPromptTimer();
 
                 let canVibrate = 'vibrate' in navigator;
 
@@ -1321,7 +1316,6 @@
                         playCommaAnimation();
                     }, 10);
 
-                    resetPromptTimer();
                     messages = [];
                 }
 
@@ -1393,8 +1387,7 @@
 
                     if (isInitialLoad) {
                         content.forEach(el => el.style.opacity = '0');
-                        copyright.style.opacity = '0';
-                        setTimeout(resetPromptTimer, 3000);
+                        copyright.style.opacity = '0');
                     }
 
                     setTimeout(() => {
@@ -1445,17 +1438,11 @@
                         }
                         copyright.style.opacity = '1';
                         copyright.style.animation = 'fadeIn 1s ease-in';
-                        resetPromptTimer();
                     }, 800);
                 }
 
                 function resetPromptTimer() {
-                    clearTimeout(promptTimer);
-                    promptTimer = setTimeout(() => {
-                        if (!inChatMode) {
-                            showPrompt(getSmartGreeting(), true);
-                        }
-                    }, 5000);
+                    // Disabled - no automatic prompts
                 }
 
                 typeHey();
@@ -1661,7 +1648,6 @@
                     messages = [];
                     
                     playPopOutAnimation();
-                    resetPromptTimer();
                 }
 
                 window.resetPage = resetPage;

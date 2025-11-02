@@ -407,7 +407,7 @@ body {
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="index.html" class="home-link">← blogs</a>
-            <div class="post-counter">1/9</div>
+            <div class="post-counter">1/10</div>
         </div>
     </nav>
 
@@ -844,6 +844,41 @@ body {
             <img src="img8.jpeg" alt="Blog post image" class="blog-image">
             <div class="next-post" onclick="navigate(1)">
                 <div class="next-label">Next</div>
+                <h2 class="next-title">The Redukt →</h2>
+            </div>
+        </article>
+
+        <article class="blog-post">
+            <h1 class="blog-title">The Redukt</h1>
+            <div class="audio-container">
+                <button class="play-button" onclick="togglePlay(9)">listen</button>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="progress-container" onclick="seek(event, 9)">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="blog-content">
+                <p>If you've read my earlier writing on "form follows function follows feeling," you know I think we're entering a new phase with technology - almost in a Kuhnian sense, a paradigm shift.</p>
+
+                <p>For a long time, technology was this very new thing that quickly made its way into our lives, sometimes without us questioning the second-order effects it would have. On us as individuals, as families, as children, but also at a society level. The person who conceived of the car probably didn't think too much about CO2 emissions and climate impact. I don't think there was intentional wrongdoing there - cognitive dissonance is real, and I'm maybe naively convinced that most people do want to build good technology.</p>
+
+                <p>But here's the thing: we now have this insane body of knowledge about what happens to our bodies and minds when we use technology. We know about posture from working at laptops. Effects of light on sleep rhythms. How social media rewires our brains.</p>
+
+                <p>And younger generations especially - but older ones too - are realizing that interacting with technology often leaves us feeling worse after using it than before. When in reality, the promise of technology was supposed to make aspects of life feel fuller, better, healthier.</p>
+
+                <p>And because we know this now, we're starting to see a new kind of product emerge. Hardware that blocks your phone when you need to focus. Software that adds friction before you open social media. Interfaces designed around how your attention actually works, not how companies wish it worked.</p>
+
+                <p>Kuhn might say we're in this moment, where we have a little crisis of our old paradigm. So people start to question and to build things differently - tools that respect our natural constraints instead of pushing them past their boundaries in forceful ways.</p>
+
+                <p>Some of these products will work, some won't. But they're all reaching toward the same thing: technology that serves not just a function, but also a feeling. Technology designed around our actual physical and mental limits.</p>
+
+                <p>I call these products Redukts.</p>
+
+                <p>Not because they reduce features (though sometimes they do). But because they reduce technology back to what it usually tries to be - something that makes us live more, not just more efficiently.</p>
+            </div>
+            <img src="img11.jpg" alt="Blog post image" class="blog-image">
+            <div class="next-post" onclick="navigate(1)">
+                <div class="next-label">Next</div>
                 <h2 class="next-title">Form follows function, follows feeling →</h2>
             </div>
         </article>
@@ -875,7 +910,8 @@ body {
             new Audio('audio03.mp3'),
             new Audio('audio4.mp3'),
             new Audio('audio5.mp3'),
-            new Audio('audio2.mp3')
+            new Audio('audio2.mp3'),
+            new Audio('audio1.mp3')
         ];
         let currentlyPlaying = null;
         const timeDisplays = document.querySelectorAll('.time-display');
