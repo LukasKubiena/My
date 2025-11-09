@@ -1073,13 +1073,17 @@
                 const hey = document.querySelector('.hey');
                 const heyText = hey.querySelector('.hey-text');
                 const comma = hey.querySelector('.comma');
-                const cursor = hey.querySelector('.typing-cursor');
                 const content = document.querySelectorAll('.content, .send-mail, .blog-link');
                 hey.style.animation = 'none';
 
                 content.forEach(el => el.style.opacity = '0');
                 heyText.style.opacity = '0';
                 comma.style.opacity = '0';
+                
+                // Create typing cursor for mobile
+                const cursor = document.createElement('span');
+                cursor.className = 'typing-cursor';
+                hey.appendChild(cursor);
                 
                 function typeText(text, element, callback) {
                     let i = 0;
@@ -1116,7 +1120,9 @@
                 }
 
                 function showContent() {
-                    cursor.style.display = 'none';
+                    if (cursor) {
+                        cursor.style.display = 'none';
+                    }
                     
                     content.forEach(el => {
                         el.style.opacity = '1';
@@ -1435,7 +1441,7 @@
                     if (backButton) backButton.remove();
 
                     const heyContainer = document.querySelector('.hey-container');
-                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash">—</div>';
+                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash"></div>';
                     hey = heyContainer.querySelector('.hey');
                     heyText = hey.querySelector('.hey-text');
                     comma = hey.querySelector('.comma');
