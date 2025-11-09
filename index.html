@@ -31,16 +31,8 @@
             font-family: 'NeueHaasDisplay-Light', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-            display: grid;
-            --row-gap: 2rem;
-            row-gap: var(--row-gap);
-            grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto auto auto auto;
-            column-gap: 1.5rem;
-            padding-top: 11vh;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
+            font-size: 16px;
+            line-height: 1.6;
         }
 
         .nav-bar {
@@ -175,8 +167,14 @@
         .send-mail {
             color: #000000;
             font-size: 16px;
-            font-weight: 400;
+            line-height: 1.6;
             text-decoration: underline;
+        }
+
+        .blog-link a,
+        .send-mail a {
+            font-size: 16px;
+            line-height: 1.6;
         }
 
         a {
@@ -197,15 +195,22 @@
 
         @media screen and (min-width: 1025px) {
             body {
-                display: grid;
-                grid-template-columns: 120px 1fr 1fr 1fr 120px;
-                grid-template-rows: auto 1fr auto;
-                column-gap: 3rem;
-                row-gap: 4rem;
-                max-width: 1400px;
-                margin: 0 auto;
-                padding: 100px 80px 60px 80px;
+                position: relative;
+                display: block;
+                max-width: none;
+                margin: 0;
+                padding: 0;
                 min-height: 100vh;
+                height: 100vh;
+            }
+
+            .nav-bar {
+                opacity: 0;
+                transition: opacity 1s ease-in;
+            }
+
+            .nav-bar.visible {
+                opacity: 1;
             }
 
             .profile-image {
@@ -217,15 +222,11 @@
             }
 
             .hey-container {
-                grid-column: 2 / 3;
-                grid-row: 2 / 3;
-                align-self: start;
-                margin-top: 0;
+                position: absolute;
+                left: 260px;
+                top: 180px;
             }
 
-            .blog-link {
-                margin-bottom: 0;
-            }
 
             .hey {
                 font-size: 40px;
@@ -239,6 +240,9 @@
                 margin-top: 0.5rem;
                 opacity: 0;
                 transition: opacity 0.3s ease-in;
+                height: 2px;
+                width: 20px;
+                background: #000;
             }
 
             .hey-dash.visible {
@@ -246,73 +250,84 @@
             }
 
             .content-1 {
-                grid-column: 2 / 3;
-                grid-row: 2 / 3;
-                align-self: end;
+                position: absolute;
+                left: 260px;
+                top: 320px;
+                width: 280px;
                 text-align: justify;
+                font-size: 16px;
+                line-height: 1.6;
             }
 
             .content-2 {
-                grid-column: 3 / 4;
-                grid-row: 2 / 3;
-                align-self: end;
+                position: absolute;
+                left: 580px;
+                top: 320px;
+                width: 280px;
                 text-align: justify;
-                margin-bottom: 0;
+                font-size: 16px;
+                line-height: 1.6;
             }
 
             .content-group {
-                grid-column: 4 / 5;
-                grid-row: 2 / 3;
-                display: flex;
-                flex-direction: column;
-                gap: 1.5rem;
-                margin-top: 0;
-                align-self: end;
+                position: absolute;
+                left: 900px;
+                top: 320px;
+                width: 280px;
+                display: block;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+
+            .content-3 {
+                text-align: justify;
+                margin-bottom: 2rem;
+            }
+
+            .content-group .blog-link {
+                margin-bottom: 0.5rem;
+            }
+
+            .content-group .send-mail {
+                margin-bottom: 0;
+            }
+
+            .content-group .blog-link,
+            .content-group .send-mail {
+                text-align: left;
             }
 
             .year-left {
-                position: fixed;
-                left: 40px;
-                top: 50%;
-                transform: translateY(-50%) rotate(-90deg);
-                font-size: 14px;
-                color: #000;
-                transform-origin: center;
-                writing-mode: vertical-rl;
-                text-orientation: mixed;
-                letter-spacing: 0.05em;
+                display: none;
             }
 
             .year-right {
-                position: fixed;
-                right: 40px;
-                top: 120px;
-                font-size: 14px;
+                position: absolute;
+                right: 260px;
+                top: 180px;
+                font-size: 16px;
                 color: #000;
                 font-style: italic;
             }
 
             .location-info {
-                grid-column: 2 / 3;
-                grid-row: 3 / 4;
-                font-size: 14px;
+                position: absolute;
+                left: 260px;
+                bottom: 100px;
+                font-size: 16px;
+                line-height: 1.6;
                 color: #000;
-                align-self: end;
             }
 
-            .location-info::before {
-                content: '—';
-                display: block;
-                margin-bottom: 0.5rem;
-            }
 
             .care-europe {
-                grid-column: 4 / 5;
-                grid-row: 3 / 4;
+                position: absolute;
+                right: 260px;
+                bottom: 100px;
                 text-align: right;
-                font-size: 14px;
+                font-size: 16px;
+                line-height: 1.6;
                 color: #000;
-                align-self: end;
             }
         }
 
@@ -325,35 +340,32 @@
                 padding-top: 100px;
             }
 
-            .hey-container {
-                position: relative;
-                margin-bottom: 0;
-            }
-
             .prompt {
                 position: absolute;
-                top: -40px;
-                left: 0;
+                top: 150px;
+                left: 260px;
                 color: #888;
                 font-size: 16px;
                 white-space: nowrap;
+                opacity: 0;
+                transition: opacity 0.3s ease-in;
+            }
+
+            .prompt.visible {
+                opacity: 1;
             }
 
             .copyright {
                 display: none;
             }
 
-            body.chat-mode {
-                grid-template-columns: 120px 2fr 1fr 1fr 120px;
-                padding-top: 100px;
-            }
-
-            .chat-mode .hey-container {
-                grid-column: 2 / 3;
+            body.chat-mode .hey-container {
+                left: 260px;
+                top: 180px;
             }
 
             .chat-mode .hey {
-                max-width: 100%;
+                max-width: 600px;
             }
 
             .chat-mode .input-container,
@@ -362,11 +374,78 @@
                 max-width: none;
             }
 
-            .chat-mode .year-left,
-            .chat-mode .year-right,
-            .chat-mode .location-info,
-            .chat-mode .care-europe {
+            .mail-mode .nav-bar,
+            .mail-mode .year-right,
+            .mail-mode .care-europe,
+            .mail-mode .content-1,
+            .mail-mode .content-2,
+            .mail-mode .content-group {
                 display: none;
+            }
+
+            .mail-mode .hey {
+                font-size: 40px;
+                white-space: nowrap;
+                overflow: hidden;
+                max-width: calc(100vw - 520px - 260px);
+            }
+
+            .mail-mode .hey[contenteditable="true"]:empty:before,
+            .mail-mode .hey.empty-placeholder:before {
+                content: 'Your subject';
+                color: #ccc;
+                pointer-events: none;
+            }
+
+            .mail-mode .mail-input {
+                position: absolute;
+                left: 260px;
+                top: 240px;
+                right: 260px;
+                bottom: 160px;
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                font-size: 16px;
+                line-height: 1.6;
+                border: none;
+                outline: none;
+                resize: none;
+                background: transparent;
+                padding: 0;
+                overflow-y: auto;
+                height: auto;
+            }
+
+            .mail-mode .mail-input::placeholder {
+                color: #ccc;
+            }
+
+            .mail-mode .mail-input:focus::placeholder {
+                color: transparent;
+            }
+
+
+            .mail-mode .send-button {
+                position: absolute;
+                right: 260px;
+                bottom: 100px;
+                cursor: pointer;
+                text-decoration: underline;
+                font-size: 16px;
+                color: #ccc;
+                pointer-events: none;
+            }
+
+            .mail-mode .send-button.active {
+                color: #000;
+                pointer-events: auto;
+            }
+
+            .mail-mode .char-count {
+                position: absolute;
+                right: 260px;
+                top: 180px;
+                font-size: 16px;
+                font-style: italic;
             }
 
 
@@ -463,16 +542,6 @@
                 }
             }
 
-            .personal-website {
-                color: #000000;
-                text-align: left;
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 16px;
-                font-weight: 300;
-                transform-origin: top left;
-                transform: rotate(-90deg) translateX(-100%);
-                white-space: nowrap;
-            }
         }
 
         @media screen and (max-width: 1024px) {
@@ -482,14 +551,26 @@
                 padding: 40px;
                 margin-top: 12vh;
                 box-sizing: border-box;
+                height: auto;
             }
 
-            .year-left,
+            .nav-bar {
+                display: flex;
+            }
+
             .year-right,
             .location-info,
             .care-europe,
             .hey-dash {
                 display: none;
+            }
+
+            .hey-container,
+            .content-1,
+            .content-2,
+            .content-group {
+                position: static;
+                width: 100%;
             }
 
             .right-links {
@@ -687,13 +768,12 @@
         </div>
     </nav>
     <div class="copyright"></div>
-    <div class="year-left">Personal Website</div>
     <div class="year-right">2025</div>
     <div class="hey-container">
         <div class="hey">
-            <span class="hey-text"></span><span class="comma">,</span><span class="typing-cursor"></span>
+            <span class="hey-text"></span><span class="comma">,</span>
         </div>
-        <div class="hey-dash">—</div>
+        <div class="hey-dash"></div>
     </div>
     <div class="content content-1">
         I'm Lukas. Currently, I work on enabling organisations to make better decisions by scaling the natural efficiency of small-group dialogue to hundreds of people <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. As Brand & Product Marketing Lead, I make sure our tools are grounded in the stories and experiences of the people they're designed for.
@@ -714,7 +794,7 @@
         </div>
     </div>
     <div class="location-info">
-        Vienna<br>Wednesday, 25.October.2023
+        —<br>Vienna<br>Wednesday, 25.October.2023
     </div>
     <div class="care-europe">
         with care from europe
@@ -1178,11 +1258,12 @@
                 });
 
                 function handleLongPress() {
+                    // Mobile version - can keep old behavior or update to mail mode
+                    // For now, keeping simple chat mode on mobile
                     inChatMode = true;
                     window.inChatMode = true;
 
                     clearPreviousContent(true);
-                    console.log('Long press detected');
                     
                     heyText.textContent = '';
                     hey.innerHTML = '';
@@ -1196,7 +1277,7 @@
                     
                     const input = document.createElement('textarea');
                     input.className = 'chat-input';
-                    input.placeholder = 'Ask...';
+                    input.placeholder = 'Your message...';
                     input.style.font = window.getComputedStyle(hey).font;
                     input.style.border = 'none';
                     input.style.background = 'transparent';
@@ -1213,7 +1294,7 @@
                     input.focus();
                     input.click();
 
-                    showPrompt('Tap enter to send');
+                    showPrompt('Add your email at the end');
 
                     input.addEventListener('input', function() {
                         this.style.height = 'auto';
@@ -1221,14 +1302,6 @@
                     });
 
                     content.forEach(el => el.style.display = 'none');
-
-                    input.addEventListener('keypress', function(e) {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            const userInput = input.value;
-                            handleUserInput(userInput);
-                        }
-                    });
 
                     addBackButton();
 
@@ -1428,7 +1501,7 @@
             const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
             
             if (isDesktop) {
-                const hey = document.querySelector('.hey');
+                let hey = document.querySelector('.hey');
                 let heyText = hey.querySelector('.hey-text');
                 let comma = hey.querySelector('.comma');
                 const content = document.querySelectorAll('.content, .send-mail, .blog-link');
@@ -1447,12 +1520,17 @@
                 }
 
                 function typeHey(isInitialLoad = true) {
+                    const heyContainer = document.querySelector('.hey-container');
+                    hey = heyContainer.querySelector('.hey');
+                    
+                    // Reset hey content
                     hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
                     heyText = hey.querySelector('.hey-text');
                     comma = hey.querySelector('.comma');
+                    
                     heyText.textContent = '';
                     comma.style.opacity = '0';
-                    let text = 'Hey,';
+                    let text = 'Hey';
                     let index = 0;
                     cursor = document.createElement('span');
                     cursor.className = 'typing-cursor';
@@ -1460,20 +1538,25 @@
 
                     if (isInitialLoad) {
                         content.forEach(el => el.style.opacity = '0');
-                        copyright.style.opacity = '0';
+                        const yearRight = document.querySelector('.year-right');
+                        const careEurope = document.querySelector('.care-europe');
+                        const locationInfo = document.querySelector('.location-info');
+                        const heyDash = heyContainer.querySelector('.hey-dash');
+                        if (yearRight) yearRight.style.opacity = '0';
+                        if (careEurope) careEurope.style.opacity = '0';
+                        if (locationInfo) locationInfo.style.opacity = '0';
+                        if (heyDash) heyDash.style.opacity = '0';
                     }
 
                     setTimeout(() => {
                         function typeChar() {
                             if (index < text.length) {
-                                if (index === text.length - 1) {
-                                    comma.style.opacity = '1';
-                                } else {
                                     heyText.textContent += text[index];
-                                }
                                 index++;
                                 setTimeout(typeChar, 150);
                             } else {
+                                // Show comma after typing "Hey"
+                                comma.style.opacity = '1';
                                 setTimeout(() => {
                                     playPopOutAnimation();
                                 }, 100);
@@ -1504,15 +1587,36 @@
                         // Show the dash on desktop
                         const heyDash = document.querySelector('.hey-dash');
                         if (heyDash && window.innerWidth > 1024) {
+                            heyDash.style.opacity = '1';
+                            heyDash.style.transition = 'opacity 0.3s ease-in';
                             heyDash.classList.add('visible');
                         }
                         content.forEach(el => {
                             el.style.opacity = '1';
                             el.style.animation = 'fadeIn 1s ease-in';
                         });
+                        const yearRight = document.querySelector('.year-right');
+                        const careEurope = document.querySelector('.care-europe');
+                        const locationInfo = document.querySelector('.location-info');
+                        if (yearRight) {
+                            yearRight.style.opacity = '1';
+                            yearRight.style.animation = 'fadeIn 1s ease-in';
+                        }
+                        if (careEurope) {
+                            careEurope.style.opacity = '1';
+                            careEurope.style.animation = 'fadeIn 1s ease-in';
+                        }
+                        if (locationInfo) {
+                            locationInfo.style.opacity = '1';
+                            locationInfo.style.animation = 'fadeIn 1s ease-in';
+                        }
                         const profileImage = document.querySelector('.profile-image');
                         if (profileImage) {
                             profileImage.classList.add('visible');
+                        }
+                        const navBar = document.querySelector('.nav-bar');
+                        if (navBar) {
+                            navBar.classList.add('visible');
                         }
                         copyright.style.opacity = '1';
                         copyright.style.animation = 'fadeIn 1s ease-in';
@@ -1524,74 +1628,271 @@
                 }
 
                 typeHey();
+                
+                // Add click listener to hey after animation completes
+                function addHeyClickListener() {
+                    hey.addEventListener('click', function heyClickHandler() {
+                        if (!inChatMode) {
+                            handleDesktopClick();
+                        }
+                    });
+                }
+
+                setTimeout(addHeyClickListener, 4000);
 
                 function handleDesktopClick() {
                     inChatMode = true;
                     window.inChatMode = true;
-                    toggleChatMode(true);
-                    clearPreviousContent(true);
-                    hidePrompt();
-                    document.body.classList.add('chat-mode');
+                    document.body.classList.add('mail-mode');
                     
-                    hey.innerHTML = '';
-                    hey.style.cursor = 'text';
-                    
-                    const inputContainer = document.createElement('div');
-                    inputContainer.className = 'input-container';
-                    inputContainer.style.width = '100%';
-                    inputContainer.style.height = '100%';
-                    inputContainer.style.position = 'relative';
-                    
-                    const input = document.createElement('textarea');
-                    input.className = 'chat-input';
-                    input.placeholder = 'Ask...';
-                    input.style.width = '100%';
-                    input.style.height = '100%';
-                    input.style.resize = 'none';
-                    input.style.overflow = 'hidden';
-                    input.style.border = 'none';
-                    input.style.background = 'transparent';
-                    input.style.outline = 'none';
-                    input.style.font = window.getComputedStyle(hey).font;
-
+                    // Hide content
+                    content.forEach(el => el.style.display = 'none');
                     const profileImage = document.querySelector('.profile-image');
                     if (profileImage) {
                         profileImage.style.display = 'none';
                     }
                     
-                    inputContainer.appendChild(input);
-                    hey.appendChild(inputContainer);
+                    // Store original hey content
+                    const originalHeyContent = hey.innerHTML;
+                    let hasSubject = false;
                     
-                    showPrompt('Press Enter to send', true);
+                    // Transform Hey to subject input (inline contenteditable)
+                    hey.setAttribute('data-placeholder', 'Your subject');
+                    hey.textContent = '';
+                    hey.style.color = '#ccc';
+                    hey.contentEditable = 'true';
+                    hey.style.cursor = 'text';
+                    hey.style.outline = 'none';
                     
-                    input.addEventListener('input', function() {
-                        this.style.height = 'auto';
-                        this.style.height = (this.scrollHeight) + 'px';
-                    });
-                    
-                    input.addEventListener('keypress', function(e) {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            const userInput = input.value;
-                            handleUserInput(userInput);
-                        }
-                    });
-                    
-                    hey.addEventListener('click', function(e) {
-                        if (inChatMode) {
-                            input.focus();
-                        }
-                    });
-                    
-                    const aiResponse = document.querySelector('.ai-response');
-                    if (aiResponse) {
-                        aiResponse.style.display = 'none';
+                    // Hide dash
+                    const heyDash = document.querySelector('.hey-dash');
+                    if (heyDash) {
+                        heyDash.style.display = 'none';
                     }
-
-                    content.forEach(el => el.style.display = 'none');
-                    addBackButton();
                     
-                    input.focus();
+                    // Create mail input below
+                    const mailInput = document.createElement('textarea');
+                    mailInput.className = 'mail-input';
+                    mailInput.placeholder = 'Text...';
+                    document.body.appendChild(mailInput);
+                    
+                    // Create character count
+                    const charCount = document.createElement('div');
+                    charCount.className = 'char-count';
+                    charCount.textContent = '0';
+                    document.body.appendChild(charCount);
+                    
+                    // Create send button (grey by default)
+                    const sendButton = document.createElement('a');
+                    sendButton.className = 'send-button';
+                    sendButton.textContent = 'send';
+                    sendButton.style.color = '#ccc';
+                    document.body.appendChild(sendButton);
+                    
+                    // Transform location-info to back button
+                    const locationInfo = document.querySelector('.location-info');
+                    const originalLocationHTML = locationInfo.innerHTML;
+                    locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
+                    locationInfo.querySelector('a').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        resetMailMode();
+                    });
+                    
+                    // Email validation and character count
+                    function validateEmail(text) {
+                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                        return emailRegex.test(text);
+                    }
+                    
+                    // Show placeholder when empty
+                    function updatePlaceholder() {
+                        if (hey.textContent.trim() === '' && !hasSubject) {
+                            hey.classList.add('empty-placeholder');
+                        } else {
+                            hey.classList.remove('empty-placeholder');
+                        }
+                    }
+                    
+                    // Handle subject input
+                    hey.addEventListener('focus', function() {
+                        if (!hasSubject) {
+                            hey.style.color = '#000';
+                        }
+                    });
+                    
+                    hey.addEventListener('input', function(e) {
+                        hasSubject = hey.textContent.trim().length > 0;
+                        hey.style.color = '#000';
+                        updatePlaceholder();
+                        
+                        // Check if text is overflowing
+                        if (hey.scrollWidth > hey.clientWidth) {
+                            // Remove last character
+                            const text = hey.textContent;
+                            hey.textContent = text.slice(0, -1);
+                            
+                            // Move cursor to end
+                            const range = document.createRange();
+                            const sel = window.getSelection();
+                            range.selectNodeContents(hey);
+                            range.collapse(false);
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                        }
+                    });
+                    
+                    hey.addEventListener('blur', function() {
+                        if (hey.textContent.trim() === '') {
+                            hey.style.color = '#ccc';
+                            hasSubject = false;
+                        }
+                        updatePlaceholder();
+                    });
+                    
+                    // Handle Enter key on subject to move to mail input
+                    hey.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            hasSubject = true;
+                            hey.style.color = '#000';
+                            mailInput.focus();
+                        }
+                    });
+                    
+                    mailInput.addEventListener('focus', function() {
+                        this.placeholder = '';
+                    });
+                    
+                    mailInput.addEventListener('blur', function() {
+                        if (this.value === '') {
+                            this.placeholder = 'Text...';
+                        }
+                    });
+                    
+                    mailInput.addEventListener('input', function() {
+                        const text = this.value;
+                        charCount.textContent = text.length;
+                        
+                        if (validateEmail(text)) {
+                            sendButton.classList.add('active');
+                            sendButton.style.color = '#000';
+                        } else {
+                            sendButton.classList.remove('active');
+                            sendButton.style.color = '#ccc';
+                        }
+                    });
+                    
+                    // Send button click
+                    sendButton.addEventListener('click', function() {
+                        if (this.classList.contains('active')) {
+                            const subject = hey.textContent.trim() || 'No subject';
+                            const message = mailInput.value;
+                            sendMail(subject, message);
+                        }
+                    });
+                    
+                    // Function to reset mail mode
+                    function resetMailMode() {
+                        // Remove mail-specific elements
+                        mailInput.remove();
+                        charCount.remove();
+                        sendButton.remove();
+                        
+                        // Restore location info
+                        locationInfo.innerHTML = originalLocationHTML;
+                        
+                    // Restore hey
+                    hey.contentEditable = 'false';
+                    hey.innerHTML = originalHeyContent;
+                    hey.style.color = '#000';
+                    hey.style.cursor = 'pointer';
+                    hey.style.whiteSpace = '';
+                    hey.style.overflow = '';
+                    hey.style.maxWidth = '';
+                    hey.removeAttribute('data-placeholder');
+                    hey.classList.remove('empty-placeholder');
+                    
+                    // Re-attach click handler
+                    heyText = hey.querySelector('.hey-text');
+                    comma = hey.querySelector('.comma');
+                        
+                        // Show dash
+                        if (heyDash) {
+                            heyDash.style.display = 'block';
+                            heyDash.classList.add('visible');
+                        }
+                        
+                        // Remove mode
+                        document.body.classList.remove('mail-mode');
+                        inChatMode = false;
+                        window.inChatMode = false;
+                        
+                        // Show content with animation
+                        content.forEach(el => {
+                            el.style.display = '';
+                            el.style.opacity = '0';
+                        });
+                        
+                        const yearRight = document.querySelector('.year-right');
+                        const careEurope = document.querySelector('.care-europe');
+                        const navBar = document.querySelector('.nav-bar');
+                        if (yearRight) {
+                            yearRight.style.display = '';
+                            yearRight.style.opacity = '0';
+                        }
+                        if (careEurope) {
+                            careEurope.style.display = '';
+                            careEurope.style.opacity = '0';
+                        }
+                        if (navBar) {
+                            navBar.style.display = '';
+                            navBar.classList.remove('visible');
+                        }
+                        
+                        setTimeout(() => {
+                            content.forEach(el => {
+                                el.style.opacity = '1';
+                                el.style.transition = 'opacity 0.5s ease-in';
+                            });
+                            if (yearRight) {
+                                yearRight.style.opacity = '1';
+                                yearRight.style.transition = 'opacity 0.5s ease-in';
+                            }
+                            if (careEurope) {
+                                careEurope.style.opacity = '1';
+                                careEurope.style.transition = 'opacity 0.5s ease-in';
+                            }
+                            if (navBar) {
+                                navBar.classList.add('visible');
+                            }
+                        }, 50);
+                        
+                        hidePrompt();
+                        
+                        // Re-add click listener to hey
+                        setTimeout(() => {
+                            addHeyClickListener();
+                        }, 100);
+                    }
+                    
+                    updatePlaceholder();
+                    
+                    // Show prompt after slight delay
+                    setTimeout(() => {
+                        showPrompt('Add your email at the end so I can contact you!', true);
+                    }, 100);
+                    
+                    // Focus after a short delay
+                    setTimeout(() => {
+                        hey.focus();
+                    }, 150);
+                }
+                
+                async function sendMail(subject, message) {
+                    // Here you would implement the actual mail sending logic
+                    // For now, just show confirmation and reset
+                    alert('Message sent! Thank you.');
+                    resetPage();
                 }
                 
                 async function handleUserInput(userInput) {
@@ -1603,17 +1904,14 @@
                     
                     const aiResponse = await generateAIResponse(userInput);
                     
-                    const contentContainer = document.querySelector('.content-1').parentNode;
-                    const previousResponse = contentContainer.querySelector('.ai-response');
+                    const previousResponse = document.querySelector('.ai-response');
                     if (previousResponse) previousResponse.remove();
                     
                     const responseElement = document.createElement('div');
                     responseElement.className = 'ai-response';
-                    responseElement.style.maxWidth = '60%';
-                    responseElement.style.marginLeft = '20%';
                     responseElement.style.cursor = 'pointer';
                     
-                    contentContainer.insertBefore(responseElement, copyright);
+                    document.body.appendChild(responseElement);
                     
                     const words = aiResponse.split(' ');
                     let i = 0;
@@ -1671,43 +1969,54 @@
                         backButton = document.createElement('a');
                         backButton.textContent = 'back';
                         backButton.className = 'back-button';
-                        backButton.style.display = 'block';
-                        backButton.style.textAlign = 'right';
-                        backButton.style.width = '60%';
-                        backButton.style.marginLeft = '20%';
                         backButton.style.cursor = 'pointer';
+                        backButton.style.textDecoration = 'underline';
                         
                         backButton.addEventListener('click', function(e) {
                             e.preventDefault();
                             resetPage();
                         });
                         
-                        const contentContainer = document.querySelector('.content-1').parentNode;
-                        contentContainer.insertBefore(backButton, copyright);
+                        document.body.appendChild(backButton);
                     }
                 }
 
                 function resetPage() {
                     inChatMode = false;
                     window.inChatMode = false;
-                    toggleChatMode(false);
+                    document.body.classList.remove('mail-mode');
                     document.body.classList.remove('chat-mode');
                     
                     hidePrompt();
-                    clearPreviousContent();
                     
+                    // Remove mail elements
+                    const mailInput = document.querySelector('.mail-input');
+                    if (mailInput) mailInput.remove();
+                    const charCount = document.querySelector('.char-count');
+                    if (charCount) charCount.remove();
+                    const sendButton = document.querySelector('.send-button');
+                    if (sendButton) sendButton.remove();
+                    
+                    // Restore Hey
                     const heyContainer = document.querySelector('.hey-container');
-                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash">—</div>';
+                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash"></div>';
                     const newHey = heyContainer.querySelector('.hey');
                     hey = newHey;
                     hey.style.cursor = 'pointer';
+                    hey.style.color = '#000';
+                    hey.contentEditable = 'false';
                     heyText = hey.querySelector('.hey-text');
                     comma = hey.querySelector('.comma');
                     
                     const heyDash = document.querySelector('.hey-dash');
                     if (heyDash && window.innerWidth > 1024) {
+                        heyDash.style.display = 'block';
                         heyDash.classList.add('visible');
                     }
+
+                    // Restore location info
+                    const locationInfo = document.querySelector('.location-info');
+                    locationInfo.innerHTML = '—<br>Vienna<br>Wednesday, 25.October.2023';
 
                     content.forEach(el => {
                         el.style.display = '';
@@ -1734,6 +2043,13 @@
                     messages = [];
                     
                     playPopOutAnimation();
+                    
+                    // Re-add click listener
+                    hey.addEventListener('click', function() {
+                        if (!inChatMode) {
+                            handleDesktopClick();
+                        }
+                    });
                 }
 
                 window.resetPage = resetPage;
@@ -1743,44 +2059,28 @@
                     
                     let promptContainer = document.createElement('div');
                     promptContainer.className = 'prompt';
-                    hey.parentNode.insertBefore(promptContainer, hey);
+                    document.body.appendChild(promptContainer);
                     
                     promptContainer.textContent = text;
                     
                     if (fadeIn) {
-                        promptContainer.style.opacity = '0';
-                        promptContainer.style.transition = 'opacity 0.5s ease-in';
                         setTimeout(() => {
-                            promptContainer.style.opacity = '1';
+                            promptContainer.classList.add('visible');
                         }, 10);
                     } else {
-                        promptContainer.style.opacity = '1';
+                        promptContainer.classList.add('visible');
                     }
                 }
 
                 function hidePrompt() {
                     const promptContainer = document.querySelector('.prompt');
                     if (promptContainer) {
-                        promptContainer.style.transition = 'opacity 0.5s ease-out';
-                        promptContainer.style.opacity = '0';
+                        promptContainer.classList.remove('visible');
                         setTimeout(() => {
                             promptContainer.remove();
-                        }, 500);
+                        }, 300);
                     }
                 }
-
-                hey.addEventListener('click', function() {
-                    if (!inChatMode) {
-                        handleDesktopClick();
-                    } else {
-                        const input = hey.querySelector('.chat-input');
-                        if (input) {
-                            input.focus();
-                        } else {
-                            handleDesktopClick();
-                        }
-                    }
-                });
 
                 hey.addEventListener('mouseenter', function() {
                     if (!inChatMode) {
