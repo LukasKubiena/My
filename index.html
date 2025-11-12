@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lukas Kubiena</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@200;300;400&display=swap" rel="stylesheet">
     <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
     <style>
@@ -19,7 +16,11 @@
             src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
         }
 
-        * {
+        :root {
+            --row-gap: 2rem;
+        }
+
+        body, body * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -30,8 +31,15 @@
             font-family: 'NeueHaasDisplay-Light', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
-            font-size: 16px;
-            line-height: 1.6;
+            display: grid;
+            row-gap: var(--row-gap);
+            grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto auto;
+            column-gap: 1.5rem;
+            padding-top: calc(64px + 11vh);
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
         }
 
         .nav-bar {
@@ -79,20 +87,19 @@
             gap: 24px;
         }
 
-        /* Hey Section */
         .hey-container {
-            position: fixed;
-            left: 50%;
-            top: 20vh;
-            transform: translateX(calc(-550px / 2 - 180px)); /* Center with narrower text, closer */
-            z-index: 50;
+            grid-column: 4 / 6;
+            grid-row: 2 / 3;
+            align-self: start;
+            margin-left: 2rem;
+            margin-top: -0.2em;
         }
 
         .hey {
             color: #000000;
             font-family: 'NeueHaasDisplay-Medium', sans-serif;
             font-size: 40px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             display: inline-block;
             transform-origin: center;
@@ -136,7 +143,7 @@
             background-color: black;
             animation: blink 0.7s infinite;
             margin-left: 2px;
-            vertical-align: bottom;
+            vertical-align: baseline;
         }
 
         @keyframes blink {
@@ -145,7 +152,114 @@
             100% { opacity: 0; }
         }
 
-        /* Umlaut hover effect */
+        /* Content */
+        .content {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.45;
+            text-align: justify;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .content.visible {
+            opacity: 1;
+        }
+
+        .content-1 {
+            grid-column: 7 / 9;
+            grid-row: 2 / 4;
+            align-self: start;
+        }
+
+        .content-2 {
+            grid-column: 7 / 9;
+            grid-row: 4 / 6;
+            margin-bottom: 12rem;
+        }
+
+        .profile-image {
+            grid-column: 10 / 12;
+            grid-row: 2 / 4;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .profile-image.visible {
+            opacity: 1;
+        }
+
+        .content-group {
+            grid-column: 10 / 12;
+            grid-row: 4 / 6;
+            display: flex;
+            flex-direction: column;
+            gap: var(--row-gap);
+        }
+
+        .content-3 {
+            text-align: justify;
+            font-size: 15px;
+            line-height: 1.45;
+        }
+
+        .blog-link,
+        .send-mail {
+            margin-bottom: -1rem;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .blog-link.visible,
+        .send-mail.visible {
+            opacity: 1;
+        }
+
+        .blog-link a,
+        .send-mail a {
+            color: #000000;
+            text-decoration: underline;
+            font-size: 15px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .at-link {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+
+        .at-link::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #BFD4EA;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .at-link:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Umlaut animation */
         .animated-umlaut {
             position: relative;
             display: inline-block;
@@ -180,6 +294,7 @@
         .umlaut-dot.appear {
             opacity: 0.75;
             transform: translateY(0);
+            animation: dotBounce 0.4s ease-in-out 0.1s;
         }
 
         @keyframes dotBounce {
@@ -189,182 +304,105 @@
             100% { transform: translateY(0); }
         }
 
-        .umlaut-dot.appear {
-            opacity: 0.75;
-            transform: translateY(0);
-            animation: dotBounce 0.4s ease-in-out 0.1s;
-        }
-
-        /* Text Reveal Section - Flywheel Style */
-        .text-reveal-container {
-            position: relative;
-            height: 600vh; /* Increased for more scroll space */
-            display: flex;
-            justify-content: center;
-            padding: 0 72px;
-        }
-
-        .text-reveal-sticky {
-            position: sticky;
-            top: 20vh;
-            height: 60vh;
-            overflow: visible;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .text-reveal-content {
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 17px;
-            font-weight: 300;
-            line-height: 1.5;
-            letter-spacing: -0.01em;
-            max-width: 550px;
-            text-align: justify;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            transform: translateY(0); /* Start at initial position */
-        }
-
-        .text-reveal-content.visible {
-                opacity: 1;
-            }
-
-        .text-reveal-content .text-paragraph {
-            margin-bottom: 60px;
-        }
-
-        .text-reveal-content .word {
-            display: inline-block;
-            margin-right: 0.25em;
-            position: relative;
-            color: #B8B8B8;
-            font-weight: 300;
-            transition: color 0.3s ease, opacity 0.3s ease;
-        }
-
-        .text-reveal-content .word.revealed {
-            color: #000000;
-        }
-
-        .text-reveal-content .word.at-mention {
-            cursor: default;
-        }
-
-        .text-reveal-content .end-links {
-            display: block;
-            margin-top: 40px;
-            font-size: 17px;
-            line-height: 1.5;
-        }
-
-        .text-reveal-content .end-links a {
-            color: #B8B8B8;
-            text-decoration: underline;
-            display: block;
-            margin-bottom: 8px;
-            transition: color 0.3s ease, opacity 0.3s ease;
-            font-weight: 300;
-        }
-
-        .text-reveal-content .end-links a.revealed {
-            color: #000000;
-        }
-
-        /* Preview Images - Disabled */
-        .preview-image {
-            display: none !important;
-        }
-
         /* Mail Mode Styles */
         .mail-mode .nav-bar,
-        .mail-mode .text-reveal-container {
-                display: none;
-            }
+        .mail-mode .content,
+        .mail-mode .content-group,
+        .mail-mode .profile-image {
+            display: none;
+        }
 
         .mail-mode .hey-container {
+            position: absolute;
             left: 260px;
-                top: 180px;
-            transform: none;
-            }
+            top: 180px;
+            grid-column: auto;
+            grid-row: auto;
+            margin: 0;
+        }
+
+        .mail-mode body {
+            display: block;
+            padding-top: 0;
+        }
 
         .mail-mode .prompt-text {
-                position: absolute;
-                left: 260px;
-                top: 150px;
+            position: absolute;
+            left: 260px;
+            top: 150px;
             font-size: 14px;
-                color: #888;
+            color: #888;
             font-family: 'NeueHaasDisplay-Light', sans-serif;
-            }
+        }
 
-            .mail-mode .hey {
-                font-size: 40px;
-                white-space: nowrap;
-                overflow: hidden;
-                max-width: calc(100vw - 520px - 260px);
-            }
+        .mail-mode .hey {
+            font-size: 40px;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: calc(100vw - 520px - 260px);
+        }
 
-            .mail-mode .hey[contenteditable="true"]:empty:before,
-            .mail-mode .hey.empty-placeholder:before {
-                content: 'Your subject';
-                color: #ccc;
-                pointer-events: none;
-            }
+        .mail-mode .hey[contenteditable="true"]:empty:before,
+        .mail-mode .hey.empty-placeholder:before {
+            content: 'Your subject';
+            color: #ccc;
+            pointer-events: none;
+        }
 
         .mail-input {
-                position: absolute;
-                left: 260px;
-                top: 240px;
-                right: 260px;
-                bottom: 160px;
+            position: absolute;
+            left: 260px;
+            top: 240px;
+            right: 260px;
+            bottom: 160px;
             font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 16px;
-                line-height: 1.6;
-                border: none;
-                outline: none;
-                resize: none;
-                background: transparent;
-                padding: 0;
-                overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.6;
+            border: none;
+            outline: none;
+            resize: none;
+            background: transparent;
+            padding: 0;
+            overflow-y: auto;
             color: #000;
-            }
+        }
 
         .mail-input::placeholder {
-                color: #ccc;
-            }
+            color: #ccc;
+        }
 
         .mail-mode a {
             color: #000 !important;
-            }
+        }
 
         .send-button {
-                position: absolute;
-                right: 260px;
-                bottom: 100px;
-                cursor: pointer;
-                text-decoration: underline;
-                font-size: 16px;
-                color: #ccc;
-                pointer-events: none;
+            position: absolute;
+            right: 260px;
+            bottom: 100px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 16px;
+            color: #ccc;
+            pointer-events: none;
             font-family: 'NeueHaasDisplay-Light', sans-serif;
-            }
+        }
 
         .send-button.active {
-                color: #000;
-                pointer-events: auto;
-            }
+            color: #000;
+            pointer-events: auto;
+        }
 
         .char-count {
-                position: absolute;
-                right: 260px;
-                top: 180px;
-                font-size: 16px;
-                font-style: italic;
+            position: absolute;
+            right: 260px;
+            top: 180px;
+            font-size: 16px;
+            font-style: italic;
             font-family: 'NeueHaasDisplay-Light', sans-serif;
-            }
+        }
 
         .location-info {
-                position: absolute;
+            position: absolute;
             left: 260px;
             bottom: 100px;
             font-size: 16px;
@@ -374,51 +412,47 @@
         }
 
         @media screen and (max-width: 1024px) {
-            .hey-container {
-                position: static;
+            body {
+                display: flex;
+                flex-direction: column;
                 padding: 40px;
                 margin-top: 12vh;
-                transform: none;
-                left: auto;
+                padding-top: calc(64px + 40px);
             }
 
-            .text-reveal-container {
-                height: auto;
-                padding: 40px;
-                justify-content: flex-start;
-            }
-
-            .text-reveal-sticky {
+            .hey-container {
                 position: static;
-                height: auto;
-                transform: none;
+                margin: 0 0 40px 0;
             }
 
-            .text-reveal-content {
-                transform: none !important;
-                opacity: 1;
+            .hey {
+                font-size: 36px;
             }
 
-            .text-reveal-content .text-paragraph {
-                margin-bottom: 40px;
+            .content,
+            .content-group {
+                width: 100%;
+                margin-bottom: 32px;
             }
 
-            .text-reveal-content {
-                max-width: 100%;
+            .content {
+                font-size: 15px;
+                line-height: 1.5;
                 text-align: left;
-                font-size: 14px;
-                line-height: 1.4;
-            }
-
-            .text-reveal-content .word {
-                color: #000 !important;
                 opacity: 1 !important;
             }
 
-            .text-reveal-content .end-links a {
-                color: #000 !important;
+            .profile-image {
+                width: 100%;
+                height: auto;
+                margin: 2rem 0;
+                opacity: 1 !important;
             }
 
+            .blog-link,
+            .send-mail {
+                opacity: 1 !important;
+            }
         }
     </style>
 </head>
@@ -439,43 +473,81 @@
         </div>
     </div>
 
-    <div class="text-reveal-container">
-        <div class="text-reveal-sticky">
-            <div class="text-reveal-content" id="text-content">
+    <div class="content content-1">
+        I'm Lukas. Currently, I work on enabling organisations to make better decisions by scaling the natural efficiency of small-group dialogue to hundreds of people <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. As Brand & Product Marketing Lead, I make sure our tools are grounded in the stories and experiences of the people they're designed for.
     </div>
+
+    <img src="profile.jpeg" alt="Lukas Kubiena" class="profile-image">
+
+    <div class="content content-2">
+        Apart from work, I helped co-found <a href="https://c-fund.org/" class="at-link">@c</a>, a young creative collective based in Vienna. Occasionally, you can also find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
     </div>
+
+    <div class="content-group">
+        <div class="content content-3">
+            Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation, as a medium to express myself in ways I can't get across otherwise. Feel free to reach out if we care about the same things!
         </div>
+        <div class="blog-link">
+            <a href="./blog/index.html">blog</a>
+        </div>
+        <div class="send-mail">
+            <a href="#" id="send-mail-link">send me a mail</a>
+        </div>
+    </div>
 
     <script>
-        const paragraphs = [
-            "I'm Lukas. Currently, I work on enabling organisations to make better decisions by scaling the natural efficiency of small-group dialogue to hundreds of people @Dembrane. As Brand & Product Marketing Lead, I make sure our tools are grounded in the stories and experiences of the people they're designed for.",
-            "Apart from work, I helped co-found @c, a young creative collective based in Vienna. Occasionally, you can also find me studying the Brain @AarhusUniversity in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.",
-            "Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation, as a medium to express myself in ways I can't get across otherwise. Feel free to reach out if we care about the same things!"
-        ];
-
-        let inChatMode = false;
+        let inMailMode = false;
         let hey, heyText, comma;
-        let animationComplete = false;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             hey = document.querySelector('.hey');
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
+            const content = document.querySelectorAll('.content, .send-mail, .blog-link, .profile-image');
+            const navBar = document.querySelector('.nav-bar');
             
-            // Type "Hey" on load
-            setTimeout(() => {
-                typeHey();
-            }, 1000);
-
-            // Setup text reveal (but don't show yet)
-            setupTextReveal();
+            // Check if user has seen animation before
+            const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+            
+            if (hasSeenAnimation) {
+                // Skip animation, show everything immediately
+                heyText.textContent = 'Hey';
+                comma.style.opacity = '1';
+                content.forEach(el => {
+                    el.classList.add('visible');
+                });
+                navBar.classList.add('visible');
+            } else {
+                // Type "Hey" on load
+                setTimeout(() => {
+                    typeHey();
+                }, 1000);
+                
+                // Show content after Hey animation completes
+                setTimeout(() => {
+                    content.forEach(el => {
+                        el.classList.add('visible');
+                    });
+                    navBar.classList.add('visible');
+                    sessionStorage.setItem('hasSeenAnimation', 'true');
+                }, 2200);
+            }
 
             // Add hover animation
             hey.addEventListener('mouseenter', playAnimation);
             
             // Add click for mail mode
             hey.addEventListener('click', handleHeyClick);
+            
+            // Add click handler for send mail link
+            const sendMailLink = document.getElementById('send-mail-link');
+            if (sendMailLink) {
+                sendMailLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleHeyClick();
+                });
+            }
         });
 
         function typeHey() {
@@ -483,166 +555,41 @@
             let index = 0;
             heyText.textContent = '';
             
-                const cursor = document.createElement('span');
-                cursor.className = 'typing-cursor';
-                hey.appendChild(cursor);
-                
+            const cursor = document.createElement('span');
+            cursor.className = 'typing-cursor';
+            hey.appendChild(cursor);
+            
             function typeChar() {
                 if (index < text.length) {
                     heyText.textContent += text[index];
                     index++;
                     setTimeout(typeChar, 150);
-                        } else {
+                } else {
                     // Show comma
                     comma.style.opacity = '1';
-                        setTimeout(() => {
+                    setTimeout(() => {
                         cursor.remove();
                         playAnimation();
-                        // Wait a bit then show text content and navbar
-                        setTimeout(() => {
-                            document.querySelector('.text-reveal-content').classList.add('visible');
-                            document.querySelector('.nav-bar').classList.add('visible');
-                            animationComplete = true;
-                        }, 800);
-                        }, 100);
-                    }
+                    }, 100);
                 }
+            }
 
             typeChar();
         }
 
         function playAnimation() {
-            if (!inChatMode) {
+            if (!inMailMode) {
                 hey.classList.remove('animate');
                 void hey.offsetWidth;
                 hey.classList.add('animate');
             }
         }
 
-        // Text Reveal Setup
-        function setupTextReveal() {
-            const textContent = document.getElementById('text-content');
-            let globalWordIndex = 0;
-            const allWordElements = [];
-            
-            // Create paragraphs with spacing
-            paragraphs.forEach((paragraphText, paraIndex) => {
-                const paraDiv = document.createElement('div');
-                paraDiv.className = 'text-paragraph';
-                
-                const words = paragraphText.split(' ');
-                words.forEach((word, wordIndex) => {
-                const span = document.createElement('span');
-                span.className = 'word';
-                span.textContent = word;
-                    span.dataset.index = globalWordIndex;
-                    span.dataset.paragraph = paraIndex;
-                    
-                    paraDiv.appendChild(span);
-                    allWordElements.push(span);
-                    
-                    // Add space after each word except the last
-                    if (wordIndex < words.length - 1) {
-                        paraDiv.appendChild(document.createTextNode(' '));
-                    }
-                    
-                    globalWordIndex++;
-                });
-                
-                textContent.appendChild(paraDiv);
-            });
-            
-            // Add end links
-            const endLinks = document.createElement('div');
-            endLinks.className = 'end-links';
-            endLinks.innerHTML = `
-                <a href="./blog/index.html" class="end-link">blog</a>
-                <a href="#" id="send-mail-link" class="end-link">send me a mail</a>
-            `;
-            textContent.appendChild(endLinks);
-            
-            // Add click handler for send mail link
-            document.getElementById('send-mail-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                handleHeyClick();
-            });
-
-            // Scroll-based reveal with flywheel
-            const container = document.querySelector('.text-reveal-container');
-            const wordElements = allWordElements;
-            const totalWords = wordElements.length;
-
-            let lastRevealedCount = -1;
-            const pixelsPerWord = 2.5;
-            
-            function updateFlywheelScroll() {
-                if (!animationComplete) return;
-                
-                const containerRect = container.getBoundingClientRect();
-                const scrollProgress = Math.max(0, Math.min(1, -containerRect.top / (container.offsetHeight - window.innerHeight)));
-                
-                // Add +2 to total to account for end links
-                const extendedTotal = totalWords + 2;
-                const revealedWordCount = Math.floor(scrollProgress * extendedTotal);
-                
-                // Only update if count changed
-                if (revealedWordCount === lastRevealedCount) return;
-                lastRevealedCount = revealedWordCount;
-                
-                // Calculate vertical offset - slower for smoother effect
-                const verticalOffset = -revealedWordCount * pixelsPerWord;
-                textContent.style.transform = `translateY(${verticalOffset}px)`;
-                
-                // Update all words with smoother fade
-                wordElements.forEach((word, index) => {
-                    const wordDistance = index - revealedWordCount;
-                    
-                    if (index < revealedWordCount) {
-                        word.classList.add('revealed');
-                        
-                        // Smoother, longer fade range
-                        if (wordDistance < -100) {
-                            word.style.opacity = '0';
-                        } else if (wordDistance < -70) {
-                            const fade = (wordDistance + 100) / 30;
-                            word.style.opacity = String(Math.max(0, Math.min(1, fade)));
-                        } else {
-                            word.style.opacity = '1';
-                        }
-                    } else {
-                        word.classList.remove('revealed');
-                        word.style.opacity = '1';
-                    }
-                });
-                
-                // Handle end links - reveal when close to end
-                const endLinksElements = document.querySelectorAll('.end-link');
-                const linksRevealStart = totalWords - 10; // Start revealing 10 words before end
-                
-                if (revealedWordCount >= linksRevealStart) {
-                    endLinksElements.forEach((link) => {
-                        link.classList.add('revealed');
-                        link.style.opacity = '1';
-                    });
-                    } else {
-                    endLinksElements.forEach((link) => {
-                        link.classList.remove('revealed');
-                        link.style.opacity = '0.4';
-                    });
-                }
-            }
-
-            // Simple scroll handler
-            window.addEventListener('scroll', updateFlywheelScroll, { passive: true });
-            
-            updateFlywheelScroll();
-        }
-
         // Mail Mode
         function handleHeyClick() {
-            if (inChatMode) return;
+            if (inMailMode) return;
             
-            inChatMode = true;
+            inMailMode = true;
             document.body.classList.add('mail-mode');
             
             // Store original content
@@ -663,97 +610,97 @@
             hey.classList.add('empty-placeholder');
             
             // Create mail input
-                    const mailInput = document.createElement('textarea');
-                    mailInput.className = 'mail-input';
-                    mailInput.placeholder = 'Text...';
-                    document.body.appendChild(mailInput);
-                    
-                    // Create character count
-                    const charCount = document.createElement('div');
-                    charCount.className = 'char-count';
-                    charCount.textContent = '0';
-                    document.body.appendChild(charCount);
-                    
+            const mailInput = document.createElement('textarea');
+            mailInput.className = 'mail-input';
+            mailInput.placeholder = 'Text...';
+            document.body.appendChild(mailInput);
+            
+            // Create character count
+            const charCount = document.createElement('div');
+            charCount.className = 'char-count';
+            charCount.textContent = '0';
+            document.body.appendChild(charCount);
+            
             // Create send button
-                    const sendButton = document.createElement('a');
-                    sendButton.className = 'send-button';
-                    sendButton.textContent = 'send';
-                    document.body.appendChild(sendButton);
-                    
+            const sendButton = document.createElement('a');
+            sendButton.className = 'send-button';
+            sendButton.textContent = 'send';
+            document.body.appendChild(sendButton);
+            
             // Create back button
             const locationInfo = document.createElement('div');
             locationInfo.className = 'location-info';
-                    locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
+            locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
             document.body.appendChild(locationInfo);
             
-                    locationInfo.querySelector('a').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        resetMailMode();
-                    });
-                    
+            locationInfo.querySelector('a').addEventListener('click', function(e) {
+                e.preventDefault();
+                resetMailMode();
+            });
+            
             // Email validation
-                    function validateEmail(text) {
-                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-                        return emailRegex.test(text);
-                    }
-                    
-                    // Handle subject input
-                    hey.addEventListener('focus', function() {
-                            hey.style.color = '#000';
-                    });
-                    
+            function validateEmail(text) {
+                const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                return emailRegex.test(text);
+            }
+            
+            // Handle subject input
+            hey.addEventListener('focus', function() {
+                hey.style.color = '#000';
+            });
+            
             hey.addEventListener('input', function() {
-                        hey.style.color = '#000';
+                hey.style.color = '#000';
                 hey.classList.remove('empty-placeholder');
-                        
+                
                 // Prevent overflow
-                        if (hey.scrollWidth > hey.clientWidth) {
-                            const text = hey.textContent;
-                            hey.textContent = text.slice(0, -1);
-                            
-                            const range = document.createRange();
-                            const sel = window.getSelection();
-                            range.selectNodeContents(hey);
-                            range.collapse(false);
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        }
-                    });
+                if (hey.scrollWidth > hey.clientWidth) {
+                    const text = hey.textContent;
+                    hey.textContent = text.slice(0, -1);
                     
-                    hey.addEventListener('blur', function() {
-                        if (hey.textContent.trim() === '') {
-                            hey.style.color = '#ccc';
+                    const range = document.createRange();
+                    const sel = window.getSelection();
+                    range.selectNodeContents(hey);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            });
+            
+            hey.addEventListener('blur', function() {
+                if (hey.textContent.trim() === '') {
+                    hey.style.color = '#ccc';
                     hey.classList.add('empty-placeholder');
-                        }
-                    });
-                    
-                    hey.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            hey.style.color = '#000';
-                            mailInput.focus();
-                        }
-                    });
-                    
-                    mailInput.addEventListener('input', function() {
-                        const text = this.value;
-                        charCount.textContent = text.length;
-                        
-                        if (validateEmail(text)) {
-                            sendButton.classList.add('active');
-                        } else {
-                            sendButton.classList.remove('active');
-                        }
-                    });
-                    
-                    sendButton.addEventListener('click', function() {
-                        if (this.classList.contains('active')) {
-                            const subject = hey.textContent.trim() || 'No subject';
-                            const message = mailInput.value;
-                            sendMail(subject, message);
-                        }
-                    });
-                    
+                }
+            });
+            
+            hey.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    hey.style.color = '#000';
+                    mailInput.focus();
+                }
+            });
+            
+            mailInput.addEventListener('input', function() {
+                const text = this.value;
+                charCount.textContent = text.length;
+                
+                if (validateEmail(text)) {
+                    sendButton.classList.add('active');
+                } else {
+                    sendButton.classList.remove('active');
+                }
+            });
+            
+            sendButton.addEventListener('click', function() {
+                if (this.classList.contains('active')) {
+                    const subject = hey.textContent.trim() || 'No subject';
+                    const message = mailInput.value;
+                    sendMail(subject, message);
+                }
+            });
+            
             function resetMailMode() {
                 mailInput.remove();
                 charCount.remove();
@@ -771,22 +718,22 @@
                 comma = hey.querySelector('.comma');
                 
                 document.body.classList.remove('mail-mode');
-                inChatMode = false;
+                inMailMode = false;
             }
-                        
-                        setTimeout(() => {
+            
+            setTimeout(() => {
                 hey.focus();
-                        }, 100);
-                }
-                
-                async function sendMail(subject, message) {
-                    alert('Message sent! Thank you.');
+            }, 100);
+        }
+        
+        async function sendMail(subject, message) {
+            alert('Message sent! Thank you.');
             location.reload();
         }
 
         // Escape key to exit mail mode
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && inChatMode) {
+            if (e.key === 'Escape' && inMailMode) {
                 location.reload();
             }
         });
