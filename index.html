@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lukas Kubiena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@200;300;400&display=swap" rel="stylesheet">
+    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
     <style>
         @font-face {
             font-family: 'NeueHaasDisplay-Light';
@@ -11,21 +16,15 @@
         }
         @font-face {
             font-family: 'NeueHaasDisplay-Medium';
-            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+            src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
         }
-        @font-face {
-            font-family: 'NeueHaasDisplay-Thin';
-            src: url('NeueHaasDisplay-XThin.woff2') format('woff2');
-        }
-        :root {
-            --box-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.05),
-                0px 0px 1px 0px rgba(0, 0, 0, 0.25);
-        }
-        body, body * {
+
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
             background: #ffffff;
             font-family: 'NeueHaasDisplay-Light', sans-serif;
@@ -45,6 +44,12 @@
             backdrop-filter: blur(8px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav-bar.visible {
+            opacity: 1;
         }
 
         .nav-content {
@@ -74,17 +79,30 @@
             gap: 24px;
         }
 
+        /* Hey Section */
+        .hey-container {
+            position: fixed;
+            left: 50%;
+            top: 20vh;
+            transform: translateX(calc(-550px / 2 - 180px)); /* Center with narrower text, closer */
+            z-index: 50;
+        }
+
         .hey {
             color: #000000;
             font-family: 'NeueHaasDisplay-Medium', sans-serif;
             font-size: 40px;
-            font-weight: 600;
-            grid-column: 4 / 6;
-            margin-left: 2rem;
-            grid-row: 2 / 3;
-            align-self: start;
-            margin-top: -0.2em;
+            font-weight: 500;
             cursor: pointer;
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        .hey-text {
+            display: inline-block;
+        }
+
+        .comma {
             display: inline-block;
             transform-origin: center;
         }
@@ -103,29 +121,6 @@
             100% { transform: rotate(0deg); }
         }
 
-        .blog-link {
-            margin-bottom: -1rem;
-        }
-
-        .blog-link a {
-            color: #000000;
-            text-decoration: underline;
-        }
-
-        .comma-container {
-            display: inline-block;
-            padding-left: 2px;
-        }
-
-        .hey-text {
-            display: inline-block;
-        }
-
-        .comma {
-            display: inline-block;
-            transform-origin: center;
-        }
-
         .hey.animate {
             animation: popOut 0.3s ease-out;
         }
@@ -134,253 +129,172 @@
             animation: bellJingle 0.8s ease-in-out 0.3s;
         }
 
-        .content-1 {
-            grid-column: 7 / 9;
-            grid-row: 2 / 4;
-            align-self: start;
-            text-align: justify;
+        .typing-cursor {
+            display: inline-block;
+            width: 1px;
+            height: 1em;
+            background-color: black;
+            animation: blink 0.7s infinite;
+            margin-left: 2px;
+            vertical-align: bottom;
         }
 
-        .content-2 {
-            grid-column: 7 / 9;
-            grid-row: 4 / 6;
-            text-align: justify;
-            margin-bottom: 12rem;
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
 
-        .content-group {
-            grid-column: 10 / 12;
-            grid-row: 2 / 6;
-            display: flex;
-            flex-direction: column;
-            gap: var(--row-gap);
-        }
-
-        .content-3 {
-            color: #000000;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            text-align: justify;
-        }
-
-        .send-mail {
-            color: #000000;
-            font-size: 16px;
-            line-height: 1.6;
-            text-decoration: underline;
-        }
-
-        .blog-link a,
-        .send-mail a {
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .send-mail a {
-            color: #000000;
-            text-decoration: underline;
-        }
-
-        .at-link {
+        /* Umlaut hover effect */
+        .animated-umlaut {
             position: relative;
             display: inline-block;
-            z-index: 1;
         }
 
-        @media screen and (min-width: 1025px) {
-            body {
-                position: relative;
-                display: block;
-                max-width: none;
-                margin: 0;
-                padding: 0;
-                min-height: 100vh;
-                height: 100vh;
-            }
+        .umlaut-dots {
+            position: absolute;
+            top: -2.5px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 1px;
+        }
 
-            .nav-bar {
-                opacity: 0;
-                transition: opacity 1s ease-in;
-            }
+        .umlaut-dot {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(3px);
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+            font-size: 0.8em;
+            line-height: 1;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            height: 2px;
+        }
 
-            .nav-bar.visible {
+        .nav-link:hover .umlaut-dot {
+            opacity: 1 !important;
+            color: inherit !important;
+        }
+
+        .umlaut-dot.appear {
+            opacity: 0.75;
+            transform: translateY(0);
+        }
+
+        @keyframes dotBounce {
+            0% { transform: translateY(0); }
+            40% { transform: translateY(-1px); }
+            60% { transform: translateY(0.5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .umlaut-dot.appear {
+            opacity: 0.75;
+            transform: translateY(0);
+            animation: dotBounce 0.4s ease-in-out 0.1s;
+        }
+
+        /* Text Reveal Section - Flywheel Style */
+        .text-reveal-container {
+            position: relative;
+            height: 600vh; /* Increased for more scroll space */
+            display: flex;
+            justify-content: center;
+            padding: 0 72px;
+        }
+
+        .text-reveal-sticky {
+            position: sticky;
+            top: 20vh;
+            height: 60vh;
+            overflow: visible;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .text-reveal-content {
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 17px;
+            font-weight: 300;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
+            max-width: 550px;
+            text-align: justify;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            transform: translateY(0); /* Start at initial position */
+        }
+
+        .text-reveal-content.visible {
                 opacity: 1;
             }
 
-            .profile-image {
+        .text-reveal-content .text-paragraph {
+            margin-bottom: 60px;
+        }
+
+        .text-reveal-content .word {
+            display: inline-block;
+            margin-right: 0.25em;
+            position: relative;
+            color: #B8B8B8;
+            font-weight: 300;
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+
+        .text-reveal-content .word.revealed {
+            color: #000000;
+        }
+
+        .text-reveal-content .word.at-mention {
+            cursor: default;
+        }
+
+        .text-reveal-content .end-links {
+            display: block;
+            margin-top: 40px;
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        .text-reveal-content .end-links a {
+            color: #B8B8B8;
+            text-decoration: underline;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.3s ease, opacity 0.3s ease;
+            font-weight: 300;
+        }
+
+        .text-reveal-content .end-links a.revealed {
+            color: #000000;
+        }
+
+        /* Preview Images - Disabled */
+        .preview-image {
+            display: none !important;
+        }
+
+        /* Mail Mode Styles */
+        .mail-mode .nav-bar,
+        .mail-mode .text-reveal-container {
                 display: none;
             }
 
-            .profile-image.visible {
-                opacity: 1;
-            }
-
-            .hey-container {
-                position: absolute;
-                left: 260px;
+        .mail-mode .hey-container {
+            left: 260px;
                 top: 180px;
+            transform: none;
             }
 
-
-            .hey {
-                font-size: 40px;
-                margin-left: 0;
-                word-wrap: break-word;
-                max-width: 100%;
-            }
-
-            .hey-dash {
-                display: block;
-                margin-top: 0.5rem;
-                opacity: 0;
-                transition: opacity 0.3s ease-in;
-                height: 2px;
-                width: 20px;
-                background: #000;
-            }
-
-            .hey-dash.visible {
-                opacity: 1;
-            }
-
-            .content-1 {
+        .mail-mode .prompt-text {
                 position: absolute;
                 left: 260px;
-                top: 320px;
-                width: 280px;
-                text-align: justify;
-                font-size: 16px;
-                line-height: 1.6;
-            }
-
-            .content-2 {
-                position: absolute;
-                left: 580px;
-                top: 320px;
-                width: 280px;
-                text-align: justify;
-                font-size: 16px;
-                line-height: 1.6;
-            }
-
-            .content-group {
-                position: absolute;
-                left: 900px;
-                top: 320px;
-                width: 280px;
-                display: block;
-                font-size: 16px;
-                line-height: 1.6;
-            }
-
-            .content-3 {
-                text-align: justify;
-                margin-bottom: 2rem;
-            }
-
-            .content-group .blog-link {
-                margin-bottom: 0.5rem;
-            }
-
-            .content-group .send-mail {
-                margin-bottom: 0;
-            }
-
-            .content-group .blog-link,
-            .content-group .send-mail {
-                text-align: left;
-            }
-
-            .year-left {
-                display: none;
-            }
-
-            .year-right {
-                position: absolute;
-                right: 260px;
-                top: 180px;
-                font-size: 16px;
-                color: #000;
-                font-style: italic;
-            }
-
-            .location-info {
-                position: absolute;
-                left: 260px;
-                bottom: 100px;
-                font-size: 16px;
-                line-height: 1.6;
-                color: #000;
-            }
-
-
-            .care-europe {
-                position: absolute;
-                right: 260px;
-                bottom: 100px;
-                text-align: right;
-                font-size: 16px;
-                line-height: 1.6;
-                color: #000;
-            }
-        }
-
-        @media screen and (min-width: 1025px) {
-            body {
-                overflow: hidden;
-            }
-
-            body.initial-load {
-                padding-top: 100px;
-            }
-
-            .prompt {
-                position: absolute;
                 top: 150px;
-                left: 260px;
+            font-size: 14px;
                 color: #888;
-                font-size: 16px;
-                white-space: nowrap;
-                opacity: 0;
-                transition: opacity 0.3s ease-in;
-            }
-
-            .prompt.visible {
-                opacity: 1;
-            }
-
-            .copyright {
-                display: none;
-            }
-
-            body.chat-mode .hey-container {
-                left: 260px;
-                top: 180px;
-            }
-
-            .chat-mode .hey {
-                max-width: 600px;
-            }
-
-            .chat-mode .input-container,
-            .chat-mode .chat-input {
-                width: 100%;
-                max-width: none;
-            }
-
-            .mail-mode .nav-bar,
-            .mail-mode .year-right,
-            .mail-mode .care-europe,
-            .mail-mode .content-1,
-            .mail-mode .content-2,
-            .mail-mode .content-group {
-                display: none;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
             }
 
             .mail-mode .hey {
@@ -397,13 +311,13 @@
                 pointer-events: none;
             }
 
-            .mail-mode .mail-input {
+        .mail-input {
                 position: absolute;
                 left: 260px;
                 top: 240px;
                 right: 260px;
                 bottom: 160px;
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
                 font-size: 16px;
                 line-height: 1.6;
                 border: none;
@@ -412,19 +326,18 @@
                 background: transparent;
                 padding: 0;
                 overflow-y: auto;
-                height: auto;
+            color: #000;
             }
 
-            .mail-mode .mail-input::placeholder {
+        .mail-input::placeholder {
                 color: #ccc;
             }
 
-            .mail-mode .mail-input:focus::placeholder {
-                color: transparent;
+        .mail-mode a {
+            color: #000 !important;
             }
 
-
-            .mail-mode .send-button {
+        .send-button {
                 position: absolute;
                 right: 260px;
                 bottom: 100px;
@@ -433,331 +346,83 @@
                 font-size: 16px;
                 color: #ccc;
                 pointer-events: none;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
             }
 
-            .mail-mode .send-button.active {
+        .send-button.active {
                 color: #000;
                 pointer-events: auto;
             }
 
-            .mail-mode .char-count {
+        .char-count {
                 position: absolute;
                 right: 260px;
                 top: 180px;
                 font-size: 16px;
                 font-style: italic;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
             }
 
-
-
-            .typing-cursor {
-                display: inline-block;
-                width: 1px;
-                height: 1em;
-                background-color: black;
-                animation: blink 0.7s infinite;
-                margin-left: 2px;
-                vertical-align: bottom;
-            }
-
-
-            @keyframes blink {
-                0% { opacity: 0; }
-                50% { opacity: 1; }
-                100% { opacity: 0; }
-            }
-
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-
-            .animated-umlaut {
-                position: relative;
-                display: inline-block;
-            }
-
-            .umlaut-dots {
+        .location-info {
                 position: absolute;
-                top: -2.5px;
-                left: 0;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                gap: 1px;
-            }
-
-            .umlaut-dot {
-                display: inline-block;
-                opacity: 0;
-                transform: translateY(3px);
-                transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
-                font-size: 0.8em;
-                line-height: 1;
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                height: 2px;
-            }
-
-            .nav-link:hover .umlaut-dot {
-                opacity: 1 !important;
-                color: inherit !important;
-            }
-
-            .umlaut-dot.appear {
-                opacity: 0.75;
-                transform: translateY(0);
-            }
-
-            @keyframes dotBounce {
-                0% { transform: translateY(0); }
-                40% { transform: translateY(-1px); }
-                60% { transform: translateY(0.5px); }
-                100% { transform: translateY(0); }
-            }
-
-            .umlaut-dot.appear {
-                opacity: 0.75;
-                transform: translateY(0);
-                animation: dotBounce 0.4s ease-in-out 0.1s;
-            }
-
-            @media screen and (min-width: 1025px) {
-                .at-link::before {
-                    content: "";
-                    position: absolute;
-                    z-index: -1;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: #BFD4EA;
-                    transform: scaleX(0);
-                    transform-origin: bottom right;
-                    transition: transform 0.3s ease;
-                }
-
-                .at-link:hover::before {
-                    transform: scaleX(1);
-                    transform-origin: bottom left;
-                }
-            }
-
+            left: 260px;
+            bottom: 100px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
         }
 
         @media screen and (max-width: 1024px) {
-            body {
-                display: flex;
-                flex-direction: column;
+            .hey-container {
+                position: static;
                 padding: 40px;
                 margin-top: 12vh;
-                box-sizing: border-box;
+                transform: none;
+                left: auto;
+            }
+
+            .text-reveal-container {
                 height: auto;
+                padding: 40px;
+                justify-content: flex-start;
             }
 
-            .nav-bar {
-                display: flex;
-            }
-
-            .year-right,
-            .location-info,
-            .care-europe,
-            .hey-dash {
-                display: none;
-            }
-
-            .hey-container,
-            .content-1,
-            .content-2,
-            .content-group {
+            .text-reveal-sticky {
                 position: static;
-                width: 100%;
-            }
-
-            .right-links {
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 8px;
-                position: relative;
-            }
-
-            .follow-mode {
-                padding: 20px;
-                margin-top: 8vh;
-            }
-
-            .follow-container {
-                max-width: 100%;
-                padding: 0 20px;
-            }
-
-            .follow-hey {
-                font-size: 36px;
-                margin-bottom: 24px;
-            }
-
-            .follow-text {
-                font-size: 18px;
-                line-height: 1.5;
-                margin-bottom: 32px;
-            }
-
-            .follow-email-input {
-                font-size: 28px;
-                margin-bottom: 32px;
-            }
-
-            .follow-submit-button {
-                width: 100%;
-                padding: 16px 24px;
-                margin-bottom: 32px;
-            }
-
-            body.chat-mode {
-                row-gap: 0;
-            }
-
-            .ai-response {
-                font-family: 'NeueHaasDisplay-Light', sans-serif;
-                font-size: 18px;
-                line-height: 1.5;
-                max-width: 100%;
-                margin-left: 0;
-                text-align: left;
-                cursor: pointer;
-            }
-
-            .initial-load .comma {
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-
-            .hey, .content, .send-mail {
-                width: 100%;
-                margin-left: 0;
-                padding-left: 0;
-            }
-
-            .hey-container {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                position: relative;
-            }
-
-            .chat-input::placeholder {
-                font: inherit;
-                color: #CCCCCC;
-            }
-
-            body {
-                margin-top: 8vh;
-            }
-
-            .nav-bar {
-                height: 56px;
-            }
-
-            .typing-cursor {
-                display: inline-block;
-                width: 1px;
-                height: 0.8em;
-                background-color: #000;
-                animation: blink 0.7s infinite;
-                margin-left: 2px;
-                vertical-align: baseline;
-            }
-
-            .profile-image {
-                width: 100%;
                 height: auto;
-                margin: 2rem 0;
-                grid-column: 1 / -1;
-                grid-row: auto;
-                opacity: 0;
-                transition: opacity 1s ease-in;
-                display: block;
+                transform: none;
+            }
+
+            .text-reveal-content {
+                transform: none !important;
+                opacity: 1;
+            }
+
+            .text-reveal-content .text-paragraph {
+                margin-bottom: 40px;
+            }
+
+            .text-reveal-content {
                 max-width: 100%;
-            }
-
-            .profile-image.visible {
-                opacity: 1;
-            }
-
-            body.chat-mode .profile-image {
-                display: none;
-            }
-
-            body.chat-mode {
-                margin-top: 6vh;
-            }
-
-            .initial-load .profile-image {
-                opacity: 0;
-            }
-
-            .back-button {
-                position: fixed;
-                bottom: 3vh;
-                right: 3vh;
-            }
-
-            .prompt {
-                position: absolute;
-                top: -44px;
-                left: 0;
-                color: #888;
-                font-size: 16px;
-                opacity: 0;
-                transition: opacity 0.5s ease-in-out;
-            }
-
-            .hey {
-                font-size: 36px;
                 text-align: left;
-                opacity: 1;
-                transition: transform 0.5s ease-out;
+                font-size: 14px;
+                line-height: 1.4;
             }
 
-            .user-input,
-            .ai-output {
-                margin-top: 4px;
-                margin-bottom: 4px;
+            .text-reveal-content .word {
+                color: #000 !important;
+                opacity: 1 !important;
             }
 
-            .content, .send-mail, .blog-link {
-                font-size: 18px;
-                line-height: 1.5;
-                margin-bottom: 20px;
-                text-align: left;
-                opacity: 0;
-                transition: opacity 1s ease-in;
+            .text-reveal-content .end-links a {
+                color: #000 !important;
             }
 
-            .content.visible, .send-mail.visible, .blog-link.visible {
-                opacity: 1;
-            }
-
-            .chat-input::placeholder {
-                color: #CCCCCC;
-                font-family: 'NeueHaasDisplay-Medium', sans-serif;
-                font-size: 36px;
-                font-weight: 600;
-                opacity: 1;
-            }
-
-            @keyframes blink {
-                0% { opacity: 0; }
-                50% { opacity: 1; }
-                100% { opacity: 0; }
-            }
-
-            header, .side-group, ._24, .personal-website, .project-row, .project-image-container, .project-row-right, .project-image-container-2, .project-info, .project-paragraph-2, .copyright {
-                display: none;
-            }
         }
     </style>
 </head>
-<body class="initial-load">
+<body>
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="#" class="nav-link">Lukas Kubiena</a>
@@ -767,241 +432,371 @@
             </div>
         </div>
     </nav>
-    <div class="copyright"></div>
-    <div class="year-right">2025</div>
+
     <div class="hey-container">
         <div class="hey">
-            <span class="hey-text"></span><span class="comma">,</span>
-        </div>
-        <div class="hey-dash"></div>
-    </div>
-    <div class="content content-1">
-        I'm Lukas. Currently, I work on enabling organisations to make better decisions by scaling the natural efficiency of small-group dialogue to hundreds of people <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>. As Brand & Product Marketing Lead, I make sure our tools are grounded in the stories and experiences of the people they're designed for.
-    </div>
-    <img src="profile.jpeg" alt="Lukas Kubiena" class="profile-image">
-    <div class="content content-2">
-        Apart from work, I helped co-found <a href="https://c-fund.org/" class="at-link">@c</a>, a young creative collective based in Vienna. Occasionally, you can also find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
-    </div>
-    <div class="content-group">
-        <div class="content content-3">
-            Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation, as a medium to express myself in ways I can't get across otherwise. Feel free to reach out if we care about the same things!
-        </div>
-        <div class="blog-link">
-            <a href="./blog/index.html">blog</a>
-        </div>
-        <div class="send-mail">
-            <a href="mailto:lukasmariakubiena@gmail.com">send me a mail</a>
+            <span class="hey-text"></span><span class="comma" style="opacity: 0;">,</span>
         </div>
     </div>
-    <div class="location-info">
-        —<br>Vienna<br>Wednesday, 25.October.2023
+
+    <div class="text-reveal-container">
+        <div class="text-reveal-sticky">
+            <div class="text-reveal-content" id="text-content">
     </div>
-    <div class="care-europe">
-        with care from europe
     </div>
+        </div>
+
     <script>
-        // Dynamic greeting system for system messages
-        function getSmartGreeting() {
-            const now = new Date();
-            const hour = now.getHours();
-            const day = now.getDay();
-            const isWeekend = day === 0 || day === 6;
+        const paragraphs = [
+            "I'm Lukas. Currently, I work on enabling organisations to make better decisions by scaling the natural efficiency of small-group dialogue to hundreds of people @Dembrane. As Brand & Product Marketing Lead, I make sure our tools are grounded in the stories and experiences of the people they're designed for.",
+            "Apart from work, I helped co-found @c, a young creative collective based in Vienna. Occasionally, you can also find me studying the Brain @AarhusUniversity in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.",
+            "Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation, as a medium to express myself in ways I can't get across otherwise. Feel free to reach out if we care about the same things!"
+        ];
+
+        let inChatMode = false;
+        let hey, heyText, comma;
+        let animationComplete = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            hey = document.querySelector('.hey');
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
             
-            if (!window.visitData) {
-                window.visitData = {
-                    hasVisited: false,
-                    lastVisit: null,
-                    visitCount: 0
-                };
-            }
+            // Type "Hey" on load
+            setTimeout(() => {
+                typeHey();
+            }, 1000);
+
+            // Setup text reveal (but don't show yet)
+            setupTextReveal();
+
+            // Add hover animation
+            hey.addEventListener('mouseenter', playAnimation);
             
-            const today = now.toDateString();
+            // Add click for mail mode
+            hey.addEventListener('click', handleHeyClick);
+        });
+
+        function typeHey() {
+            const text = 'Hey';
+            let index = 0;
+            heyText.textContent = '';
             
-            window.visitData.visitCount++;
-            const isReturnVisitor = window.visitData.hasVisited && window.visitData.lastVisit !== today;
-            const isSameDayReturn = window.visitData.hasVisited && window.visitData.lastVisit === today;
-            window.visitData.hasVisited = true;
-            window.visitData.lastVisit = today;
-            
-            const month = now.getMonth();
-            const date = now.getDate();
-            
-            if (month === 0 && date === 1) {
-                return "Happy New Year! Want to ask something about me?";
-            }
-            
-            if (month === 11 && date >= 20 && date <= 26) {
-                return "Happy holidays! Want to ask something about me?";
-            }
-            
-            if (hour >= 22 || hour < 6) {
-                const lateMessages = [
-                    "Up late? Want to ask something about me?",
-                    "Night owl? Click to ask about me",
-                    "Late night browsing? Ask me something",
-                    "Burning the midnight oil? Want to chat about me?"
-                ];
-                return lateMessages[Math.floor(Math.random() * lateMessages.length)];
-            }
-            
-            if (hour >= 6 && hour < 10) {
-                const morningMessages = [
-                    "Good morning! Want to ask something about me?",
-                    "Early bird! Click to learn about me",
-                    "Morning! Curious about something?",
-                    "Rise and shine! Want to ask about me?"
-                ];
-                return morningMessages[Math.floor(Math.random() * morningMessages.length)];
-            }
-            
-            if (isReturnVisitor) {
-                const welcomeBackMessages = [
-                    "Welcome back! Want to ask something new about me?",
-                    "Good to see you again! Curious about anything?",
-                    "You're back! Want to learn more about me?"
-                ];
-                return welcomeBackMessages[Math.floor(Math.random() * welcomeBackMessages.length)];
-            }
-            
-            if (isSameDayReturn && window.visitData.visitCount > 2) {
-                const sameDayMessages = [
-                    "Still here? Want to ask something else about me?",
-                    "Hello again! Got more questions about me?",
-                    "Back for more? Click to ask about me"
-                ];
-                return sameDayMessages[Math.floor(Math.random() * sameDayMessages.length)];
-            }
-            
-            if (isWeekend) {
-                const weekendMessages = [
-                    "Happy weekend! Want to ask something about me?",
-                    "Weekend vibes! Curious about me?",
-                    "Enjoying your weekend? Want to learn about me?"
-                ];
-                return weekendMessages[Math.floor(Math.random() * weekendMessages.length)];
-            }
-            
-            const defaultMessages = [
-                "Want to ask something about me?",
-                "Curious about me? Click to ask",
-                "Got questions about me? Click here",
-                "Want to learn more about me?",
-                "Wondering about something? Ask me",
-                "Click to ask me anything about myself"
-            ];
-            
-            return defaultMessages[Math.floor(Math.random() * defaultMessages.length)];
+                const cursor = document.createElement('span');
+                cursor.className = 'typing-cursor';
+                hey.appendChild(cursor);
+                
+            function typeChar() {
+                if (index < text.length) {
+                    heyText.textContent += text[index];
+                    index++;
+                    setTimeout(typeChar, 150);
+                        } else {
+                    // Show comma
+                    comma.style.opacity = '1';
+                        setTimeout(() => {
+                        cursor.remove();
+                        playAnimation();
+                        // Wait a bit then show text content and navbar
+                        setTimeout(() => {
+                            document.querySelector('.text-reveal-content').classList.add('visible');
+                            document.querySelector('.nav-bar').classList.add('visible');
+                            animationComplete = true;
+                        }, 800);
+                        }, 100);
+                    }
+                }
+
+            typeChar();
         }
 
-        // Global escape key listener
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const inChatMode = document.body.classList.contains('chat-mode') || window.inChatMode;
-                
-                if (inChatMode) {
-                    if (typeof resetPage === 'function') {
-                        resetPage();
-                    } else if (typeof window.resetPage === 'function') {
-                        window.resetPage();
-                    }
-                }
-            }
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    
-        document.addEventListener('DOMContentLoaded', function() {
-            const logo = document.getElementById('logo');
-            const contact = document.getElementById('contact');
-            const projects = document.querySelector('a[href="#projects"]');
-            const projectImages = document.querySelectorAll('.project-image, .project-image-2');
-    
-            function checkIntersection() {
-                let logoRect = logo.getBoundingClientRect();
-                let contactRect = contact.getBoundingClientRect();
-                let projectsRect = projects.getBoundingClientRect();
-                let logoIntersecting = false;
-                let contactIntersecting = false;
-                let projectsIntersecting = false;
-    
-                projectImages.forEach(image => {
-                    let imageRect = image.getBoundingClientRect();
-    
-                    if (logoRect.bottom > imageRect.top && logoRect.top < imageRect.bottom) {
-                        logoIntersecting = true;
-                    }
-    
-                    if (contactRect.bottom > imageRect.top && contactRect.top < imageRect.bottom) {
-                        contactIntersecting = true;
-                    }
-    
-                    if (projectsRect.bottom > imageRect.top && projectsRect.top < imageRect.bottom) {
-                        projectsIntersecting = true;
-                    }
-                });
-    
-                if (logoIntersecting) {
-                    logo.style.filter = 'brightness(0) invert(1)';
-                } else {
-                    logo.style.filter = 'brightness(0) invert(0)';
-                }
-    
-                if (contactIntersecting || projectsIntersecting) {
-                    contact.style.color = '#FFFFFF';
-                    projects.style.color = '#FFFFFF';
-                } else {
-                    contact.style.color = '#000000';
-                    projects.style.color = '#000000';
-                }
-            }
-    
-            window.addEventListener('scroll', checkIntersection);
-            window.addEventListener('resize', checkIntersection);
-            checkIntersection();
-        });
-    
-        document.addEventListener('DOMContentLoaded', function() {
-            const hey = document.querySelector('.hey');
-    
-            function playAnimation() {
+        function playAnimation() {
+            if (!inChatMode) {
                 hey.classList.remove('animate');
                 void hey.offsetWidth;
                 hey.classList.add('animate');
             }
-    
-            playAnimation();
-    
-            hey.addEventListener('mouseenter', playAnimation);
-        });
+        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            function alignProjectParagraph() {
-                const hey = document.querySelector('.hey');
-                const projectParagraph = document.querySelector('.project-paragraph');
-                const heyRect = hey.getBoundingClientRect();
-                const paragraphRect = projectParagraph.getBoundingClientRect();
+        // Text Reveal Setup
+        function setupTextReveal() {
+            const textContent = document.getElementById('text-content');
+            let globalWordIndex = 0;
+            const allWordElements = [];
+            
+            // Create paragraphs with spacing
+            paragraphs.forEach((paragraphText, paraIndex) => {
+                const paraDiv = document.createElement('div');
+                paraDiv.className = 'text-paragraph';
                 
-                const difference = heyRect.left - paragraphRect.left;
-                projectParagraph.style.paddingLeft = `${difference}px`;
+                const words = paragraphText.split(' ');
+                words.forEach((word, wordIndex) => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.textContent = word;
+                    span.dataset.index = globalWordIndex;
+                    span.dataset.paragraph = paraIndex;
+                    
+                    paraDiv.appendChild(span);
+                    allWordElements.push(span);
+                    
+                    // Add space after each word except the last
+                    if (wordIndex < words.length - 1) {
+                        paraDiv.appendChild(document.createTextNode(' '));
+                    }
+                    
+                    globalWordIndex++;
+                });
+                
+                textContent.appendChild(paraDiv);
+            });
+            
+            // Add end links
+            const endLinks = document.createElement('div');
+            endLinks.className = 'end-links';
+            endLinks.innerHTML = `
+                <a href="./blog/index.html" class="end-link">blog</a>
+                <a href="#" id="send-mail-link" class="end-link">send me a mail</a>
+            `;
+            textContent.appendChild(endLinks);
+            
+            // Add click handler for send mail link
+            document.getElementById('send-mail-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                handleHeyClick();
+            });
+
+            // Scroll-based reveal with flywheel
+            const container = document.querySelector('.text-reveal-container');
+            const wordElements = allWordElements;
+            const totalWords = wordElements.length;
+
+            let lastRevealedCount = -1;
+            const pixelsPerWord = 2.5;
+            
+            function updateFlywheelScroll() {
+                if (!animationComplete) return;
+                
+                const containerRect = container.getBoundingClientRect();
+                const scrollProgress = Math.max(0, Math.min(1, -containerRect.top / (container.offsetHeight - window.innerHeight)));
+                
+                // Add +2 to total to account for end links
+                const extendedTotal = totalWords + 2;
+                const revealedWordCount = Math.floor(scrollProgress * extendedTotal);
+                
+                // Only update if count changed
+                if (revealedWordCount === lastRevealedCount) return;
+                lastRevealedCount = revealedWordCount;
+                
+                // Calculate vertical offset - slower for smoother effect
+                const verticalOffset = -revealedWordCount * pixelsPerWord;
+                textContent.style.transform = `translateY(${verticalOffset}px)`;
+                
+                // Update all words with smoother fade
+                wordElements.forEach((word, index) => {
+                    const wordDistance = index - revealedWordCount;
+                    
+                    if (index < revealedWordCount) {
+                        word.classList.add('revealed');
+                        
+                        // Smoother, longer fade range
+                        if (wordDistance < -100) {
+                            word.style.opacity = '0';
+                        } else if (wordDistance < -70) {
+                            const fade = (wordDistance + 100) / 30;
+                            word.style.opacity = String(Math.max(0, Math.min(1, fade)));
+                        } else {
+                            word.style.opacity = '1';
+                        }
+                    } else {
+                        word.classList.remove('revealed');
+                        word.style.opacity = '1';
+                    }
+                });
+                
+                // Handle end links - reveal when close to end
+                const endLinksElements = document.querySelectorAll('.end-link');
+                const linksRevealStart = totalWords - 10; // Start revealing 10 words before end
+                
+                if (revealedWordCount >= linksRevealStart) {
+                    endLinksElements.forEach((link) => {
+                        link.classList.add('revealed');
+                        link.style.opacity = '1';
+                    });
+                    } else {
+                    endLinksElements.forEach((link) => {
+                        link.classList.remove('revealed');
+                        link.style.opacity = '0.4';
+                    });
+                }
             }
 
-            window.addEventListener('load', alignProjectParagraph);
-            window.addEventListener('resize', alignProjectParagraph);
+            // Simple scroll handler
+            window.addEventListener('scroll', updateFlywheelScroll, { passive: true });
+            
+            updateFlywheelScroll();
+        }
+
+        // Mail Mode
+        function handleHeyClick() {
+            if (inChatMode) return;
+            
+            inChatMode = true;
+            document.body.classList.add('mail-mode');
+            
+            // Store original content
+            const originalHeyContent = hey.innerHTML;
+            
+            // Add prompt text
+            const promptText = document.createElement('div');
+            promptText.className = 'prompt-text';
+            promptText.textContent = 'Add your email at the end so I can contact you!';
+            document.body.appendChild(promptText);
+            
+            // Transform hey to subject input
+            hey.textContent = '';
+            hey.style.color = '#ccc';
+            hey.contentEditable = 'true';
+            hey.style.cursor = 'text';
+            hey.style.outline = 'none';
+            hey.classList.add('empty-placeholder');
+            
+            // Create mail input
+                    const mailInput = document.createElement('textarea');
+                    mailInput.className = 'mail-input';
+                    mailInput.placeholder = 'Text...';
+                    document.body.appendChild(mailInput);
+                    
+                    // Create character count
+                    const charCount = document.createElement('div');
+                    charCount.className = 'char-count';
+                    charCount.textContent = '0';
+                    document.body.appendChild(charCount);
+                    
+            // Create send button
+                    const sendButton = document.createElement('a');
+                    sendButton.className = 'send-button';
+                    sendButton.textContent = 'send';
+                    document.body.appendChild(sendButton);
+                    
+            // Create back button
+            const locationInfo = document.createElement('div');
+            locationInfo.className = 'location-info';
+                    locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
+            document.body.appendChild(locationInfo);
+            
+                    locationInfo.querySelector('a').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        resetMailMode();
+                    });
+                    
+            // Email validation
+                    function validateEmail(text) {
+                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                        return emailRegex.test(text);
+                    }
+                    
+                    // Handle subject input
+                    hey.addEventListener('focus', function() {
+                            hey.style.color = '#000';
+                    });
+                    
+            hey.addEventListener('input', function() {
+                        hey.style.color = '#000';
+                hey.classList.remove('empty-placeholder');
+                        
+                // Prevent overflow
+                        if (hey.scrollWidth > hey.clientWidth) {
+                            const text = hey.textContent;
+                            hey.textContent = text.slice(0, -1);
+                            
+                            const range = document.createRange();
+                            const sel = window.getSelection();
+                            range.selectNodeContents(hey);
+                            range.collapse(false);
+                            sel.removeAllRanges();
+                            sel.addRange(range);
+                        }
+                    });
+                    
+                    hey.addEventListener('blur', function() {
+                        if (hey.textContent.trim() === '') {
+                            hey.style.color = '#ccc';
+                    hey.classList.add('empty-placeholder');
+                        }
+                    });
+                    
+                    hey.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            hey.style.color = '#000';
+                            mailInput.focus();
+                        }
+                    });
+                    
+                    mailInput.addEventListener('input', function() {
+                        const text = this.value;
+                        charCount.textContent = text.length;
+                        
+                        if (validateEmail(text)) {
+                            sendButton.classList.add('active');
+                        } else {
+                            sendButton.classList.remove('active');
+                        }
+                    });
+                    
+                    sendButton.addEventListener('click', function() {
+                        if (this.classList.contains('active')) {
+                            const subject = hey.textContent.trim() || 'No subject';
+                            const message = mailInput.value;
+                            sendMail(subject, message);
+                        }
+                    });
+                    
+            function resetMailMode() {
+                mailInput.remove();
+                charCount.remove();
+                sendButton.remove();
+                locationInfo.remove();
+                promptText.remove();
+                
+                hey.contentEditable = 'false';
+                hey.innerHTML = originalHeyContent;
+                hey.style.color = '#000';
+                hey.style.cursor = 'pointer';
+                hey.classList.remove('empty-placeholder');
+                
+                heyText = hey.querySelector('.hey-text');
+                comma = hey.querySelector('.comma');
+                
+                document.body.classList.remove('mail-mode');
+                inChatMode = false;
+            }
+                        
+                        setTimeout(() => {
+                hey.focus();
+                        }, 100);
+                }
+                
+                async function sendMail(subject, message) {
+                    alert('Message sent! Thank you.');
+            location.reload();
+        }
+
+        // Escape key to exit mail mode
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && inChatMode) {
+                location.reload();
+            }
         });
 
+        // Umlaut hover effect on navbar name
         document.addEventListener('DOMContentLoaded', function() {
             const nameLink = document.querySelector('.nav-link:first-child');
             
             if (nameLink) {
                 const originalText = nameLink.textContent;
-                const originalHref = nameLink.getAttribute('href');
                 
                 nameLink.addEventListener('mouseenter', function() {
                     nameLink.innerHTML = 'Lukas Kubi<span class="animated-umlaut">e</span>na';
@@ -1036,1067 +831,8 @@
                 nameLink.addEventListener('mouseleave', function() {
                     nameLink.textContent = originalText;
                 });
-                
-                nameLink.addEventListener('click', function(e) {
-                    if (originalHref === "#") {
-                        e.preventDefault();
-                        window.location.href = "/";
-                    }
-                });
             }
         });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const hey = document.querySelector('.hey');
-
-            function playAnimation() {
-                hey.classList.remove('animate');
-                void hey.offsetWidth;
-                hey.classList.add('animate');
-            }
-
-            playAnimation();
-
-            hey.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                playAnimation();
-            });
-
-            if (window.matchMedia("(min-width: 1025px)").matches) {
-                hey.addEventListener('mouseenter', playAnimation);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.innerWidth <= 1024) {
-                const body = document.body;
-                const hey = document.querySelector('.hey');
-                const heyText = hey.querySelector('.hey-text');
-                const comma = hey.querySelector('.comma');
-                const content = document.querySelectorAll('.content, .send-mail, .blog-link');
-                hey.style.animation = 'none';
-
-                content.forEach(el => el.style.opacity = '0');
-                heyText.style.opacity = '0';
-                comma.style.opacity = '0';
-                
-                // Create typing cursor for mobile
-                const cursor = document.createElement('span');
-                cursor.className = 'typing-cursor';
-                hey.appendChild(cursor);
-                
-                function typeText(text, element, callback) {
-                    let i = 0;
-                    element.textContent = '';
-                    element.style.opacity = '1';
-                    function type() {
-                        if (i < text.length) {
-                            element.textContent += text.charAt(i);
-                            i++;
-                            setTimeout(type, 150);
-                        } else {
-                            callback();
-                        }
-                    }
-                    type();
-                }
-
-                function showComma() {
-                    comma.style.opacity = '1';
-                    playPopOutAnimation();
-                }
-
-                function playPopOutAnimation() {
-                    hey.style.animation = '';
-                    hey.classList.add('animate');
-                    setTimeout(playCommaAnimation, 300);
-                }
-
-                function playCommaAnimation() {
-                    comma.style.animation = 'none';
-                    void comma.offsetWidth;
-                    comma.style.animation = 'bellJingle 0.8s ease-in-out';
-                    setTimeout(showContent, 800);
-                }
-
-                function showContent() {
-                    if (cursor) {
-                        cursor.style.display = 'none';
-                    }
-                    
-                    content.forEach(el => {
-                        el.style.opacity = '1';
-                        el.style.transition = 'opacity 1s ease-in';
-                    });
-                    
-                    const profileImage = document.querySelector('.profile-image');
-                    if (profileImage) {
-                        profileImage.style.display = 'block';
-                        profileImage.style.opacity = '0';
-                        setTimeout(() => {
-                            profileImage.style.opacity = '1';
-                            profileImage.style.transition = 'opacity 1s ease-in';
-                        }, 100);
-                    }
-                }
-
-                setTimeout(() => {
-                    body.classList.remove('initial-load');
-                    typeText('Hey', heyText, showComma);
-                }, 2000);
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.innerWidth <= 1024) {
-                let hey = document.querySelector('.hey');
-                let heyText = hey.querySelector('.hey-text');
-                let comma = hey.querySelector('.comma');
-                const content = document.querySelectorAll('.content, .send-mail, .blog-link');
-                let longPressTimer;
-                let isLongPress = false;
-                let messages = [];
-                let promptShown = false;
-                let inChatMode = false;
-                let promptTimer;
-                let blinkInterval;
-
-                function showPrompt(text, fadeIn = false) {
-                    clearTimeout(promptTimer);
-                    hidePrompt();
-                    
-                    let promptContainer = document.createElement('div');
-                    promptContainer.className = 'prompt';
-                    hey.parentNode.insertBefore(promptContainer, hey);
-                    
-                    promptContainer.textContent = text;
-                    
-                    if (fadeIn) {
-                        promptContainer.style.opacity = '0';
-                        promptContainer.style.transition = 'opacity 1s ease-in';
-                        setTimeout(() => {
-                            promptContainer.style.opacity = '1';
-                        }, 10);
-                    } else {
-                        promptContainer.style.opacity = '1';
-                    }
-                    promptContainer.style.cursor = 'pointer';
-                    
-                    promptContainer.addEventListener('click', () => {
-                        if (inChatMode) {
-                            handleLongPress();
-                        }
-                    });
-                }
-
-                function hidePrompt() {
-                    const promptContainer = document.querySelector('.prompt');
-                    if (promptContainer) {
-                        promptContainer.style.transition = 'opacity 0.3s ease-out';
-                        promptContainer.style.opacity = '0';
-
-                        setTimeout(() => {
-                            promptContainer.remove();
-                            promptShown = false;
-                        }, 500);
-                    }
-                }
-
-                function resetPromptTimer() {
-                    // Disabled - no automatic prompts
-                }
-
-                // Disabled - no automatic prompts
-                // resetPromptTimer();
-
-                let canVibrate = 'vibrate' in navigator;
-
-                function tryVibrate(duration) {
-                    if (canVibrate) {
-                        return new Promise((resolve, reject) => {
-                            try {
-                                navigator.vibrate(duration);
-                                console.log("Vibration command sent successfully");
-                                resolve(true);
-                            } catch (error) {
-                                console.error("Error when trying to vibrate:", error);
-                                reject(error);
-                            }
-                        });
-                    } else {
-                        console.log("Vibration not supported on this device");
-                        return Promise.resolve(false);
-                    }
-                }
-
-                hey.addEventListener('touchstart', function(e) {
-                    isLongPress = false;
-                    longPressTimer = setTimeout(() => {
-                        isLongPress = true;
-                        tryVibrate(50)
-                            .then(success => {
-                                if (success) {
-                                    console.log('Long press vibration successful');
-                                } else {
-                                    console.log('Long press vibration not supported or failed');
-                                }
-                                handleLongPress();
-                            })
-                            .catch(error => console.error('Vibration error:', error));
-                    }, 800);
-                });
-
-                hey.addEventListener('touchend', function(e) {
-                    clearTimeout(longPressTimer);
-                    if (!isLongPress && !inChatMode) {
-                        tryVibrate(25)
-                            .then(success => {
-                                if (success) {
-                                    console.log('Short vibration successful');
-                                } else {
-                                    console.log('Short vibration not supported or failed');
-                                }
-                                playAnimation();
-                                playCommaAnimation();
-                            })
-                            .catch(error => console.error('Vibration error:', error));
-                    }
-                });
-
-                function handleLongPress() {
-                    // Mobile version - can keep old behavior or update to mail mode
-                    // For now, keeping simple chat mode on mobile
-                    inChatMode = true;
-                    window.inChatMode = true;
-
-                    clearPreviousContent(true);
-                    
-                    heyText.textContent = '';
-                    hey.innerHTML = '';
-                    comma.style.display = 'none';
-                    
-                    content.forEach(el => el.style.display = 'none');
-                    const profileImage = document.querySelector('.profile-image');
-                    if (profileImage) {
-                        profileImage.style.display = 'none';
-                    }
-                    
-                    const input = document.createElement('textarea');
-                    input.className = 'chat-input';
-                    input.placeholder = 'Your message...';
-                    input.style.font = window.getComputedStyle(hey).font;
-                    input.style.border = 'none';
-                    input.style.background = 'transparent';
-                    input.style.outline = 'none';
-                    input.style.width = '100%';
-                    input.style.resize = 'none';
-                    input.style.height = 'auto';
-                    input.style.overflow = 'hidden';
-                    input.style.caretColor = 'black';
-                    heyText.appendChild(input);
-                    hey.appendChild(input);
-
-                    input.readOnly = false;
-                    input.focus();
-                    input.click();
-
-                    showPrompt('Add your email at the end');
-
-                    input.addEventListener('input', function() {
-                        this.style.height = 'auto';
-                        this.style.height = this.scrollHeight + 'px';
-                    });
-
-                    content.forEach(el => el.style.display = 'none');
-
-                    addBackButton();
-
-                    hey.addEventListener('touchstart', function(e) {
-                        if (inChatMode) {
-                            e.preventDefault();
-                            input.focus();
-                        }
-                    });
-                }
-
-                function clearPreviousContent(keepPrompt = false) {
-                    const contentContainer = document.querySelector('.content-1').parentNode;
-                    const previousResponses = contentContainer.querySelectorAll('.ai-response');
-                    previousResponses.forEach(response => response.remove());
-                    
-                    const chatInputs = document.querySelectorAll('.chat-input');
-                    chatInputs.forEach(input => input.remove());
-                    
-                    if (!keepPrompt) {
-                        hidePrompt();
-                    }
-                }
-
-                function toggleChatMode(enable) {
-                    if (enable) {
-                        document.body.classList.add('chat-mode');
-                    } else {
-                        document.body.classList.remove('chat-mode');
-                    }
-                }
-
-                function addBackButton() {
-                    let backButton = document.querySelector('a[style*="text-decoration: underline"]');
-                    if (!backButton) {
-                        backButton = document.createElement('a');
-                        backButton.textContent = 'back';
-                        backButton.style.textDecoration = 'underline';
-                        backButton.style.display = 'block';
-                        backButton.style.marginTop = 'var(--row-gap)';
-                        backButton.style.fontFamily = window.getComputedStyle(content[0]).fontFamily;
-                        backButton.style.fontSize = window.getComputedStyle(content[0]).fontSize;
-                        backButton.style.cursor = 'pointer';
-                        
-                        backButton.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            resetPage();
-                        });
-                        
-                        const contentContainer = document.querySelector('.content-1').parentNode;
-                        contentContainer.appendChild(backButton);
-                    }
-                }
-
-                async function handleUserInput(userInput) {
-                    clearPreviousContent(true);
-                    
-                    if (hey.textContent !== userInput) {
-                        hey.textContent = userInput;
-                    }
-                    
-                    hidePrompt();
-                    showPrompt('Tap here for a new question', true);
-                    
-                    addBackButton();
-                    
-                    const aiResponse = await generateAIResponse(userInput);
-                    
-                    const contentContainer = document.querySelector('.content-1').parentNode;
-                    const responseElement = document.createElement('div');
-                    responseElement.className = 'ai-response';
-                    responseElement.style.maxWidth = '100%';
-                    responseElement.style.marginLeft = '0';
-                    responseElement.style.textAlign = 'left';
-                    responseElement.style.cursor = 'pointer';
-                    responseElement.addEventListener('click', handleLongPress);
-                    
-                    contentContainer.insertBefore(responseElement, contentContainer.lastChild);
-
-                    const heyContainer = document.querySelector('.hey-container');
-                    heyContainer.insertAdjacentElement('afterend', responseElement);
-                    
-                    const words = aiResponse.split(' ');
-                    let i = 0;
-                    const intervalId = setInterval(() => {
-                        if (i < words.length) {
-                            responseElement.textContent += words[i] + ' ';
-                            i++;
-                        } else {
-                            clearInterval(intervalId);
-                        }
-                    }, 120);
-                }
-
-                async function generateAIResponse(userInput) {
-                    messages.push({ "role": "user", "content": userInput });
-
-                    try {
-                        const response = await fetch('/.netlify/functions/generate-response', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ userInput, messages })
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        const aiResponse = data.response;
-                        messages.push({ "role": "assistant", "content": aiResponse });
-                        return aiResponse;
-                    } catch (error) {
-                        console.error('Error:', error);
-                        return "I'm sorry, I couldn't generate a response at this time.";
-                    }
-                }
-
-                function resetPage() {
-                    inChatMode = false;
-                    window.inChatMode = false;
-                    
-                    hidePrompt();
-                    const systemMessage = document.querySelector('.system-message');
-                    if (systemMessage) systemMessage.remove();
-
-                    clearPreviousContent();
-                    const backButton = document.querySelector('a[style*="text-decoration: underline"]');
-                    if (backButton) backButton.remove();
-
-                    const heyContainer = document.querySelector('.hey-container');
-                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash"></div>';
-                    hey = heyContainer.querySelector('.hey');
-                    heyText = hey.querySelector('.hey-text');
-                    comma = hey.querySelector('.comma');
-
-                    content.forEach(el => {
-                        el.style.display = 'block';
-                        el.style.opacity = '1';
-                    });
-
-                    const profileImage = document.querySelector('.profile-image');
-                    if (profileImage) {
-                        profileImage.style.display = 'block';
-                        profileImage.style.opacity = '1';
-                    }
-
-                    const aiResponses = document.querySelectorAll('.ai-response');
-                    aiResponses.forEach(response => response.remove());
-
-                    const chatInputs = document.querySelectorAll('.chat-input');
-                    chatInputs.forEach(input => input.remove());
-
-                    setTimeout(() => {
-                        playAnimation();
-                        playCommaAnimation();
-                    }, 10);
-
-                    messages = [];
-                }
-
-                window.resetPage = resetPage;
-
-                function playAnimation() {
-                    hey.classList.remove('animate');
-                    void hey.offsetWidth;
-                    hey.classList.add('animate');
-                }
-
-                function playCommaAnimation() {
-                    comma.style.animation = 'none';
-                    void comma.offsetWidth;
-                    comma.style.animation = 'bellJingle 0.8s ease-in-out';
-                }
-
-                hey.addEventListener('touchstart', function(e) {
-                    isLongPress = false;
-                    longPressTimer = setTimeout(() => {
-                        isLongPress = true;
-                        handleLongPress();
-                    }, 500);
-                });
-
-                hey.addEventListener('touchend', function(e) {
-                    clearTimeout(longPressTimer);
-                    if (!isLongPress) {
-                        e.preventDefault();
-                    }
-                });
-            }
-        });
-
-        // Desktop-specific JavaScript
-        document.addEventListener('DOMContentLoaded', function() {
-            const isDesktop = window.matchMedia("(min-width: 1025px)").matches;
-            
-            if (isDesktop) {
-                let hey = document.querySelector('.hey');
-                let heyText = hey.querySelector('.hey-text');
-                let comma = hey.querySelector('.comma');
-                const content = document.querySelectorAll('.content, .send-mail, .blog-link');
-                const copyright = document.querySelector('.copyright');
-                let messages = [];
-                let inChatMode = false;
-                let cursor;
-                let promptTimer;
-
-                function toggleChatMode(enable) {
-                    if (enable) {
-                        copyright.classList.add('hidden');
-                    } else {
-                        copyright.classList.remove('hidden');
-                    }
-                }
-
-                function typeHey(isInitialLoad = true) {
-                    const heyContainer = document.querySelector('.hey-container');
-                    hey = heyContainer.querySelector('.hey');
-                    
-                    // Reset hey content
-                    hey.innerHTML = '<span class="hey-text"></span><span class="comma">,</span>';
-                    heyText = hey.querySelector('.hey-text');
-                    comma = hey.querySelector('.comma');
-                    
-                    heyText.textContent = '';
-                    comma.style.opacity = '0';
-                    let text = 'Hey';
-                    let index = 0;
-                    cursor = document.createElement('span');
-                    cursor.className = 'typing-cursor';
-                    hey.appendChild(cursor);
-
-                    if (isInitialLoad) {
-                        content.forEach(el => el.style.opacity = '0');
-                        const yearRight = document.querySelector('.year-right');
-                        const careEurope = document.querySelector('.care-europe');
-                        const locationInfo = document.querySelector('.location-info');
-                        const heyDash = heyContainer.querySelector('.hey-dash');
-                        if (yearRight) yearRight.style.opacity = '0';
-                        if (careEurope) careEurope.style.opacity = '0';
-                        if (locationInfo) locationInfo.style.opacity = '0';
-                        if (heyDash) heyDash.style.opacity = '0';
-                    }
-
-                    setTimeout(() => {
-                        function typeChar() {
-                            if (index < text.length) {
-                                    heyText.textContent += text[index];
-                                index++;
-                                setTimeout(typeChar, 150);
-                            } else {
-                                // Show comma after typing "Hey"
-                                comma.style.opacity = '1';
-                                setTimeout(() => {
-                                    playPopOutAnimation();
-                                }, 100);
-                            }
-                        }
-                        typeChar();
-                    }, 2000);
-                }
-
-                function playPopOutAnimation() {
-                    hey.style.animation = 'none';
-                    void hey.offsetWidth;
-                    hey.style.animation = 'popOut 0.3s ease-out';
-                    setTimeout(() => {
-                        playCommaAnimation();
-                    }, 300);
-                }
-
-                function playCommaAnimation() {
-                    comma.style.animation = 'none';
-                    void comma.offsetWidth;
-                    comma.style.animation = 'bellJingle 0.8s ease-in-out';
-                    setTimeout(() => {
-                        if (cursor) {
-                            cursor.remove();
-                            cursor = null;
-                        }
-                        // Show the dash on desktop
-                        const heyDash = document.querySelector('.hey-dash');
-                        if (heyDash && window.innerWidth > 1024) {
-                            heyDash.style.opacity = '1';
-                            heyDash.style.transition = 'opacity 0.3s ease-in';
-                            heyDash.classList.add('visible');
-                        }
-                        content.forEach(el => {
-                            el.style.opacity = '1';
-                            el.style.animation = 'fadeIn 1s ease-in';
-                        });
-                        const yearRight = document.querySelector('.year-right');
-                        const careEurope = document.querySelector('.care-europe');
-                        const locationInfo = document.querySelector('.location-info');
-                        if (yearRight) {
-                            yearRight.style.opacity = '1';
-                            yearRight.style.animation = 'fadeIn 1s ease-in';
-                        }
-                        if (careEurope) {
-                            careEurope.style.opacity = '1';
-                            careEurope.style.animation = 'fadeIn 1s ease-in';
-                        }
-                        if (locationInfo) {
-                            locationInfo.style.opacity = '1';
-                            locationInfo.style.animation = 'fadeIn 1s ease-in';
-                        }
-                        const profileImage = document.querySelector('.profile-image');
-                        if (profileImage) {
-                            profileImage.classList.add('visible');
-                        }
-                        const navBar = document.querySelector('.nav-bar');
-                        if (navBar) {
-                            navBar.classList.add('visible');
-                        }
-                        copyright.style.opacity = '1';
-                        copyright.style.animation = 'fadeIn 1s ease-in';
-                    }, 800);
-                }
-
-                function resetPromptTimer() {
-                    // Disabled - no automatic prompts
-                }
-
-                typeHey();
-                
-                // Add click listener to hey after animation completes
-                function addHeyClickListener() {
-                    hey.addEventListener('click', function heyClickHandler() {
-                        if (!inChatMode) {
-                            handleDesktopClick();
-                        }
-                    });
-                }
-
-                setTimeout(addHeyClickListener, 4000);
-
-                function handleDesktopClick() {
-                    inChatMode = true;
-                    window.inChatMode = true;
-                    document.body.classList.add('mail-mode');
-                    
-                    // Hide content
-                    content.forEach(el => el.style.display = 'none');
-                    const profileImage = document.querySelector('.profile-image');
-                    if (profileImage) {
-                        profileImage.style.display = 'none';
-                    }
-                    
-                    // Store original hey content
-                    const originalHeyContent = hey.innerHTML;
-                    let hasSubject = false;
-                    
-                    // Transform Hey to subject input (inline contenteditable)
-                    hey.setAttribute('data-placeholder', 'Your subject');
-                    hey.textContent = '';
-                    hey.style.color = '#ccc';
-                    hey.contentEditable = 'true';
-                    hey.style.cursor = 'text';
-                    hey.style.outline = 'none';
-                    
-                    // Hide dash
-                    const heyDash = document.querySelector('.hey-dash');
-                    if (heyDash) {
-                        heyDash.style.display = 'none';
-                    }
-                    
-                    // Create mail input below
-                    const mailInput = document.createElement('textarea');
-                    mailInput.className = 'mail-input';
-                    mailInput.placeholder = 'Text...';
-                    document.body.appendChild(mailInput);
-                    
-                    // Create character count
-                    const charCount = document.createElement('div');
-                    charCount.className = 'char-count';
-                    charCount.textContent = '0';
-                    document.body.appendChild(charCount);
-                    
-                    // Create send button (grey by default)
-                    const sendButton = document.createElement('a');
-                    sendButton.className = 'send-button';
-                    sendButton.textContent = 'send';
-                    sendButton.style.color = '#ccc';
-                    document.body.appendChild(sendButton);
-                    
-                    // Transform location-info to back button
-                    const locationInfo = document.querySelector('.location-info');
-                    const originalLocationHTML = locationInfo.innerHTML;
-                    locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
-                    locationInfo.querySelector('a').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        resetMailMode();
-                    });
-                    
-                    // Email validation and character count
-                    function validateEmail(text) {
-                        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-                        return emailRegex.test(text);
-                    }
-                    
-                    // Show placeholder when empty
-                    function updatePlaceholder() {
-                        if (hey.textContent.trim() === '' && !hasSubject) {
-                            hey.classList.add('empty-placeholder');
-                        } else {
-                            hey.classList.remove('empty-placeholder');
-                        }
-                    }
-                    
-                    // Handle subject input
-                    hey.addEventListener('focus', function() {
-                        if (!hasSubject) {
-                            hey.style.color = '#000';
-                        }
-                    });
-                    
-                    hey.addEventListener('input', function(e) {
-                        hasSubject = hey.textContent.trim().length > 0;
-                        hey.style.color = '#000';
-                        updatePlaceholder();
-                        
-                        // Check if text is overflowing
-                        if (hey.scrollWidth > hey.clientWidth) {
-                            // Remove last character
-                            const text = hey.textContent;
-                            hey.textContent = text.slice(0, -1);
-                            
-                            // Move cursor to end
-                            const range = document.createRange();
-                            const sel = window.getSelection();
-                            range.selectNodeContents(hey);
-                            range.collapse(false);
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        }
-                    });
-                    
-                    hey.addEventListener('blur', function() {
-                        if (hey.textContent.trim() === '') {
-                            hey.style.color = '#ccc';
-                            hasSubject = false;
-                        }
-                        updatePlaceholder();
-                    });
-                    
-                    // Handle Enter key on subject to move to mail input
-                    hey.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            hasSubject = true;
-                            hey.style.color = '#000';
-                            mailInput.focus();
-                        }
-                    });
-                    
-                    mailInput.addEventListener('focus', function() {
-                        this.placeholder = '';
-                    });
-                    
-                    mailInput.addEventListener('blur', function() {
-                        if (this.value === '') {
-                            this.placeholder = 'Text...';
-                        }
-                    });
-                    
-                    mailInput.addEventListener('input', function() {
-                        const text = this.value;
-                        charCount.textContent = text.length;
-                        
-                        if (validateEmail(text)) {
-                            sendButton.classList.add('active');
-                            sendButton.style.color = '#000';
-                        } else {
-                            sendButton.classList.remove('active');
-                            sendButton.style.color = '#ccc';
-                        }
-                    });
-                    
-                    // Send button click
-                    sendButton.addEventListener('click', function() {
-                        if (this.classList.contains('active')) {
-                            const subject = hey.textContent.trim() || 'No subject';
-                            const message = mailInput.value;
-                            sendMail(subject, message);
-                        }
-                    });
-                    
-                    // Function to reset mail mode
-                    function resetMailMode() {
-                        // Remove mail-specific elements
-                        mailInput.remove();
-                        charCount.remove();
-                        sendButton.remove();
-                        
-                        // Restore location info
-                        locationInfo.innerHTML = originalLocationHTML;
-                        
-                    // Restore hey
-                    hey.contentEditable = 'false';
-                    hey.innerHTML = originalHeyContent;
-                    hey.style.color = '#000';
-                    hey.style.cursor = 'pointer';
-                    hey.style.whiteSpace = '';
-                    hey.style.overflow = '';
-                    hey.style.maxWidth = '';
-                    hey.removeAttribute('data-placeholder');
-                    hey.classList.remove('empty-placeholder');
-                    
-                    // Re-attach click handler
-                    heyText = hey.querySelector('.hey-text');
-                    comma = hey.querySelector('.comma');
-                        
-                        // Show dash
-                        if (heyDash) {
-                            heyDash.style.display = 'block';
-                            heyDash.classList.add('visible');
-                        }
-                        
-                        // Remove mode
-                        document.body.classList.remove('mail-mode');
-                        inChatMode = false;
-                        window.inChatMode = false;
-                        
-                        // Show content with animation
-                        content.forEach(el => {
-                            el.style.display = '';
-                            el.style.opacity = '0';
-                        });
-                        
-                        const yearRight = document.querySelector('.year-right');
-                        const careEurope = document.querySelector('.care-europe');
-                        const navBar = document.querySelector('.nav-bar');
-                        if (yearRight) {
-                            yearRight.style.display = '';
-                            yearRight.style.opacity = '0';
-                        }
-                        if (careEurope) {
-                            careEurope.style.display = '';
-                            careEurope.style.opacity = '0';
-                        }
-                        if (navBar) {
-                            navBar.style.display = '';
-                            navBar.classList.remove('visible');
-                        }
-                        
-                        setTimeout(() => {
-                            content.forEach(el => {
-                                el.style.opacity = '1';
-                                el.style.transition = 'opacity 0.5s ease-in';
-                            });
-                            if (yearRight) {
-                                yearRight.style.opacity = '1';
-                                yearRight.style.transition = 'opacity 0.5s ease-in';
-                            }
-                            if (careEurope) {
-                                careEurope.style.opacity = '1';
-                                careEurope.style.transition = 'opacity 0.5s ease-in';
-                            }
-                            if (navBar) {
-                                navBar.classList.add('visible');
-                            }
-                        }, 50);
-                        
-                        hidePrompt();
-                        
-                        // Re-add click listener to hey
-                        setTimeout(() => {
-                            addHeyClickListener();
-                        }, 100);
-                    }
-                    
-                    updatePlaceholder();
-                    
-                    // Show prompt after slight delay
-                    setTimeout(() => {
-                        showPrompt('Add your email at the end so I can contact you!', true);
-                    }, 100);
-                    
-                    // Focus after a short delay
-                    setTimeout(() => {
-                        hey.focus();
-                    }, 150);
-                }
-                
-                async function sendMail(subject, message) {
-                    // Here you would implement the actual mail sending logic
-                    // For now, just show confirmation and reset
-                    alert('Message sent! Thank you.');
-                    resetPage();
-                }
-                
-                async function handleUserInput(userInput) {
-                    hey.textContent = userInput;
-                    hey.style.cursor = 'pointer';
-                    
-                    hidePrompt();
-                    showPrompt('Click here for a new question', true);
-                    
-                    const aiResponse = await generateAIResponse(userInput);
-                    
-                    const previousResponse = document.querySelector('.ai-response');
-                    if (previousResponse) previousResponse.remove();
-                    
-                    const responseElement = document.createElement('div');
-                    responseElement.className = 'ai-response';
-                    responseElement.style.cursor = 'pointer';
-                    
-                    document.body.appendChild(responseElement);
-                    
-                    const words = aiResponse.split(' ');
-                    let i = 0;
-                    const intervalId = setInterval(() => {
-                        if (i < words.length) {
-                            responseElement.textContent += words[i] + ' ';
-                            i++;
-                        } else {
-                            clearInterval(intervalId);
-                            addBackButton();
-                        }
-                    }, 120);
-                }
-                
-                async function generateAIResponse(userInput) {
-                    messages.push({ "role": "user", "content": userInput });
-
-                    try {
-                        const response = await fetch('/.netlify/functions/generate-response', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ userInput, messages })
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        const aiResponse = data.response;
-                        messages.push({ "role": "assistant", "content": aiResponse });
-                        return aiResponse;
-                    } catch (error) {
-                        console.error('Error:', error);
-                        return "I'm sorry, I couldn't generate a response at this time.";
-                    }
-                }
-
-                function clearPreviousContent(keepPrompt = false) {
-                    const contentContainer = document.querySelector('.content-1').parentNode;
-                    const previousResponse = contentContainer.querySelector('.ai-response');
-                    if (previousResponse) previousResponse.remove();
-                    const existingBackButton = contentContainer.querySelector('.back-button');
-                    if (existingBackButton) existingBackButton.remove();
-                    if (!keepPrompt) {
-                        hidePrompt();
-                    }
-                }
-
-                function addBackButton() {
-                    let backButton = document.querySelector('.back-button');
-                    if (!backButton) {
-                        backButton = document.createElement('a');
-                        backButton.textContent = 'back';
-                        backButton.className = 'back-button';
-                        backButton.style.cursor = 'pointer';
-                        backButton.style.textDecoration = 'underline';
-                        
-                        backButton.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            resetPage();
-                        });
-                        
-                        document.body.appendChild(backButton);
-                    }
-                }
-
-                function resetPage() {
-                    inChatMode = false;
-                    window.inChatMode = false;
-                    document.body.classList.remove('mail-mode');
-                    document.body.classList.remove('chat-mode');
-                    
-                    hidePrompt();
-                    
-                    // Remove mail elements
-                    const mailInput = document.querySelector('.mail-input');
-                    if (mailInput) mailInput.remove();
-                    const charCount = document.querySelector('.char-count');
-                    if (charCount) charCount.remove();
-                    const sendButton = document.querySelector('.send-button');
-                    if (sendButton) sendButton.remove();
-                    
-                    // Restore Hey
-                    const heyContainer = document.querySelector('.hey-container');
-                    heyContainer.innerHTML = '<div class="hey"><span class="hey-text">Hey</span><span class="comma">,</span></div><div class="hey-dash"></div>';
-                    const newHey = heyContainer.querySelector('.hey');
-                    hey = newHey;
-                    hey.style.cursor = 'pointer';
-                    hey.style.color = '#000';
-                    hey.contentEditable = 'false';
-                    heyText = hey.querySelector('.hey-text');
-                    comma = hey.querySelector('.comma');
-                    
-                    const heyDash = document.querySelector('.hey-dash');
-                    if (heyDash && window.innerWidth > 1024) {
-                        heyDash.style.display = 'block';
-                        heyDash.classList.add('visible');
-                    }
-
-                    // Restore location info
-                    const locationInfo = document.querySelector('.location-info');
-                    locationInfo.innerHTML = '—<br>Vienna<br>Wednesday, 25.October.2023';
-
-                    content.forEach(el => {
-                        el.style.display = '';
-                        el.style.opacity = '0';
-                    });
-                    
-                    const profileImage = document.querySelector('.profile-image');
-                    if (profileImage) {
-                        profileImage.style.display = '';
-                        profileImage.classList.remove('visible');
-                    }
-
-                    setTimeout(() => {
-                        content.forEach(el => {
-                            el.style.opacity = '1';
-                            el.style.animation = 'fadeIn 1s ease-in';
-                        });
-                        if (profileImage) {
-                            profileImage.classList.add('visible');
-                        }
-                    }, 100);
-                    
-                    copyright.style.opacity = '1';
-                    messages = [];
-                    
-                    playPopOutAnimation();
-                    
-                    // Re-add click listener
-                    hey.addEventListener('click', function() {
-                        if (!inChatMode) {
-                            handleDesktopClick();
-                        }
-                    });
-                }
-
-                window.resetPage = resetPage;
-
-                function showPrompt(text, fadeIn = false) {
-                    hidePrompt();
-                    
-                    let promptContainer = document.createElement('div');
-                    promptContainer.className = 'prompt';
-                    document.body.appendChild(promptContainer);
-                    
-                    promptContainer.textContent = text;
-                    
-                    if (fadeIn) {
-                        setTimeout(() => {
-                            promptContainer.classList.add('visible');
-                        }, 10);
-                    } else {
-                        promptContainer.classList.add('visible');
-                    }
-                }
-
-                function hidePrompt() {
-                    const promptContainer = document.querySelector('.prompt');
-                    if (promptContainer) {
-                        promptContainer.classList.remove('visible');
-                        setTimeout(() => {
-                            promptContainer.remove();
-                        }, 300);
-                    }
-                }
-
-                hey.addEventListener('mouseenter', function() {
-                    if (!inChatMode) {
-                        playPopOutAnimation();
-                    }
-                });
-            }
-        });
-
-
     </script>
 </body>
 </html>
