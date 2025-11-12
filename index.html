@@ -415,29 +415,39 @@
             body {
                 display: flex;
                 flex-direction: column;
-                padding: 40px;
-                margin-top: 12vh;
-                padding-top: calc(64px + 40px);
+                padding: 24px;
+                margin-top: 8vh;
+                padding-top: calc(56px + 24px);
+            }
+
+            .nav-bar {
+                height: 56px;
+                opacity: 1;
+            }
+
+            .nav-content {
+                padding: 0 24px;
             }
 
             .hey-container {
                 position: static;
-                margin: 0 0 40px 0;
+                margin: 0 0 32px 0;
             }
 
             .hey {
                 font-size: 36px;
+                margin-left: 0;
             }
 
             .content,
             .content-group {
                 width: 100%;
-                margin-bottom: 32px;
+                margin-bottom: 24px;
             }
 
             .content {
-                font-size: 15px;
-                line-height: 1.5;
+                font-size: 16px;
+                line-height: 1.6;
                 text-align: left;
                 opacity: 1 !important;
             }
@@ -447,11 +457,101 @@
                 height: auto;
                 margin: 2rem 0;
                 opacity: 1 !important;
+                border-radius: 4px;
             }
 
             .blog-link,
             .send-mail {
                 opacity: 1 !important;
+                font-size: 16px;
+            }
+
+            .content-group {
+                gap: 1rem;
+            }
+
+            /* Mobile Mail Mode */
+            .mail-mode {
+                padding: 24px;
+                padding-top: calc(56px + 24px);
+            }
+
+            .mail-mode .nav-bar {
+                display: block;
+            }
+
+            .mail-mode .hey-container {
+                position: static;
+                margin: 0 0 24px 0;
+            }
+
+            .mail-mode .prompt-text {
+                position: static;
+                left: auto;
+                top: auto;
+                font-size: 14px;
+                color: #888;
+                margin-bottom: 16px;
+                display: block;
+            }
+
+            .mail-mode .hey {
+                font-size: 32px;
+                white-space: normal;
+                overflow: visible;
+                max-width: 100%;
+                width: 100%;
+                min-height: 40px;
+                display: block;
+            }
+
+            .mail-input {
+                position: static;
+                left: auto;
+                top: auto;
+                right: auto;
+                bottom: auto;
+                width: 100%;
+                min-height: 200px;
+                margin: 24px 0;
+                font-size: 16px;
+            }
+
+            .char-count {
+                position: static;
+                right: auto;
+                top: auto;
+                font-size: 14px;
+                text-align: right;
+                margin-bottom: 16px;
+            }
+
+            .send-button {
+                position: static;
+                right: auto;
+                bottom: auto;
+                display: block;
+                text-align: right;
+                margin-bottom: 16px;
+            }
+
+            .location-info {
+                position: static;
+                left: auto;
+                bottom: auto;
+                margin-top: 24px;
+            }
+
+            .at-link::before {
+                display: none;
+            }
+
+            .typing-cursor {
+                height: 0.9em;
+            }
+
+            .right-links {
+                gap: 16px;
             }
         }
     </style>
@@ -592,6 +692,8 @@
             inMailMode = true;
             document.body.classList.add('mail-mode');
             
+            const isMobile = window.innerWidth <= 1024;
+            
             // Store original content
             const originalHeyContent = hey.innerHTML;
             
@@ -599,7 +701,13 @@
             const promptText = document.createElement('div');
             promptText.className = 'prompt-text';
             promptText.textContent = 'Add your email at the end so I can contact you!';
-            document.body.appendChild(promptText);
+            
+            if (isMobile) {
+                // On mobile, insert before hey container
+                hey.parentNode.parentNode.insertBefore(promptText, hey.parentNode);
+            } else {
+                document.body.appendChild(promptText);
+            }
             
             // Transform hey to subject input
             hey.textContent = '';
@@ -613,25 +721,45 @@
             const mailInput = document.createElement('textarea');
             mailInput.className = 'mail-input';
             mailInput.placeholder = 'Text...';
-            document.body.appendChild(mailInput);
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(mailInput);
+            } else {
+                document.body.appendChild(mailInput);
+            }
             
             // Create character count
             const charCount = document.createElement('div');
             charCount.className = 'char-count';
             charCount.textContent = '0';
-            document.body.appendChild(charCount);
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(charCount);
+            } else {
+                document.body.appendChild(charCount);
+            }
             
             // Create send button
             const sendButton = document.createElement('a');
             sendButton.className = 'send-button';
             sendButton.textContent = 'send';
-            document.body.appendChild(sendButton);
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(sendButton);
+            } else {
+                document.body.appendChild(sendButton);
+            }
             
             // Create back button
             const locationInfo = document.createElement('div');
             locationInfo.className = 'location-info';
             locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
-            document.body.appendChild(locationInfo);
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(locationInfo);
+            } else {
+                document.body.appendChild(locationInfo);
+            }
             
             locationInfo.querySelector('a').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -653,17 +781,19 @@
                 hey.style.color = '#000';
                 hey.classList.remove('empty-placeholder');
                 
-                // Prevent overflow
-                if (hey.scrollWidth > hey.clientWidth) {
-                    const text = hey.textContent;
-                    hey.textContent = text.slice(0, -1);
-                    
-                    const range = document.createRange();
-                    const sel = window.getSelection();
-                    range.selectNodeContents(hey);
-                    range.collapse(false);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
+                // Prevent overflow on desktop only
+                if (!isMobile) {
+                    if (hey.scrollWidth > hey.clientWidth) {
+                        const text = hey.textContent;
+                        hey.textContent = text.slice(0, -1);
+                        
+                        const range = document.createRange();
+                        const sel = window.getSelection();
+                        range.selectNodeContents(hey);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
                 }
             });
             
