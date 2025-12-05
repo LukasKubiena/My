@@ -210,19 +210,19 @@
             line-height: 1.45;
         }
 
-        .blog-link,
+        .writing-link,
         .send-mail {
             margin-bottom: -1rem;
             opacity: 0;
             transition: opacity 1s ease-in;
         }
 
-        .blog-link.visible,
+        .writing-link.visible,
         .send-mail.visible {
             opacity: 1;
         }
 
-        .blog-link a,
+        .writing-link a,
         .send-mail a {
             color: #000000;
             text-decoration: underline;
@@ -460,7 +460,7 @@
                 border-radius: 4px;
             }
 
-            .blog-link,
+            .writing-link,
             .send-mail {
                 opacity: 1 !important;
                 font-size: 16px;
@@ -561,7 +561,7 @@
         <div class="nav-content">
             <a href="#" class="nav-link">Lukas Kubiena</a>
             <div class="right-links">
-                <a href="./blog/index.html" class="nav-link">blog</a>
+                <a href="./writing/index.html" class="nav-link">writing</a>
                 <a href="mailto:lukasmariakubiena@gmail.com" class="nav-link">contact</a>
             </div>
         </div>
@@ -587,8 +587,8 @@
         <div class="content content-3">
             Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation, as a medium to express myself in ways I can't get across otherwise. Feel free to reach out if we care about the same things!
         </div>
-        <div class="blog-link">
-            <a href="./blog/index.html">blog</a>
+        <div class="writing-link">
+            <a href="./writing/index.html">writing</a>
         </div>
         <div class="send-mail">
             <a href="#" id="send-mail-link">send me a mail</a>
@@ -604,7 +604,7 @@
             hey = document.querySelector('.hey');
             heyText = hey.querySelector('.hey-text');
             comma = hey.querySelector('.comma');
-            const content = document.querySelectorAll('.content, .send-mail, .blog-link, .profile-image');
+            const content = document.querySelectorAll('.content, .send-mail, .writing-link, .profile-image');
             const navBar = document.querySelector('.nav-bar');
             
             // Check if user has seen animation before

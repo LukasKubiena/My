@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - Lukas Kubiena</title>
+    <title>Writing - Lukas Kubiena</title>
     <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="NeueHaasDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin>
     <style>
@@ -189,7 +189,7 @@
             font-size: 14px;
         }
 
-        /* Blog Popup Modal */
+        /* Writing Popup Modal */
         .writing-popup-overlay {
             position: fixed;
             top: 0;
@@ -356,7 +356,7 @@
             }
         }
 
-        /* Blog Posts Grid */
+        /* Writing Posts Grid */
         .writing-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -460,9 +460,9 @@
         </div>
     </nav>
 
-    <!-- Blog Content -->
+    <!-- Writing Content -->
     <div class="writing-container fonts-loading">
-        <!-- Blog Posts -->
+        <!-- Writing Posts -->
         <div class="writing-grid">
             <a href="post.html?post=11" class="writing-card">
                 <img src="ban12.png" alt="Constraints shape Possibilites" class="banner-image">
@@ -560,7 +560,7 @@
         Written in Europe with Care <img src="eu.svg" alt="EU Flag">
     </footer>
 
-    <!-- Blog Popup Modal -->
+    <!-- Writing Popup Modal -->
     <div class="writing-popup-overlay" id="writingPopup">
         <div class="writing-popup-container">
             <button class="writing-popup-close" id="writingPopupClose">&times;</button>
@@ -675,7 +675,7 @@
             }
         });
 
-        // Blog Popup Functionality
+        // Writing Popup Functionality
         document.addEventListener('DOMContentLoaded', function() {
             const writingPopup = document.getElementById('writingPopup');
             const writingPopupClose = document.getElementById('writingPopupClose');
@@ -768,7 +768,7 @@
                         throw new Error(result.message || 'Subscription failed');
                     }
                 } catch (error) {
-                    console.error('Blog popup subscription error:', error);
+                    console.error('Writing popup subscription error:', error);
                     writingPopupError.style.display = 'block';
                     writingPopupError.textContent = 'Something went wrong. Please try again.';
                 } finally {

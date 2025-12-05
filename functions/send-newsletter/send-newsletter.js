@@ -20,7 +20,7 @@ exports.handler = async (event, context) => {
 
   if (event.httpMethod === 'POST') {
     try {
-      const { action, email, blogTitle, blogUrl } = JSON.parse(event.body);
+      const { action, email, writingTitle, writingUrl } = JSON.parse(event.body);
       console.log('Action:', action);
 
       if (action === 'subscribe') {
@@ -40,7 +40,7 @@ exports.handler = async (event, context) => {
       }
 
       if (action === 'notify') {
-        console.log(`Sending newsletter for: ${blogTitle} to ${subscribers.length} subscribers`);
+        console.log(`Sending newsletter for: ${writingTitle} to ${subscribers.length} subscribers`);
         
         // Check environment variables
         if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
@@ -58,17 +58,17 @@ exports.handler = async (event, context) => {
 
         const mailOptions = {
           from: process.env.GMAIL_USER,
-          subject: 'New blog post from Lukas',
+          subject: 'New writing post from Lukas',
           html: `
             <div style="font-family: 'NeueHaasDisplay-Light', Arial, sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6;">
               <p>Hey,</p>
-              <p>I saw you subscribed to my blog. Thanks for that - I just posted a new one in case you are interested :)</p>
-              ${blogTitle ? `<p style="margin: 20px 0;"><strong>${blogTitle}</strong></p>` : ''}
-              ${blogUrl ? `<p><a href="${blogUrl}" style="color: #000; text-decoration: underline;">Read the post</a></p>` : ''}
+              <p>I saw you subscribed to my writing. Thanks for that - I just posted a new one in case you are interested :)</p>
+              ${writingTitle ? `<p style="margin: 20px 0;"><strong>${writingTitle}</strong></p>` : ''}
+              ${writingUrl ? `<p><a href="${writingUrl}" style="color: #000; text-decoration: underline;">Read the post</a></p>` : ''}
               <p style="margin-top: 30px;">Best,<br>Lukas</p>
               <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
               <p style="font-size: 12px; color: #666; text-align: center;">
-                You received this because you subscribed to updates from Lukas Kubiena's blog.
+                You received this because you subscribed to updates from Lukas Kubiena's writing.
               </p>
             </div>
           `

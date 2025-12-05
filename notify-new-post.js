@@ -1,12 +1,12 @@
 // notify-new-post.js
-// Run this script when you publish a new blog post
+// Run this script when you publish a new writing post
 
-async function notifySubscribers(blogTitle, blogUrl) {
+async function notifySubscribers(writingTitle, writingUrl) {
   // Make sure to include the full URL with protocol
   const SITE_URL = 'https://lukaskubiena.com';
   
   try {
-    console.log(`📧 Sending newsletter for: ${blogTitle}`);
+    console.log(`📧 Sending newsletter for: ${writingTitle}`);
     
     const response = await fetch(`${SITE_URL}/.netlify/functions/send-newsletter`, {
       method: 'POST',
@@ -15,8 +15,8 @@ async function notifySubscribers(blogTitle, blogUrl) {
       },
       body: JSON.stringify({
         action: 'notify',
-        blogTitle: blogTitle,
-        blogUrl: blogUrl
+        writingTitle: writingTitle,
+        writingUrl: writingUrl
       })
     });
 
@@ -60,8 +60,8 @@ async function getSubscriberCount() {
 // Example usage:
 // When you publish a new post, update these values and run:
 const newPost = {
-  title: "Your New Blog Post Title",
-  url: "https://lukaskubiena.com/blog/post.html?post=6"
+  title: "Your New Writing Post Title",
+  url: "https://lukaskubiena.com/writing/post.html?post=6"
 };
 
 // Uncomment to send notification:
