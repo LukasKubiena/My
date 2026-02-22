@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work — Lukas Kubiena</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* ── NAV ── */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .nav-link:hover { color: #000; }
+        .nav-link.active { color: #000; }
+
+        .right-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        /* ── SLIDES WRAPPER ── */
+        .slides-wrapper {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        /* ── SLIDE BASE ── */
+        .slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ── SHARED INNER LAYOUT ── */
+        /*
+         * 6-column grid (matches design proportions):
+         *   left-margin(12%) | info(17%) | image(35%) | mid-gap(8%) | text(16%) | right-space(1fr≈12%)
+         * 3-row grid:
+         *   top-spacer(11vh) | main(1fr) | bottom-bar(11vh)
+         * NOTE: no column-gap — spacing is fully baked into the track sizes.
+         */
+        .slide-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 12% 17% 35% 8% 16% 1fr;
+            grid-template-rows: 11vh 1fr 11vh;
+        }
+
+        /* ══════════════════════════════
+           PROJECT SLIDE
+        ══════════════════════════════ */
+
+        .project-info {
+            grid-column: 2;
+            grid-row: 2;
+            align-self: start;
+            min-width: 0;
+        }
+
+        .project-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 22px;
+            color: #000;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+
+        /* wrapper for animated client name */
+        .client-name-wrap {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: top;
+        }
+
+        #client-name {
+            display: inline-block;
+        }
+
+        .project-type {
+            font-size: 15px;
+            color: #999;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .project-image-col {
+            grid-column: 3;
+            grid-row: 1 / 4;
+            min-width: 0;        /* critical: prevents grid track from expanding to image natural width */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .project-img-wrap {
+            width: 100%;
+            line-height: 0;
+        }
+
+        .project-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: calc(100vh - 64px - 4rem);
+            object-fit: cover;
+        }
+
+        .project-text-col {
+            grid-column: 5;
+            grid-row: 2;
+            align-self: start;
+            min-width: 0;
+        }
+
+        .project-text {
+            font-size: 15px;
+            line-height: 1.45;
+            text-align: justify;
+            color: #000;
+            letter-spacing: -0.01em;
+        }
+
+        .project-text p + p {
+            margin-top: 1em;
+        }
+
+        .project-date {
+            grid-column: 2;
+            grid-row: 3;
+            align-self: end;
+            font-size: 15px;
+            color: #000;
+            padding-bottom: 2rem;
+            min-width: 0;
+        }
+
+        /* ══════════════════════════════
+           TRANSITION ANIMATIONS
+        ══════════════════════════════ */
+
+        @keyframes outUp {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(-9px); }
+        }
+        @keyframes inUp {
+            from { opacity: 0; transform: translateY(9px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes outDown {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(9px); }
+        }
+        @keyframes inDown {
+            from { opacity: 0; transform: translateY(-9px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes xfadeOut {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+        @keyframes xfadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .anim-out-up   { animation: outUp   0.22s ease forwards; }
+        .anim-in-up    { animation: inUp    0.22s ease forwards; }
+        .anim-out-down { animation: outDown 0.22s ease forwards; }
+        .anim-in-down  { animation: inDown  0.22s ease forwards; }
+        .img-out       { animation: xfadeOut 0.22s ease forwards; }
+        .img-in        { animation: xfadeIn  0.22s ease forwards; }
+
+        /* ══════════════════════════════
+           QUESTION SLIDE
+        ══════════════════════════════ */
+
+        .question-info {
+            grid-column: 2;
+            grid-row: 2;
+            align-self: start;
+            min-width: 0;
+        }
+
+        .question-text {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 22px;
+            color: #999;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 1px;
+            height: 1em;
+            background-color: #000;
+            animation: blink 0.7s infinite;
+            margin-left: 2px;
+            vertical-align: baseline;
+        }
+
+        @keyframes blink {
+            0%   { opacity: 0; }
+            50%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .make-request-btn {
+            grid-column: 6;
+            grid-row: 3;
+            align-self: end;
+            justify-self: end;
+            padding-bottom: 2rem;
+            font-size: 15px;
+            color: #999;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .make-request-btn:hover { color: #000; }
+
+        /* ══════════════════════════════
+           CONTACT SLIDE
+        ══════════════════════════════ */
+
+        .contact-header {
+            grid-column: 2;
+            grid-row: 2;
+            align-self: start;
+            min-width: 0;
+        }
+
+        .contact-title {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 22px;
+            color: #000;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+            font-weight: normal;
+        }
+
+        .contact-dash {
+            display: block;
+            font-size: 15px;
+            color: #000;
+            margin-top: 6px;
+            letter-spacing: 0;
+        }
+
+        /* Form spans image + gap + text columns (cols 3-5) */
+        .contact-form-area {
+            grid-column: 3 / 6;
+            grid-row: 2;
+            align-self: center;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            gap: 2.5rem;
+        }
+
+        .form-row.two-col { grid-template-columns: 1fr 1fr; }
+        .form-row.one-col { grid-template-columns: 1fr; }
+
+        .contact-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            padding: 4px 0 10px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 15px;
+            color: #000;
+            background: transparent;
+            outline: none;
+            letter-spacing: -0.01em;
+            transition: border-bottom-color 0.2s ease;
+            line-height: 1.45;
+            appearance: none;
+        }
+
+        .contact-input:focus {
+            border-bottom-color: #000;
+        }
+
+        .contact-input::placeholder {
+            color: #c0c0c0;
+        }
+
+        textarea.contact-input {
+            resize: none;
+            overflow-y: auto;
+        }
+
+        .send-request-btn {
+            grid-column: 6;
+            grid-row: 3;
+            align-self: end;
+            justify-self: end;
+            padding-bottom: 2rem;
+            font-size: 15px;
+            color: #ccc;
+            text-decoration: underline;
+            cursor: default;
+            transition: color 0.3s ease;
+            pointer-events: none;
+        }
+
+        .send-request-btn.active {
+            color: #999;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .send-request-btn.active:hover { color: #000; }
+
+        /* ══════════════════════════════
+           SCROLL HINT (subtle dots)
+        ══════════════════════════════ */
+
+        .scroll-dots {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 50;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-dots:hover { opacity: 0.8; }
+
+        .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ccc;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .dot.active {
+            background: #000;
+            transform: scale(1.2);
+        }
+
+        /* ══════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════ */
+
+        @media (max-width: 900px) {
+            .slide-inner {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                padding: 3rem 24px 2rem;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            body { overflow: auto; }
+            .slides-wrapper { overflow-y: auto; position: static; height: auto; }
+            .slide { position: static; opacity: 1; pointer-events: auto; display: none; }
+            .slide.active { display: flex; flex-direction: column; min-height: calc(100vh - 64px); }
+
+            .project-image-col { padding: 0; }
+            .project-text-col { order: -1; }
+            .project-info { order: -2; }
+            .project-date { margin-top: 1rem; }
+            .project-text { text-align: left; }
+
+            .contact-form-area { gap: 1.5rem; }
+            .form-row.two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+
+            .make-request-btn,
+            .send-request-btn {
+                margin-top: auto;
+                padding-bottom: 0;
+                justify-self: auto;
+                text-align: right;
+            }
+
+            .scroll-dots { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="./index.html" class="nav-link">Lukas Kubiena</a>
+            <div class="right-links">
+                <a href="./work.html" class="nav-link active">work</a>
+                <a href="./writing/index.html" class="nav-link">blog</a>
+                <a href="mailto:lukasmariakubiena@gmail.com" class="nav-link">contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="slides-wrapper">
+
+        <!-- ── PROJECT SLIDE ── -->
+        <div class="slide active" id="slide-project">
+            <div class="slide-inner">
+
+                <div class="project-info">
+                    <div class="project-title">
+                        For&nbsp;<span class="client-name-wrap"><span id="client-name">co.built</span></span>
+                    </div>
+                    <div class="project-type" id="project-type">Logo Design</div>
+                </div>
+
+                <div class="project-image-col">
+                    <div class="project-img-wrap">
+                        <img id="project-image" src="image.webp" alt="co.built project">
+                    </div>
+                </div>
+
+                <div class="project-text-col">
+                    <div class="project-text" id="project-text"></div>
+                </div>
+
+                <div class="project-date" id="project-date">Vienna, 2026</div>
+
+            </div>
+        </div>
+
+        <!-- ── QUESTION SLIDE ── -->
+        <div class="slide" id="slide-question">
+            <div class="slide-inner">
+
+                <div class="question-info">
+                    <div class="question-text">For?<span class="typing-cursor"></span></div>
+                </div>
+
+                <a href="#" class="make-request-btn" id="make-request-btn">make a request</a>
+
+            </div>
+        </div>
+
+        <!-- ── CONTACT SLIDE ── -->
+        <div class="slide" id="slide-contact">
+            <div class="slide-inner">
+
+                <div class="contact-header">
+                    <h1 class="contact-title">Contact Form</h1>
+                    <span class="contact-dash">—</span>
+                </div>
+
+                <div class="contact-form-area">
+                    <div class="form-row two-col">
+                        <input type="text"  class="contact-input" id="f-firstname" placeholder="First name" autocomplete="given-name">
+                        <input type="text"  class="contact-input" id="f-lastname"  placeholder="Last name"  autocomplete="family-name">
+                    </div>
+                    <div class="form-row two-col">
+                        <input type="email" class="contact-input" id="f-email"   placeholder="Email"   autocomplete="email">
+                        <input type="tel"   class="contact-input" id="f-phone"   placeholder="Phone"   autocomplete="tel">
+                    </div>
+                    <div class="form-row one-col">
+                        <textarea class="contact-input" id="f-message" placeholder="Message" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <a href="#" class="send-request-btn" id="send-request-btn">send request</a>
+
+            </div>
+        </div>
+
+    </div><!-- /slides-wrapper -->
+
+    <!-- Scroll position dots -->
+    <div class="scroll-dots" id="scroll-dots"></div>
+
+    <script>
+        /* ─────────────────────────────────────────────
+           PROJECT DATA
+        ───────────────────────────────────────────── */
+        const projects = [
+            {
+                client: 'co.built',
+                type: 'Logo Design',
+                location: 'Vienna, 2026',
+                image: 'image.webp',
+                text: [
+                    'We intercut between intimate Vienna moments (an elderly couple kissing through a café window, light patterns on architecture) and brief flashes of historical curiosity — These weave with other moments — a kid showing another kid a chalk drawing it made on the street with cut to: feynman laughing during a lecture, drawing on a chalkboard, the first photograph ever taken, the Lumière brothers\u2019 train arriving at a station, Hitchcock genuinely laughing on stage, the AlphaGo move that surprised its creators, Lee Sedol\u2019s move 78, scientists reacting to the first picture of a black hole.',
+                    'Not presented as \u201cgreat achievements\u201d but people following their wonder, human moments \u2014 Feynman\u2019s joy, not Feynman the genius.',
+                    'The ping-pong rhythm feels natural, like one thought leading to another.'
+                ]
+            },
+            {
+                client: 'MindStash',
+                type: 'Logo Design',
+                location: 'Vienna, 2026',
+                image: 'image2.jpeg',
+                text: [
+                    'We intercut between intimate Vienna moments (an elderly couple kissing through a café window, light patterns on architecture) and brief flashes of historical curiosity — These weave with other moments — a kid showing another kid a chalk drawing it made on the street with cut to: feynman laughing during a lecture, drawing on a chalkboard, the first photograph ever taken, the Lumière brothers\u2019 train arriving at a station, Hitchcock genuinely laughing on stage, the AlphaGo move that surprised its creators, Lee Sedol\u2019s move 78, scientists reacting to the first picture of a black hole.',
+                    'Not presented as \u201cgreat achievements\u201d but people following their wonder, human moments \u2014 Feynman\u2019s joy, not Feynman the genius.',
+                    'The ping-pong rhythm feels natural, like one thought leading to another.'
+                ]
+            }
+        ];
+
+        /* ─────────────────────────────────────────────
+           DOM REFS
+        ───────────────────────────────────────────── */
+        const clientNameEl   = document.getElementById('client-name');
+        const projectTypeEl  = document.getElementById('project-type');
+        const projectImageEl = document.getElementById('project-image');
+        const projectTextEl  = document.getElementById('project-text');
+        const projectDateEl  = document.getElementById('project-date');
+        const slideProject   = document.getElementById('slide-project');
+        const slideQuestion  = document.getElementById('slide-question');
+        const slideContact   = document.getElementById('slide-contact');
+        const makeRequestBtn = document.getElementById('make-request-btn');
+        const sendRequestBtn = document.getElementById('send-request-btn');
+        const dotsContainer  = document.getElementById('scroll-dots');
+
+        /* ─────────────────────────────────────────────
+           STATE
+        ───────────────────────────────────────────── */
+        let currentProjectIndex = 0;
+        let currentScreen = 'project'; // 'project' | 'question' | 'contact'
+        let isTransitioning = false;
+
+        /* ─────────────────────────────────────────────
+           DOTS
+        ───────────────────────────────────────────── */
+        const totalDots = projects.length + 1; // projects + question
+
+        function buildDots() {
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < totalDots; i++) {
+                const d = document.createElement('span');
+                d.className = 'dot' + (i === 0 ? ' active' : '');
+                dotsContainer.appendChild(d);
+            }
+        }
+
+        function updateDots() {
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((d, i) => {
+                if (currentScreen === 'project') {
+                    d.classList.toggle('active', i === currentProjectIndex);
+                } else if (currentScreen === 'question') {
+                    d.classList.toggle('active', i === projects.length);
+                } else {
+                    // contact: keep question dot lit
+                    d.classList.toggle('active', i === projects.length);
+                }
+            });
+        }
+
+        buildDots();
+
+        /* ─────────────────────────────────────────────
+           POPULATE INITIAL PROJECT
+        ───────────────────────────────────────────── */
+        function renderProject(index) {
+            const p = projects[index];
+            clientNameEl.textContent  = p.client;
+            projectTypeEl.textContent = p.type;
+            projectDateEl.textContent = p.location;
+            projectImageEl.src        = p.image;
+            projectImageEl.alt        = p.client;
+            projectTextEl.innerHTML   = p.text.map(t => `<p>${t}</p>`).join('');
+        }
+
+        renderProject(0);
+
+        /* ─────────────────────────────────────────────
+           SLIDE SWITCHER
+        ───────────────────────────────────────────── */
+        function showSlide(slide) {
+            [slideProject, slideQuestion, slideContact].forEach(s => s.classList.remove('active'));
+            slide.classList.add('active');
+        }
+
+        /* ─────────────────────────────────────────────
+           ANIMATED PROJECT TRANSITION
+        ───────────────────────────────────────────── */
+        function transitionProject(nextIndex, direction) {
+            // direction > 0 = scrolling forward (up animation)
+            const outCls = direction > 0 ? 'anim-out-up'   : 'anim-out-down';
+            const inCls  = direction > 0 ? 'anim-in-up'    : 'anim-in-down';
+
+            const textEls = [clientNameEl, projectTypeEl, projectDateEl, projectTextEl];
+
+            // Animate out
+            projectImageEl.classList.add('img-out');
+            textEls.forEach(el => {
+                el.classList.remove(outCls, inCls, 'anim-out-up', 'anim-in-up', 'anim-out-down', 'anim-in-down');
+                void el.offsetWidth; // force reflow
+                el.classList.add(outCls);
+            });
+
+            setTimeout(() => {
+                // Swap content
+                renderProject(nextIndex);
+
+                // Remove out, add in
+                textEls.forEach(el => {
+                    el.classList.remove(outCls);
+                    void el.offsetWidth;
+                    el.classList.add(inCls);
+                });
+                projectImageEl.classList.remove('img-out');
+                projectImageEl.classList.add('img-in');
+
+                setTimeout(() => {
+                    textEls.forEach(el => el.classList.remove(inCls));
+                    projectImageEl.classList.remove('img-in');
+                    isTransitioning = false;
+                }, 260);
+
+            }, 240);
+        }
+
+        /* ─────────────────────────────────────────────
+           NAVIGATION
+        ───────────────────────────────────────────── */
+        function navigateNext() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            if (currentScreen === 'project') {
+                if (currentProjectIndex < projects.length - 1) {
+                    const next = currentProjectIndex + 1;
+                    transitionProject(next, 1);
+                    currentProjectIndex = next;
+                    updateDots();
+                    // isTransitioning reset inside transitionProject
+                } else {
+                    // No more projects → question slide
+                    currentScreen = 'question';
+                    showSlide(slideQuestion);
+                    updateDots();
+                    isTransitioning = false;
+                }
+            } else {
+                isTransitioning = false;
+            }
+        }
+
+        function navigatePrev() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            if (currentScreen === 'question') {
+                currentScreen = 'project';
+                showSlide(slideProject);
+                updateDots();
+                isTransitioning = false;
+            } else if (currentScreen === 'project' && currentProjectIndex > 0) {
+                const next = currentProjectIndex - 1;
+                transitionProject(next, -1);
+                currentProjectIndex = next;
+                updateDots();
+                // isTransitioning reset inside transitionProject
+            } else {
+                isTransitioning = false;
+            }
+        }
+
+        /* ─────────────────────────────────────────────
+           SCROLL / WHEEL
+        ───────────────────────────────────────────── */
+        let wheelAccum    = 0;
+        let wheelCooldown = false;
+        const WHEEL_THRESHOLD = 55;
+        const COOLDOWN_MS     = 750;
+
+        function resetCooldown() {
+            setTimeout(() => { wheelCooldown = false; }, COOLDOWN_MS);
+        }
+
+        window.addEventListener('wheel', (e) => {
+            if (currentScreen === 'contact') return; // allow free scroll on contact
+            e.preventDefault();
+
+            if (wheelCooldown) return;
+            wheelAccum += e.deltaY;
+
+            if (Math.abs(wheelAccum) >= WHEEL_THRESHOLD) {
+                const dir = wheelAccum > 0 ? 1 : -1;
+                wheelAccum = 0;
+                wheelCooldown = true;
+                if (dir > 0) navigateNext(); else navigatePrev();
+                resetCooldown();
+            }
+        }, { passive: false });
+
+        /* ─────────────────────────────────────────────
+           KEYBOARD
+        ───────────────────────────────────────────── */
+        window.addEventListener('keydown', (e) => {
+            if (currentScreen === 'contact') return;
+            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                e.preventDefault();
+                if (!wheelCooldown) { wheelCooldown = true; navigateNext(); resetCooldown(); }
+            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                if (!wheelCooldown) { wheelCooldown = true; navigatePrev(); resetCooldown(); }
+            }
+        });
+
+        /* ─────────────────────────────────────────────
+           TOUCH
+        ───────────────────────────────────────────── */
+        let touchStartY = 0;
+
+        window.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+            if (currentScreen === 'contact') return;
+            const delta = touchStartY - e.changedTouches[0].clientY;
+            if (Math.abs(delta) > 40 && !wheelCooldown) {
+                wheelCooldown = true;
+                if (delta > 0) navigateNext(); else navigatePrev();
+                resetCooldown();
+            }
+        }, { passive: true });
+
+        /* ─────────────────────────────────────────────
+           MAKE REQUEST BUTTON
+        ───────────────────────────────────────────── */
+        makeRequestBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentScreen = 'contact';
+            showSlide(slideContact);
+            setTimeout(() => {
+                document.getElementById('f-firstname').focus();
+            }, 550);
+        });
+
+        /* ─────────────────────────────────────────────
+           CONTACT FORM VALIDATION
+        ───────────────────────────────────────────── */
+        const emailRe = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;
+
+        function validateContact() {
+            const name  = document.getElementById('f-firstname').value.trim();
+            const email = document.getElementById('f-email').value.trim();
+            const ready = name.length > 0 && emailRe.test(email);
+            sendRequestBtn.classList.toggle('active', ready);
+        }
+
+        ['f-firstname','f-lastname','f-email','f-phone','f-message'].forEach(id => {
+            document.getElementById(id).addEventListener('input', validateContact);
+        });
+
+        sendRequestBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!sendRequestBtn.classList.contains('active')) return;
+            // submission logic placeholder
+            alert('Request sent! Thank you.');
+        });
+    </script>
+</body>
+</html>
