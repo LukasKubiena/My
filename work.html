@@ -30,17 +30,14 @@
             height: 100vh;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+        a { color: inherit; text-decoration: none; }
 
-        /* ── NAV ── */
+        /* ══════════════════════════════
+           NAV
+        ══════════════════════════════ */
         .nav-bar {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 64px;
             background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(8px);
@@ -60,36 +57,29 @@
 
         .nav-link {
             color: #666;
-            text-decoration: none;
             font-size: 15px;
-            transition: color 0.3s ease;
             font-family: 'NeueHaasDisplay-Light', sans-serif;
+            transition: color 0.3s ease;
         }
-
         .nav-link:hover { color: #000; }
         .nav-link.active { color: #000; }
 
-        .right-links {
-            display: flex;
-            gap: 24px;
-        }
+        .right-links { display: flex; gap: 24px; }
 
-        /* ── SLIDES WRAPPER ── */
+        /* ══════════════════════════════
+           SLIDE SHELL
+        ══════════════════════════════ */
         .slides-wrapper {
             position: fixed;
-            top: 64px;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 64px; left: 0; right: 0; bottom: 0;
         }
 
-        /* ── SLIDE BASE ── */
         .slide {
             position: absolute;
             inset: 0;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.48s ease;
         }
 
         .slide.active {
@@ -97,14 +87,17 @@
             pointer-events: auto;
         }
 
-        /* ── SHARED INNER LAYOUT ── */
-        /*
-         * 6-column grid (matches design proportions):
-         *   left-margin(12%) | info(17%) | image(35%) | mid-gap(8%) | text(16%) | right-space(1fr≈12%)
-         * 3-row grid:
-         *   top-spacer(11vh) | main(1fr) | bottom-bar(11vh)
-         * NOTE: no column-gap — spacing is fully baked into the track sizes.
-         */
+        /* ══════════════════════════════
+           SHARED GRID
+           6 columns — spacing baked in (no column-gap):
+           col1: 12% left margin
+           col2: 17% project info
+           col3: 35% image
+           col4: 8%  mid gap
+           col5: 16% text
+           col6: 1fr right margin
+           3 rows: 11vh top | 1fr content | 11vh bottom
+        ══════════════════════════════ */
         .slide-inner {
             max-width: 1400px;
             margin: 0 auto;
@@ -116,7 +109,7 @@
         }
 
         /* ══════════════════════════════
-           PROJECT SLIDE
+           PROJECT SLIDE — DESKTOP
         ══════════════════════════════ */
 
         .project-info {
@@ -135,16 +128,13 @@
             white-space: nowrap;
         }
 
-        /* wrapper for animated client name */
+        /* Animated client name wrapper */
         .client-name-wrap {
             display: inline-block;
             overflow: hidden;
             vertical-align: top;
         }
-
-        #client-name {
-            display: inline-block;
-        }
+        #client-name { display: inline-block; }
 
         .project-type {
             font-size: 15px;
@@ -156,11 +146,12 @@
         .project-image-col {
             grid-column: 3;
             grid-row: 1 / 4;
-            min-width: 0;        /* critical: prevents grid track from expanding to image natural width */
+            min-width: 0;          /* stops grid track bloating to image natural-width */
             overflow: hidden;
             display: flex;
-            align-items: center;
-            padding: 2rem 0;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2.5rem 0;
         }
 
         .project-img-wrap {
@@ -172,8 +163,7 @@
             width: 100%;
             height: auto;
             display: block;
-            max-height: calc(100vh - 64px - 4rem);
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .project-text-col {
@@ -190,10 +180,7 @@
             color: #000;
             letter-spacing: -0.01em;
         }
-
-        .project-text p + p {
-            margin-top: 1em;
-        }
+        .project-text p + p { margin-top: 1em; }
 
         .project-date {
             grid-column: 2;
@@ -211,28 +198,22 @@
 
         @keyframes outUp {
             from { opacity: 1; transform: translateY(0); }
-            to   { opacity: 0; transform: translateY(-9px); }
+            to   { opacity: 0; transform: translateY(-10px); }
         }
         @keyframes inUp {
-            from { opacity: 0; transform: translateY(9px); }
+            from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes outDown {
             from { opacity: 1; transform: translateY(0); }
-            to   { opacity: 0; transform: translateY(9px); }
+            to   { opacity: 0; transform: translateY(10px); }
         }
         @keyframes inDown {
-            from { opacity: 0; transform: translateY(-9px); }
+            from { opacity: 0; transform: translateY(-10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes xfadeOut {
-            from { opacity: 1; }
-            to   { opacity: 0; }
-        }
-        @keyframes xfadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-        }
+        @keyframes xfadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes xfadeIn  { from { opacity: 0; } to { opacity: 1; } }
 
         .anim-out-up   { animation: outUp   0.22s ease forwards; }
         .anim-in-up    { animation: inUp    0.22s ease forwards; }
@@ -242,226 +223,173 @@
         .img-in        { animation: xfadeIn  0.22s ease forwards; }
 
         /* ══════════════════════════════
-           QUESTION SLIDE
+           PROGRESS DOTS
         ══════════════════════════════ */
-
-        .question-info {
-            grid-column: 2;
-            grid-row: 2;
-            align-self: start;
-            min-width: 0;
-        }
-
-        .question-text {
-            font-family: 'NeueHaasDisplay-Medium', sans-serif;
-            font-size: 22px;
-            color: #999;
-            letter-spacing: -0.02em;
-            line-height: 1.25;
-        }
-
-        .typing-cursor {
-            display: inline-block;
-            width: 1px;
-            height: 1em;
-            background-color: #000;
-            animation: blink 0.7s infinite;
-            margin-left: 2px;
-            vertical-align: baseline;
-        }
-
-        @keyframes blink {
-            0%   { opacity: 0; }
-            50%  { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        .make-request-btn {
-            grid-column: 6;
-            grid-row: 3;
-            align-self: end;
-            justify-self: end;
-            padding-bottom: 2rem;
-            font-size: 15px;
-            color: #999;
-            text-decoration: underline;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .make-request-btn:hover { color: #000; }
-
-        /* ══════════════════════════════
-           CONTACT SLIDE
-        ══════════════════════════════ */
-
-        .contact-header {
-            grid-column: 2;
-            grid-row: 2;
-            align-self: start;
-            min-width: 0;
-        }
-
-        .contact-title {
-            font-family: 'NeueHaasDisplay-Medium', sans-serif;
-            font-size: 22px;
-            color: #000;
-            letter-spacing: -0.02em;
-            line-height: 1.25;
-            font-weight: normal;
-        }
-
-        .contact-dash {
-            display: block;
-            font-size: 15px;
-            color: #000;
-            margin-top: 6px;
-            letter-spacing: 0;
-        }
-
-        /* Form spans image + gap + text columns (cols 3-5) */
-        .contact-form-area {
-            grid-column: 3 / 6;
-            grid-row: 2;
-            align-self: center;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        .form-row {
-            display: grid;
-            gap: 2.5rem;
-        }
-
-        .form-row.two-col { grid-template-columns: 1fr 1fr; }
-        .form-row.one-col { grid-template-columns: 1fr; }
-
-        .contact-input {
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-            padding: 4px 0 10px;
-            font-family: 'NeueHaasDisplay-Light', sans-serif;
-            font-size: 15px;
-            color: #000;
-            background: transparent;
-            outline: none;
-            letter-spacing: -0.01em;
-            transition: border-bottom-color 0.2s ease;
-            line-height: 1.45;
-            appearance: none;
-        }
-
-        .contact-input:focus {
-            border-bottom-color: #000;
-        }
-
-        .contact-input::placeholder {
-            color: #c0c0c0;
-        }
-
-        textarea.contact-input {
-            resize: none;
-            overflow-y: auto;
-        }
-
-        .send-request-btn {
-            grid-column: 6;
-            grid-row: 3;
-            align-self: end;
-            justify-self: end;
-            padding-bottom: 2rem;
-            font-size: 15px;
-            color: #ccc;
-            text-decoration: underline;
-            cursor: default;
-            transition: color 0.3s ease;
-            pointer-events: none;
-        }
-
-        .send-request-btn.active {
-            color: #999;
-            pointer-events: auto;
-            cursor: pointer;
-        }
-
-        .send-request-btn.active:hover { color: #000; }
-
-        /* ══════════════════════════════
-           SCROLL HINT (subtle dots)
-        ══════════════════════════════ */
-
         .scroll-dots {
             position: fixed;
-            bottom: 28px;
+            bottom: 26px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 6px;
+            gap: 7px;
             z-index: 50;
-            opacity: 0.4;
-            transition: opacity 0.3s ease;
         }
-
-        .scroll-dots:hover { opacity: 0.8; }
 
         .dot {
             width: 4px;
             height: 4px;
             border-radius: 50%;
-            background: #ccc;
-            transition: background 0.3s ease, transform 0.3s ease;
+            background: #d0d0d0;
+            transition: background 0.35s ease, transform 0.35s ease;
+            cursor: pointer;
         }
 
         .dot.active {
             background: #000;
-            transform: scale(1.2);
+            transform: scale(1.25);
         }
 
         /* ══════════════════════════════
-           RESPONSIVE
+           MOBILE  (≤ 768 px)
         ══════════════════════════════ */
+        @media (max-width: 768px) {
 
-        @media (max-width: 900px) {
+            /* Let the page scroll naturally */
+            body {
+                overflow: auto;
+                height: auto;
+            }
+
+            /* Wrapper becomes normal flow */
+            .slides-wrapper {
+                position: static;
+                /* visual space for fixed nav */
+                padding-top: 64px;
+            }
+
+            /* Every slide is a block; only active is shown */
+            .slide {
+                position: static;
+                opacity: 1;
+                pointer-events: auto;
+                display: none;
+                transition: none;
+                min-height: calc(100vh - 64px);
+            }
+            .slide.active { display: block; }
+
+            /* ── mobile inner layout ── */
             .slide-inner {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-                padding: 3rem 24px 2rem;
-                overflow-y: auto;
                 display: flex;
                 flex-direction: column;
-                gap: 1.5rem;
+                padding: 2.5rem 20px 3rem;
+                height: auto;
+                min-height: calc(100vh - 64px);
+                /* override the desktop grid */
+                grid-template-columns: unset;
+                grid-template-rows: unset;
             }
 
-            body { overflow: auto; }
-            .slides-wrapper { overflow-y: auto; position: static; height: auto; }
-            .slide { position: static; opacity: 1; pointer-events: auto; display: none; }
-            .slide.active { display: flex; flex-direction: column; min-height: calc(100vh - 64px); }
+            /* Reorder: title → image → text → date */
+            .project-info {
+                order: 1;
+                grid-column: unset; grid-row: unset;
+                min-width: unset;
+                margin-bottom: 1.5rem;
+                flex-shrink: 0;
+            }
 
-            .project-image-col { padding: 0; }
-            .project-text-col { order: -1; }
-            .project-info { order: -2; }
-            .project-date { margin-top: 1rem; }
-            .project-text { text-align: left; }
+            .project-image-col {
+                order: 2;
+                grid-column: unset; grid-row: unset;
+                padding: 0;
+                margin-bottom: 2rem;
+                flex-shrink: 0;
+                height: auto;
+                overflow: visible;
+                justify-content: flex-start;
+            }
 
-            .contact-form-area { gap: 1.5rem; }
-            .form-row.two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+            .project-image {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+            }
 
-            .make-request-btn,
-            .send-request-btn {
-                margin-top: auto;
+            .project-text-col {
+                order: 3;
+                grid-column: unset; grid-row: unset;
+                min-width: unset;
+                flex: 1;
+                margin-bottom: 2rem;
+            }
+
+            .project-text {
+                text-align: left;
+                font-size: 15px;
+                line-height: 1.55;
+            }
+
+            .project-date {
+                order: 4;
+                grid-column: unset; grid-row: unset;
+                min-width: unset;
                 padding-bottom: 0;
-                justify-self: auto;
-                text-align: right;
+                flex-shrink: 0;
             }
 
+            /* Mobile nav arrows */
+            .mobile-arrows {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 2rem 20px 0;
+                flex-shrink: 0;
+            }
+
+            .mobile-arrow {
+                font-size: 15px;
+                color: #999;
+                cursor: pointer;
+                padding: 8px 0;
+                transition: color 0.25s ease;
+                background: none;
+                border: none;
+                font-family: 'NeueHaasDisplay-Light', sans-serif;
+                letter-spacing: -0.01em;
+            }
+            .mobile-arrow:hover { color: #000; }
+            .mobile-arrow:disabled { opacity: 0; pointer-events: none; }
+
+            .mobile-counter {
+                font-size: 13px;
+                color: #bbb;
+                letter-spacing: 0.02em;
+            }
+
+            /* Hide desktop dots on mobile */
             .scroll-dots { display: none; }
+
+            /* Touch hint — shown briefly on load */
+            .touch-hint {
+                display: block;
+                text-align: center;
+                font-size: 13px;
+                color: #ccc;
+                padding-top: 1.5rem;
+                letter-spacing: 0.02em;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-arrows { display: none; }
+            .touch-hint    { display: none; }
         }
     </style>
 </head>
 <body>
+
     <nav class="nav-bar">
         <div class="nav-content">
             <a href="./index.html" class="nav-link">Lukas Kubiena</a>
@@ -473,22 +401,22 @@
         </div>
     </nav>
 
-    <div class="slides-wrapper">
+    <div class="slides-wrapper" id="slides-wrapper">
 
-        <!-- ── PROJECT SLIDE ── -->
+        <!-- Single shared project slide; JS swaps content -->
         <div class="slide active" id="slide-project">
             <div class="slide-inner">
 
                 <div class="project-info">
                     <div class="project-title">
-                        For&nbsp;<span class="client-name-wrap"><span id="client-name">co.built</span></span>
+                        For&nbsp;<span class="client-name-wrap"><span id="client-name"></span></span>
                     </div>
-                    <div class="project-type" id="project-type">Logo Design</div>
+                    <div class="project-type" id="project-type"></div>
                 </div>
 
                 <div class="project-image-col">
                     <div class="project-img-wrap">
-                        <img id="project-image" src="image.webp" alt="co.built project">
+                        <img id="project-image" src="" alt="">
                     </div>
                 </div>
 
@@ -496,342 +424,253 @@
                     <div class="project-text" id="project-text"></div>
                 </div>
 
-                <div class="project-date" id="project-date">Vienna, 2026</div>
+                <div class="project-date" id="project-date"></div>
 
             </div>
-        </div>
 
-        <!-- ── QUESTION SLIDE ── -->
-        <div class="slide" id="slide-question">
-            <div class="slide-inner">
-
-                <div class="question-info">
-                    <div class="question-text">For?<span class="typing-cursor"></span></div>
-                </div>
-
-                <a href="#" class="make-request-btn" id="make-request-btn">make a request</a>
-
+            <!-- Mobile only: prev / counter / next -->
+            <div class="mobile-arrows" id="mobile-arrows">
+                <button class="mobile-arrow" id="mob-prev" disabled>← prev</button>
+                <span class="mobile-counter" id="mob-counter"></span>
+                <button class="mobile-arrow" id="mob-next">next →</button>
             </div>
-        </div>
 
-        <!-- ── CONTACT SLIDE ── -->
-        <div class="slide" id="slide-contact">
-            <div class="slide-inner">
-
-                <div class="contact-header">
-                    <h1 class="contact-title">Contact Form</h1>
-                    <span class="contact-dash">—</span>
-                </div>
-
-                <div class="contact-form-area">
-                    <div class="form-row two-col">
-                        <input type="text"  class="contact-input" id="f-firstname" placeholder="First name" autocomplete="given-name">
-                        <input type="text"  class="contact-input" id="f-lastname"  placeholder="Last name"  autocomplete="family-name">
-                    </div>
-                    <div class="form-row two-col">
-                        <input type="email" class="contact-input" id="f-email"   placeholder="Email"   autocomplete="email">
-                        <input type="tel"   class="contact-input" id="f-phone"   placeholder="Phone"   autocomplete="tel">
-                    </div>
-                    <div class="form-row one-col">
-                        <textarea class="contact-input" id="f-message" placeholder="Message" rows="4"></textarea>
-                    </div>
-                </div>
-
-                <a href="#" class="send-request-btn" id="send-request-btn">send request</a>
-
-            </div>
         </div>
 
     </div><!-- /slides-wrapper -->
 
-    <!-- Scroll position dots -->
+    <!-- Desktop progress dots -->
     <div class="scroll-dots" id="scroll-dots"></div>
 
     <script>
-        /* ─────────────────────────────────────────────
-           PROJECT DATA
-        ───────────────────────────────────────────── */
-        const projects = [
-            {
-                client: 'co.built',
-                type: 'Logo Design',
-                location: 'Vienna, 2026',
-                image: 'image.webp',
-                text: [
-                    'We intercut between intimate Vienna moments (an elderly couple kissing through a café window, light patterns on architecture) and brief flashes of historical curiosity — These weave with other moments — a kid showing another kid a chalk drawing it made on the street with cut to: feynman laughing during a lecture, drawing on a chalkboard, the first photograph ever taken, the Lumière brothers\u2019 train arriving at a station, Hitchcock genuinely laughing on stage, the AlphaGo move that surprised its creators, Lee Sedol\u2019s move 78, scientists reacting to the first picture of a black hole.',
-                    'Not presented as \u201cgreat achievements\u201d but people following their wonder, human moments \u2014 Feynman\u2019s joy, not Feynman the genius.',
-                    'The ping-pong rhythm feels natural, like one thought leading to another.'
-                ]
-            },
-            {
-                client: 'MindStash',
-                type: 'Logo Design',
-                location: 'Vienna, 2026',
-                image: 'image2.jpeg',
-                text: [
-                    'We intercut between intimate Vienna moments (an elderly couple kissing through a café window, light patterns on architecture) and brief flashes of historical curiosity — These weave with other moments — a kid showing another kid a chalk drawing it made on the street with cut to: feynman laughing during a lecture, drawing on a chalkboard, the first photograph ever taken, the Lumière brothers\u2019 train arriving at a station, Hitchcock genuinely laughing on stage, the AlphaGo move that surprised its creators, Lee Sedol\u2019s move 78, scientists reacting to the first picture of a black hole.',
-                    'Not presented as \u201cgreat achievements\u201d but people following their wonder, human moments \u2014 Feynman\u2019s joy, not Feynman the genius.',
-                    'The ping-pong rhythm feels natural, like one thought leading to another.'
-                ]
-            }
-        ];
-
-        /* ─────────────────────────────────────────────
-           DOM REFS
-        ───────────────────────────────────────────── */
-        const clientNameEl   = document.getElementById('client-name');
-        const projectTypeEl  = document.getElementById('project-type');
-        const projectImageEl = document.getElementById('project-image');
-        const projectTextEl  = document.getElementById('project-text');
-        const projectDateEl  = document.getElementById('project-date');
-        const slideProject   = document.getElementById('slide-project');
-        const slideQuestion  = document.getElementById('slide-question');
-        const slideContact   = document.getElementById('slide-contact');
-        const makeRequestBtn = document.getElementById('make-request-btn');
-        const sendRequestBtn = document.getElementById('send-request-btn');
-        const dotsContainer  = document.getElementById('scroll-dots');
-
-        /* ─────────────────────────────────────────────
-           STATE
-        ───────────────────────────────────────────── */
-        let currentProjectIndex = 0;
-        let currentScreen = 'project'; // 'project' | 'question' | 'contact'
-        let isTransitioning = false;
-
-        /* ─────────────────────────────────────────────
-           DOTS
-        ───────────────────────────────────────────── */
-        const totalDots = projects.length + 1; // projects + question
-
-        function buildDots() {
-            dotsContainer.innerHTML = '';
-            for (let i = 0; i < totalDots; i++) {
-                const d = document.createElement('span');
-                d.className = 'dot' + (i === 0 ? ' active' : '');
-                dotsContainer.appendChild(d);
-            }
+    /* ═══════════════════════════════════════════════
+       PROJECT DATA
+    ═══════════════════════════════════════════════ */
+    const projects = [
+        {
+            client:   'co.built',
+            type:     'Logo Design',
+            location: 'Vienna, 2026',
+            image:    'work/img1.png',
+            text: [
+                'We intercut between intimate Vienna moments (an elderly couple kissing through a café window, light patterns on architecture) and brief flashes of historical curiosity \u2014 These weave with other moments \u2014 a kid showing another kid a chalk drawing it made on the street with cut to: feynman laughing during a lecture, drawing on a chalkboard, the first photograph ever taken, the Lumière brothers\u2019 train arriving at a station, Hitchcock genuinely laughing on stage, the AlphaGo move that surprised its creators, Lee Sedol\u2019s move 78, scientists reacting to the first picture of a black hole.',
+                'Not presented as \u201cgreat achievements\u201d but people following their wonder, human moments \u2014 Feynman\u2019s joy, not Feynman the genius.',
+                'The ping-pong rhythm feels natural, like one thought leading to another.'
+            ]
+        },
+        {
+            client:   'MindStash',
+            type:     'Logo Design',
+            location: 'Vienna, 2026',
+            image:    'work/img2.png',
+            text: [
+                'We intercut between intimate Vienna moments (an elderly couple kissing through a café window, light patterns on architecture) and brief flashes of historical curiosity \u2014 These weave with other moments \u2014 a kid showing another kid a chalk drawing it made on the street with cut to: feynman laughing during a lecture, drawing on a chalkboard, the first photograph ever taken, the Lumière brothers\u2019 train arriving at a station, Hitchcock genuinely laughing on stage, the AlphaGo move that surprised its creators, Lee Sedol\u2019s move 78, scientists reacting to the first picture of a black hole.',
+                'Not presented as \u201cgreat achievements\u201d but people following their wonder, human moments \u2014 Feynman\u2019s joy, not Feynman the genius.',
+                'The ping-pong rhythm feels natural, like one thought leading to another.'
+            ]
         }
+    ];
 
-        function updateDots() {
-            const dots = dotsContainer.querySelectorAll('.dot');
-            dots.forEach((d, i) => {
-                if (currentScreen === 'project') {
-                    d.classList.toggle('active', i === currentProjectIndex);
-                } else if (currentScreen === 'question') {
-                    d.classList.toggle('active', i === projects.length);
-                } else {
-                    // contact: keep question dot lit
-                    d.classList.toggle('active', i === projects.length);
-                }
-            });
-        }
+    /* ═══════════════════════════════════════════════
+       DOM REFS
+    ═══════════════════════════════════════════════ */
+    const clientNameEl   = document.getElementById('client-name');
+    const projectTypeEl  = document.getElementById('project-type');
+    const projectImageEl = document.getElementById('project-image');
+    const projectTextEl  = document.getElementById('project-text');
+    const projectDateEl  = document.getElementById('project-date');
+    const dotsContainer  = document.getElementById('scroll-dots');
+    const mobPrev        = document.getElementById('mob-prev');
+    const mobNext        = document.getElementById('mob-next');
+    const mobCounter     = document.getElementById('mob-counter');
 
-        buildDots();
+    /* ═══════════════════════════════════════════════
+       STATE
+    ═══════════════════════════════════════════════ */
+    let idx            = 0;        // current project index
+    let isAnimating    = false;
 
-        /* ─────────────────────────────────────────────
-           POPULATE INITIAL PROJECT
-        ───────────────────────────────────────────── */
-        function renderProject(index) {
-            const p = projects[index];
-            clientNameEl.textContent  = p.client;
-            projectTypeEl.textContent = p.type;
-            projectDateEl.textContent = p.location;
-            projectImageEl.src        = p.image;
-            projectImageEl.alt        = p.client;
-            projectTextEl.innerHTML   = p.text.map(t => `<p>${t}</p>`).join('');
-        }
+    /* ═══════════════════════════════════════════════
+       DOTS
+    ═══════════════════════════════════════════════ */
+    function buildDots() {
+        dotsContainer.innerHTML = '';
+        projects.forEach((_, i) => {
+            const d = document.createElement('span');
+            d.className = 'dot' + (i === 0 ? ' active' : '');
+            d.addEventListener('click', () => goTo(i));
+            dotsContainer.appendChild(d);
+        });
+    }
 
-        renderProject(0);
+    function syncDots() {
+        dotsContainer.querySelectorAll('.dot').forEach((d, i) =>
+            d.classList.toggle('active', i === idx));
+    }
 
-        /* ─────────────────────────────────────────────
-           SLIDE SWITCHER
-        ───────────────────────────────────────────── */
-        function showSlide(slide) {
-            [slideProject, slideQuestion, slideContact].forEach(s => s.classList.remove('active'));
-            slide.classList.add('active');
-        }
+    function syncMobileNav() {
+        mobCounter.textContent = `${idx + 1} / ${projects.length}`;
+        mobPrev.disabled = idx === 0;
+        mobNext.disabled = idx === projects.length - 1;
+    }
 
-        /* ─────────────────────────────────────────────
-           ANIMATED PROJECT TRANSITION
-        ───────────────────────────────────────────── */
-        function transitionProject(nextIndex, direction) {
-            // direction > 0 = scrolling forward (up animation)
-            const outCls = direction > 0 ? 'anim-out-up'   : 'anim-out-down';
-            const inCls  = direction > 0 ? 'anim-in-up'    : 'anim-in-down';
+    buildDots();
 
-            const textEls = [clientNameEl, projectTypeEl, projectDateEl, projectTextEl];
+    /* ═══════════════════════════════════════════════
+       RENDER
+    ═══════════════════════════════════════════════ */
+    function render(i) {
+        const p = projects[i];
+        clientNameEl.textContent  = p.client;
+        projectTypeEl.textContent = p.type;
+        projectDateEl.textContent = p.location;
+        projectImageEl.src        = p.image;
+        projectImageEl.alt        = p.client;
+        projectTextEl.innerHTML   = p.text.map(t => `<p>${t}</p>`).join('');
+    }
 
-            // Animate out
-            projectImageEl.classList.add('img-out');
+    render(0);
+    syncDots();
+    syncMobileNav();
+
+    /* ═══════════════════════════════════════════════
+       ANIMATED TRANSITION
+    ═══════════════════════════════════════════════ */
+    function goTo(nextIdx, direction) {
+        if (isAnimating || nextIdx === idx) return;
+        if (nextIdx < 0 || nextIdx >= projects.length) return;
+
+        isAnimating = true;
+
+        // direction: 1 = forward (scroll down), -1 = back (scroll up)
+        const dir    = direction !== undefined ? direction : (nextIdx > idx ? 1 : -1);
+        const outCls = dir > 0 ? 'anim-out-up'   : 'anim-out-down';
+        const inCls  = dir > 0 ? 'anim-in-up'    : 'anim-in-down';
+
+        const textEls = [clientNameEl, projectTypeEl, projectDateEl, projectTextEl];
+
+        /* — animate out — */
+        projectImageEl.classList.add('img-out');
+        textEls.forEach(el => {
+            el.classList.remove('anim-out-up','anim-in-up','anim-out-down','anim-in-down');
+            void el.offsetWidth;
+            el.classList.add(outCls);
+        });
+
+        setTimeout(() => {
+            idx = nextIdx;
+            render(idx);
+            syncDots();
+            syncMobileNav();
+
+            /* — animate in — */
             textEls.forEach(el => {
-                el.classList.remove(outCls, inCls, 'anim-out-up', 'anim-in-up', 'anim-out-down', 'anim-in-down');
-                void el.offsetWidth; // force reflow
-                el.classList.add(outCls);
+                el.classList.remove(outCls);
+                void el.offsetWidth;
+                el.classList.add(inCls);
             });
+            projectImageEl.classList.remove('img-out');
+            projectImageEl.classList.add('img-in');
 
             setTimeout(() => {
-                // Swap content
-                renderProject(nextIndex);
+                textEls.forEach(el => el.classList.remove(inCls));
+                projectImageEl.classList.remove('img-in');
+                isAnimating = false;
+            }, 250);
 
-                // Remove out, add in
-                textEls.forEach(el => {
-                    el.classList.remove(outCls);
-                    void el.offsetWidth;
-                    el.classList.add(inCls);
-                });
-                projectImageEl.classList.remove('img-out');
-                projectImageEl.classList.add('img-in');
+        }, 230);
+    }
 
-                setTimeout(() => {
-                    textEls.forEach(el => el.classList.remove(inCls));
-                    projectImageEl.classList.remove('img-in');
-                    isTransitioning = false;
-                }, 260);
+    /* ═══════════════════════════════════════════════
+       WHEEL / SCROLL (desktop)
+       — time-based accumulator reset so trackpad
+         momentum scrolling doesn't over-fire —
+    ═══════════════════════════════════════════════ */
+    let wheelAccum     = 0;
+    let lastWheelTime  = 0;
+    let wheelCooldown  = false;
+    const THRESHOLD    = 50;   // px to accumulate before firing
+    const COOLDOWN_MS  = 700;  // lock-out after each navigation
+    const DECAY_GAP_MS = 120;  // reset accumulator if scroll pauses > this
 
-            }, 240);
-        }
+    window.addEventListener('wheel', e => {
+        e.preventDefault();
+        if (wheelCooldown) return;
 
-        /* ─────────────────────────────────────────────
-           NAVIGATION
-        ───────────────────────────────────────────── */
-        function navigateNext() {
-            if (isTransitioning) return;
-            isTransitioning = true;
+        const now = Date.now();
+        // Reset accumulator if there's been a scroll pause
+        if (now - lastWheelTime > DECAY_GAP_MS) wheelAccum = 0;
+        lastWheelTime = now;
 
-            if (currentScreen === 'project') {
-                if (currentProjectIndex < projects.length - 1) {
-                    const next = currentProjectIndex + 1;
-                    transitionProject(next, 1);
-                    currentProjectIndex = next;
-                    updateDots();
-                    // isTransitioning reset inside transitionProject
-                } else {
-                    // No more projects → question slide
-                    currentScreen = 'question';
-                    showSlide(slideQuestion);
-                    updateDots();
-                    isTransitioning = false;
-                }
-            } else {
-                isTransitioning = false;
-            }
-        }
+        // Normalise across deltaMode (lines / pages / pixels)
+        let dy = e.deltaY;
+        if (e.deltaMode === 1) dy *= 32;   // line
+        if (e.deltaMode === 2) dy *= 400;  // page
 
-        function navigatePrev() {
-            if (isTransitioning) return;
-            isTransitioning = true;
+        wheelAccum += dy;
 
-            if (currentScreen === 'question') {
-                currentScreen = 'project';
-                showSlide(slideProject);
-                updateDots();
-                isTransitioning = false;
-            } else if (currentScreen === 'project' && currentProjectIndex > 0) {
-                const next = currentProjectIndex - 1;
-                transitionProject(next, -1);
-                currentProjectIndex = next;
-                updateDots();
-                // isTransitioning reset inside transitionProject
-            } else {
-                isTransitioning = false;
-            }
-        }
-
-        /* ─────────────────────────────────────────────
-           SCROLL / WHEEL
-        ───────────────────────────────────────────── */
-        let wheelAccum    = 0;
-        let wheelCooldown = false;
-        const WHEEL_THRESHOLD = 55;
-        const COOLDOWN_MS     = 750;
-
-        function resetCooldown() {
+        if (Math.abs(wheelAccum) >= THRESHOLD) {
+            const dir = wheelAccum > 0 ? 1 : -1;
+            wheelAccum    = 0;
+            wheelCooldown = true;
+            goTo(idx + dir, dir);
             setTimeout(() => { wheelCooldown = false; }, COOLDOWN_MS);
         }
+    }, { passive: false });
 
-        window.addEventListener('wheel', (e) => {
-            if (currentScreen === 'contact') return; // allow free scroll on contact
+    /* ═══════════════════════════════════════════════
+       KEYBOARD
+    ═══════════════════════════════════════════════ */
+    window.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') {
             e.preventDefault();
-
-            if (wheelCooldown) return;
-            wheelAccum += e.deltaY;
-
-            if (Math.abs(wheelAccum) >= WHEEL_THRESHOLD) {
-                const dir = wheelAccum > 0 ? 1 : -1;
-                wheelAccum = 0;
+            if (!wheelCooldown) {
                 wheelCooldown = true;
-                if (dir > 0) navigateNext(); else navigatePrev();
-                resetCooldown();
+                goTo(idx + 1, 1);
+                setTimeout(() => { wheelCooldown = false; }, COOLDOWN_MS);
             }
-        }, { passive: false });
-
-        /* ─────────────────────────────────────────────
-           KEYBOARD
-        ───────────────────────────────────────────── */
-        window.addEventListener('keydown', (e) => {
-            if (currentScreen === 'contact') return;
-            if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-                e.preventDefault();
-                if (!wheelCooldown) { wheelCooldown = true; navigateNext(); resetCooldown(); }
-            } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-                e.preventDefault();
-                if (!wheelCooldown) { wheelCooldown = true; navigatePrev(); resetCooldown(); }
-            }
-        });
-
-        /* ─────────────────────────────────────────────
-           TOUCH
-        ───────────────────────────────────────────── */
-        let touchStartY = 0;
-
-        window.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        window.addEventListener('touchend', (e) => {
-            if (currentScreen === 'contact') return;
-            const delta = touchStartY - e.changedTouches[0].clientY;
-            if (Math.abs(delta) > 40 && !wheelCooldown) {
-                wheelCooldown = true;
-                if (delta > 0) navigateNext(); else navigatePrev();
-                resetCooldown();
-            }
-        }, { passive: true });
-
-        /* ─────────────────────────────────────────────
-           MAKE REQUEST BUTTON
-        ───────────────────────────────────────────── */
-        makeRequestBtn.addEventListener('click', (e) => {
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
             e.preventDefault();
-            currentScreen = 'contact';
-            showSlide(slideContact);
-            setTimeout(() => {
-                document.getElementById('f-firstname').focus();
-            }, 550);
-        });
-
-        /* ─────────────────────────────────────────────
-           CONTACT FORM VALIDATION
-        ───────────────────────────────────────────── */
-        const emailRe = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;
-
-        function validateContact() {
-            const name  = document.getElementById('f-firstname').value.trim();
-            const email = document.getElementById('f-email').value.trim();
-            const ready = name.length > 0 && emailRe.test(email);
-            sendRequestBtn.classList.toggle('active', ready);
+            if (!wheelCooldown) {
+                wheelCooldown = true;
+                goTo(idx - 1, -1);
+                setTimeout(() => { wheelCooldown = false; }, COOLDOWN_MS);
+            }
         }
+    });
 
-        ['f-firstname','f-lastname','f-email','f-phone','f-message'].forEach(id => {
-            document.getElementById(id).addEventListener('input', validateContact);
-        });
+    /* ═══════════════════════════════════════════════
+       TOUCH (mobile swipe)
+    ═══════════════════════════════════════════════ */
+    let touchStartY   = 0;
+    let touchStartX   = 0;
+    let touchCooldown = false;
 
-        sendRequestBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!sendRequestBtn.classList.contains('active')) return;
-            // submission logic placeholder
-            alert('Request sent! Thank you.');
-        });
+    window.addEventListener('touchstart', e => {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+
+    window.addEventListener('touchend', e => {
+        if (touchCooldown) return;
+        const dy = touchStartY - e.changedTouches[0].clientY;
+        const dx = touchStartX - e.changedTouches[0].clientX;
+
+        // Only trigger on predominantly vertical swipe ≥ 35px
+        if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 35) {
+            touchCooldown = true;
+            const dir = dy > 0 ? 1 : -1;
+            goTo(idx + dir, dir);
+            setTimeout(() => { touchCooldown = false; }, COOLDOWN_MS);
+        }
+    }, { passive: true });
+
+    /* ═══════════════════════════════════════════════
+       MOBILE ARROW BUTTONS
+    ═══════════════════════════════════════════════ */
+    mobPrev.addEventListener('click', () => goTo(idx - 1, -1));
+    mobNext.addEventListener('click', () => goTo(idx + 1,  1));
+
     </script>
 </body>
 </html>
