@@ -5,465 +5,222 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writing - Lukas Kubiena</title>
     <link rel="icon" type="image/png" href="../favicon.png">
-    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="NeueHaasDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
     <style>
         @font-face {
             font-family: 'NeueHaasDisplay-Light';
-            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+            src: url('../NeueHaasDisplay-Light.woff2') format('woff2');
             font-display: swap;
         }
-
         @font-face {
             font-family: 'NeueHaasDisplay-Medium';
-            src: url('NeueHaasDisplay-Medium.woff2') format('woff2');
+            src: url('../NeueHaasDisplay-Mediu.woff2') format('woff2');
             font-display: swap;
         }
 
         :root {
-            --content-width: 680px;
-            --nav-height: 64px;
-            --page-padding: max(5vw, 24px);
+            --padding-y: 15vh;
+            --padding-x: 12vw;
+            --writing-top-gap: 78px;
+            --writing-card-gap: 4.2vw;
+        }
+
+        @media screen and (max-width: 1024px) {
+            :root {
+                --padding-y: 10vh;
+                --padding-x: 8vw;
+                --writing-top-gap: 64px;
+                --writing-card-gap: 4.8vw;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            :root {
+                --padding-y: 40px;
+                --padding-x: 30px;
+                --writing-top-gap: 56px;
+                --writing-card-gap: 32px;
+            }
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            color: #000;
+            line-height: 1.6;
+            overflow: hidden;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #ffffff;
-            line-height: 1.6;
-            color: #1a1a1a;
-            overflow-x: hidden;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+                        transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
 
-        /* Font loading optimization */
-        .fonts-loading {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        body.is-ready {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .fonts-loaded {
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        body.is-leaving {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        /* Navigation */
-        .nav-bar {
+        .corner {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--nav-height);
-            background: rgba(255, 255, 255, 0.97);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             z-index: 100;
         }
 
-        .nav-content {
-            max-width: var(--content-width);
-            margin: 0 auto;
-            padding: 0 var(--page-padding);
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .top-left { top: var(--padding-y); left: var(--padding-x); }
+        .top-right { top: var(--padding-y); right: var(--padding-x); }
+
+        .bold { font-family: 'NeueHaasDisplay-Medium', sans-serif; font-weight: 600; }
+
+        /* Parked-era home: nav / title feel */
+        .title-text {
+            font-size: 20px;
+            letter-spacing: -0.01em;
         }
 
-        .home-link {
-            color: #666;
+        .footer-text { font-size: 15px; letter-spacing: -0.01em; }
+
+        a {
+            color: inherit;
             text-decoration: none;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .home-link:hover {
-            color: #000;
-        }
-
-        /* Main Content */
-        .writing-container {
-            max-width: var(--content-width);
-            margin: 0 auto;
-            padding: calc(var(--nav-height) + 64px) var(--page-padding) 64px;
-        }
-
-        /* Newsletter Subscription - Enhanced design */
-        .newsletter-section {
-            margin-top: 80px;
-            padding: 48px 0 32px;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
-
-        .newsletter-container {
-            max-width: 480px;
-            margin: 0 auto;
-            background: #fafafa;
-            padding: 32px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .newsletter-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            align-items: stretch;
-        }
-
-        .newsletter-form input[type="email"] {
-            padding: 16px 20px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 16px;
-            background: #fff;
-            outline: none;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .newsletter-form input[type="email"]:focus {
-            border-color: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .newsletter-form input[type="email"]:disabled {
-            background: #f5f5f5;
-            color: #999;
-            cursor: not-allowed;
-        }
-
-        .newsletter-form input[type="email"]::placeholder {
-            color: #999;
-        }
-
-        .newsletter-form button {
-            padding: 16px 32px;
-            background: #000;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 400;
+            transition: opacity 0.2s;
         }
 
-        .newsletter-form button:hover:not(:disabled) {
-            background: #333;
-            transform: translateY(-1px);
+        a:hover { opacity: 0.7; }
+
+        .underline {
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            text-decoration-thickness: 1px;
         }
 
-        .newsletter-form button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .newsletter-text {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
-        .newsletter-success {
-            padding: 16px;
-            background: #f0f8f0;
-            border: 1px solid #d4e6d4;
-            border-radius: 4px;
-            color: #2d5a2d;
-            margin-top: 16px;
-            display: none;
-            font-size: 14px;
-        }
-
-        .newsletter-error {
-            padding: 12px;
-            background: #fdf2f2;
-            border: 1px solid #f5c6c6;
-            border-radius: 4px;
-            color: #a94442;
-            margin-top: 8px;
-            display: none;
-            font-size: 14px;
-        }
-
-        /* Writing Popup Modal */
-        .writing-popup-overlay {
-            position: fixed;
+        .writing-scroll-container {
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .writing-popup-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .writing-popup-container {
-            background: #ffffff;
-            padding: 48px 40px;
-            border-radius: 8px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            max-width: 480px;
             width: 100%;
-            text-align: center;
-            position: relative;
-            transform: translateY(20px) scale(0.95);
-            transition: all 0.4s ease;
-        }
-
-        .writing-popup-overlay.show .writing-popup-container {
-            transform: translateY(0) scale(1);
-        }
-
-        .writing-popup-title {
-            font-family: 'NeueHaasDisplay-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #000;
-        }
-
-        .writing-popup-text {
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 32px;
-        }
-
-        .writing-popup-form {
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .writing-popup-input {
-            padding: 16px 20px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 16px;
-            background: #fff;
-            outline: none;
-            transition: all 0.3s ease;
+            align-items: flex-start;
+            padding-top: calc(var(--padding-y) + var(--writing-top-gap));
             box-sizing: border-box;
+            scrollbar-width: none;
         }
 
-        .writing-popup-input:focus {
-            border-color: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        .writing-scroll-container::-webkit-scrollbar {
+            display: none;
         }
 
-        .writing-popup-input::placeholder {
-            color: #999;
-        }
-
-        .writing-popup-button {
-            padding: 16px 32px;
-            background: #000;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 400;
-        }
-
-        .writing-popup-button:hover:not(:disabled) {
-            background: #333;
-            transform: translateY(-1px);
-        }
-
-        .writing-popup-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .writing-popup-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: #999;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            line-height: 1;
-        }
-
-        .writing-popup-close:hover {
-            color: #000;
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        .writing-popup-success {
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 16px;
-            color: #2d5a2d;
-            margin-bottom: 24px;
-            padding: 16px;
-            background: #f0f8f0;
-            border: 1px solid #d4e6d4;
-            border-radius: 4px;
-        }
-
-        .writing-popup-error {
-            font-family: 'NeueHaasDisplay-Light', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 14px;
-            color: #a94442;
-            margin-top: 8px;
-            padding: 12px;
-            background: #fdf2f2;
-            border: 1px solid #f5c6c6;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .writing-popup-container {
-                padding: 32px 24px;
-                margin: 16px;
-            }
-
-            .writing-popup-title {
-                font-size: 22px;
-            }
-
-            .writing-popup-text {
-                font-size: 15px;
-            }
-        }
-
-        /* Writing Posts Grid */
         .writing-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 64px;
+            display: flex;
+            flex-direction: row;
+            gap: var(--writing-card-gap);
+            padding-left: var(--padding-x);
+            padding-right: calc(var(--padding-x) + 36vw);
+            align-items: flex-start;
+            min-height: 0;
         }
 
         .writing-card {
+            flex-shrink: 0;
+            width: 31vw;
+            max-width: 420px;
+            min-width: 250px;
             text-decoration: none;
             color: inherit;
             display: block;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+            opacity: 0;
+            transform: scale(0.86);
+            transform-origin: center center;
+            animation: cardIn 0.95s cubic-bezier(0.18, 0.71, 0.11, 1) forwards;
         }
 
         .writing-card:hover {
-            opacity: 0.7;
+            opacity: 0.9;
+            transform: translateY(-2px);
+            filter: saturate(1.02);
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: scale(0.86);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .banner-image {
             width: 100%;
             aspect-ratio: 1 / 1;
-            border-radius: 4px;
+            background-color: #dadada;
+            border-radius: 2px;
             object-fit: cover;
             object-position: center;
             margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
         }
 
         .post-date {
             font-size: 14px;
             color: #666;
             margin-bottom: 8px;
+            display: none;
         }
 
         .post-title {
-            font-family: 'NeueHaasDisplay-Medium', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
             font-size: 24px;
             margin: 0;
             line-height: 1.3;
         }
 
-        @media (max-width: 768px) {
+        @media screen and (max-width: 768px) {
             :root {
-                --nav-height: 56px;
+                /* Don’t reserve a large top band for cards — strip sits low */
+                --writing-top-gap: 0px;
             }
 
-            .writing-container {
-                padding-top: calc(var(--nav-height) + 40px);
+            .writing-scroll-container {
+                align-items: flex-end;
+                /* Only clear fixed “Writing / close” header */
+                padding-top: calc(var(--padding-y) + 52px);
+                padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
             }
 
-            .writing-grid {
-                gap: 48px;
+            .writing-card {
+                width: 70vw;
             }
-
-            .newsletter-section {
-                margin-top: 60px;
-            }
-
-            .newsletter-container {
-                padding: 24px;
-                margin: 0 16px;
-            }
-
-            .newsletter-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .banner-image {
-                height: 200px;
-                margin-bottom: 20px;
-            }
-
-            .post-title {
-                font-size: 22px;
-            }
-        }
-
-        /* Footer Style */
-        .footer {
-            max-width: var(--content-width);
-            margin: 0 auto;
-            padding: 24px var(--page-padding);
-            font-size: 14px;
-            color: #666;
-            text-align: center;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .footer img {
-            vertical-align: middle;
-            margin-left: 4px;
-            height: 12px;
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <div class="nav-content">
-            <a href="../index.html" class="home-link">← home</a>
-            <span class="home-link">© 2025</span>
-        </div>
-    </nav>
 
-    <!-- Writing Content -->
-    <div class="writing-container fonts-loading">
-        <!-- Writing Posts -->
+    <div class="corner top-left bold title-text" id="dynamic-title">Writing</div>
+    <div class="corner top-right footer-text underline">
+        <a href="../index.html" class="home-close">close</a>
+    </div>
+
+    <div class="writing-scroll-container">
         <div class="writing-grid">
             <a href="post.html?post=12" class="writing-card">
                 <img src="ban13.png" alt="To our neighbours" class="banner-image">
@@ -537,253 +294,126 @@
                 <h2 class="post-title">Being a piece of it all</h2>
             </a>
         </div>
-
-        <!-- Newsletter Subscription enhanced -->
-        <div class="newsletter-section">
-            <div class="newsletter-container">
-                <div class="newsletter-text">Get notified when I publish something new</div>
-                <form class="newsletter-form" id="newsletterForm" name="newsletter" method="POST" data-netlify="true">
-                    <input type="hidden" name="form-name" value="newsletter">
-                    <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="your@email.com" 
-                        required
-                        id="emailInput"
-                    >
-                    <button type="submit" id="subscribeBtn">Subscribe</button>
-                </form>
-                <div class="newsletter-success" id="successMessage">
-                    Thanks for subscribing! You'll get an email when I publish something new.
-                </div>
-                <div class="newsletter-error" id="errorMessage">
-                    Something went wrong. Please try again.
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <footer class="footer">
-        Written in Europe with Care <img src="eu.svg" alt="EU Flag">
-    </footer>
-
-    <!-- Writing Popup Modal -->
-    <div class="writing-popup-overlay" id="writingPopup">
-        <div class="writing-popup-container">
-            <button class="writing-popup-close" id="writingPopupClose">&times;</button>
-            <div class="writing-popup-title">Stay in the loop</div>
-            <div class="writing-popup-text">
-                Get notified when I publish new thoughts and ideas. No spam, just meaningful updates.
-            </div>
-            <form class="writing-popup-form" id="writingPopupForm">
-                <input 
-                    type="email" 
-                    class="writing-popup-input" 
-                    placeholder="your@email.com" 
-                    required
-                    id="writingPopupInput"
-                >
-                <button type="submit" class="writing-popup-button" id="writingPopupButton">Subscribe</button>
-            </form>
-            <div class="writing-popup-success" id="writingPopupSuccess" style="display: none;">
-                Thanks for subscribing! You'll get an email when I publish something new.
-            </div>
-            <div class="writing-popup-error" id="writingPopupError" style="display: none;">
-                Something went wrong. Please try again.
-            </div>
-        </div>
     </div>
 
     <script>
-        // Font loading optimization
-        document.fonts.ready.then(function() {
-            document.body.classList.remove('fonts-loading');
-            document.body.classList.add('fonts-loaded');
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const scrollContainer = document.querySelector('.writing-scroll-container');
+            const titleEl = document.getElementById('dynamic-title');
+            const cards = document.querySelectorAll('.writing-card');
 
-        document.getElementById('newsletterForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const form = e.target;
-            const emailInput = document.getElementById('emailInput');
-            const subscribeBtn = document.getElementById('subscribeBtn');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            
-            // Hide previous messages
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            
-            // Disable button during submission
-            subscribeBtn.disabled = true;
-            subscribeBtn.textContent = 'Subscribing...';
-            
-            try {
-                const response = await fetch('/.netlify/functions/send-newsletter', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'subscribe',
-                        email: emailInput.value
-                    })
+            cards.forEach((card) => {
+                const randomDelay = (Math.random() * 0.45 + 0.16).toFixed(2);
+                card.style.animationDelay = `${randomDelay}s`;
+            });
+
+            requestAnimationFrame(() => {
+                document.body.classList.add('is-ready');
+            });
+
+            const monthMap = {
+                Jan: 'January', Feb: 'February', Mar: 'March',
+                Apr: 'April', May: 'May', Jun: 'June',
+                Jul: 'July', Aug: 'August', Sep: 'September',
+                Oct: 'October', Nov: 'November', Dec: 'December'
+            };
+
+            let currentTitle = 'Writing';
+            const LEAVE_ANIM_MS = 420;
+
+            function updateTitle(newTitle) {
+                if (newTitle === currentTitle) return;
+                currentTitle = newTitle;
+                titleEl.textContent = currentTitle;
+            }
+
+            const closeLink = document.querySelector('a.home-close[href="../index.html"]');
+            if (closeLink) {
+                closeLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetUrl = closeLink.getAttribute('href');
+                    const prefersReducedMotion = window.matchMedia &&
+                        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                    if (prefersReducedMotion) {
+                        window.location.href = targetUrl;
+                        return;
+                    }
+
+                    document.body.classList.add('is-leaving');
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, LEAVE_ANIM_MS);
                 });
-                
-                const result = await response.json();
-                
-                if (response.ok && result.success) {
-                    successMessage.style.display = 'block';
-                    emailInput.value = '';
-                    
-                    // Store subscription locally
-                    if (typeof(Storage) !== "undefined") {
-                        localStorage.setItem('newsletter_subscribed', 'true');
-                        localStorage.setItem('newsletter_email', emailInput.value);
+            }
+
+            scrollContainer.addEventListener('wheel', (e) => {
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    e.preventDefault();
+                    scrollContainer.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
+
+            let cardCache = [];
+            let rafPending = false;
+
+            function buildCardCache() {
+                cardCache = Array.from(cards).map((card) => {
+                    const dateEl = card.querySelector('.post-date');
+                    const dateText = dateEl ? dateEl.textContent.trim() : '';
+                    const shortMonth = dateText.split(' ')[0] || '';
+                    const fullMonth = monthMap[shortMonth] || shortMonth || 'Writing';
+
+                    return {
+                        center: card.offsetLeft + card.offsetWidth / 2,
+                        fullMonth
+                    };
+                });
+            }
+
+            function updateFromScroll() {
+                if (!cardCache.length) return;
+
+                const beginningThreshold = scrollContainer.clientWidth * 0.1;
+                if (scrollContainer.scrollLeft < beginningThreshold) {
+                    updateTitle('Writing');
+                    return;
+                }
+
+                const containerCenter = scrollContainer.scrollLeft + scrollContainer.clientWidth / 2;
+                let closest = null;
+                let minDistance = Infinity;
+
+                for (let i = 0; i < cardCache.length; i++) {
+                    const distance = Math.abs(containerCenter - cardCache[i].center);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closest = cardCache[i];
                     }
-                    
-                    // Update UI to show subscribed state
-                    updateSubscriptionUI(true);
-                } else {
-                    throw new Error(result.message || 'Subscription failed');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'Something went wrong. Please try again.';
-            } finally {
-                // Re-enable button
-                subscribeBtn.disabled = false;
-                subscribeBtn.textContent = 'Subscribe';
-            }
-        });
 
-        function updateSubscriptionUI(isSubscribed) {
-            const emailInput = document.getElementById('emailInput');
-            const subscribeBtn = document.getElementById('subscribeBtn');
-            
-            if (isSubscribed) {
-                emailInput.placeholder = 'Already subscribed ✓';
-                emailInput.disabled = true;
-                subscribeBtn.textContent = 'Subscribed';
-                subscribeBtn.disabled = true;
-            } else {
-                emailInput.placeholder = 'your@email.com';
-                emailInput.disabled = false;
-                subscribeBtn.textContent = 'Subscribe';
-                subscribeBtn.disabled = false;
-            }
-        }
-
-        // Check if user is already subscribed on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof(Storage) !== "undefined" && localStorage.getItem('newsletter_subscribed') === 'true') {
-                updateSubscriptionUI(true);
-            }
-        });
-
-        // Writing Popup Functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const writingPopup = document.getElementById('writingPopup');
-            const writingPopupClose = document.getElementById('writingPopupClose');
-            const writingPopupForm = document.getElementById('writingPopupForm');
-            const writingPopupInput = document.getElementById('writingPopupInput');
-            const writingPopupButton = document.getElementById('writingPopupButton');
-            const writingPopupSuccess = document.getElementById('writingPopupSuccess');
-            const writingPopupError = document.getElementById('writingPopupError');
-
-            // Check if user has already seen the popup or is subscribed
-            const hasSeenPopup = localStorage.getItem('writing_popup_seen') === 'true';
-            const isSubscribed = localStorage.getItem('newsletter_subscribed') === 'true';
-
-            // Show popup after 10 seconds if user hasn't seen it and isn't subscribed
-            if (!hasSeenPopup && !isSubscribed) {
-                setTimeout(() => {
-                    writingPopup.classList.add('show');
-                    writingPopupInput.focus();
-                }, 10000); // 10 seconds
-            }
-
-            // Close popup
-            function closePopup() {
-                writingPopup.classList.remove('show');
-                localStorage.setItem('writing_popup_seen', 'true');
-            }
-
-            // Close button event
-            writingPopupClose.addEventListener('click', closePopup);
-
-            // Close on overlay click
-            writingPopup.addEventListener('click', function(e) {
-                if (e.target === writingPopup) {
-                    closePopup();
+                if (closest && closest.fullMonth) {
+                    updateTitle(closest.fullMonth);
                 }
-            });
+            }
 
-            // Close on escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && writingPopup.classList.contains('show')) {
-                    closePopup();
-                }
-            });
+            function requestUpdate() {
+                if (rafPending) return;
+                rafPending = true;
+                requestAnimationFrame(() => {
+                    rafPending = false;
+                    updateFromScroll();
+                });
+            }
 
-            // Handle popup form submission
-            writingPopupForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Hide previous messages
-                writingPopupSuccess.style.display = 'none';
-                writingPopupError.style.display = 'none';
-                
-                // Disable button during submission
-                writingPopupButton.disabled = true;
-                writingPopupButton.textContent = 'Subscribing...';
-                
-                try {
-                    const response = await fetch('/.netlify/functions/send-newsletter', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            action: 'subscribe',
-                            email: writingPopupInput.value
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok && result.success) {
-                        // Show success state
-                        writingPopupForm.style.display = 'none';
-                        writingPopupSuccess.style.display = 'block';
-                        
-                        // Store subscription locally
-                        if (typeof(Storage) !== "undefined") {
-                            localStorage.setItem('newsletter_subscribed', 'true');
-                            localStorage.setItem('newsletter_email', writingPopupInput.value);
-                        }
-                        
-                        // Update main newsletter form if it exists
-                        updateSubscriptionUI(true);
-                        
-                        // Close popup after 3 seconds
-                        setTimeout(() => {
-                            closePopup();
-                        }, 3000);
-                    } else {
-                        throw new Error(result.message || 'Subscription failed');
-                    }
-                } catch (error) {
-                    console.error('Writing popup subscription error:', error);
-                    writingPopupError.style.display = 'block';
-                    writingPopupError.textContent = 'Something went wrong. Please try again.';
-                } finally {
-                    // Re-enable button
-                    writingPopupButton.disabled = false;
-                    writingPopupButton.textContent = 'Subscribe';
-                }
-            });
+            buildCardCache();
+            requestUpdate();
+
+            scrollContainer.addEventListener('scroll', requestUpdate, { passive: true });
+            window.addEventListener('resize', () => {
+                buildCardCache();
+                requestUpdate();
+            }, { passive: true });
         });
     </script>
 </body>

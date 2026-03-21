@@ -1,0 +1,257 @@
+frit <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Lukas Kubiena</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
+        }
+
+        :root {
+            --padding-y: 15vh;
+            --padding-x: 12vw;
+        }
+
+        @media screen and (max-width: 1024px) {
+            :root {
+                --padding-y: 10vh;
+                --padding-x: 8vw;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            :root {
+                --padding-y: 40px;
+                --padding-x: 30px;
+            }
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            color: #000;
+            overflow-x: hidden;
+        }
+
+        .corner { position: absolute; }
+        .top-left { top: var(--padding-y); left: var(--padding-x); }
+        .top-right { top: var(--padding-y); right: var(--padding-x); }
+
+        .logo-container {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-60deg);
+            opacity: 0;
+            animation: spinIn 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .logo-container img.spin-out {
+            /* Override the init animation to play spinOut */
+            animation: spinOut 0.8s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes spinIn {
+            0% {
+                transform: rotate(-60deg);
+                opacity: 0;
+            }
+            100% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes spinOut {
+            0% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(60deg); /* rotates back the other way positively */
+                opacity: 0;
+            }
+        }
+
+        .nav-links { display: flex; gap: 24px; font-size: 15px; letter-spacing: -0.01em; }
+        
+        a {
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        a:hover { opacity: 0.7; }
+
+        .about-content {
+            box-sizing: border-box;
+            padding: 0 var(--padding-x);
+            padding-top: calc(var(--padding-y) + 100px);
+            display: flex;
+            gap: 40px;
+            justify-content: space-between;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .text-column {
+            flex: 1;
+            max-width: 280px;
+            font-size: 15px;
+            line-height: 1.45;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .about-content .text-column {
+            min-height: 330px;
+        }
+
+        .contact-link {
+            margin-top: auto;
+            font-size: 15px;
+            line-height: 1.45;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .image-column {
+            flex: 1.5;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .profile-img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s forwards;
+            filter: grayscale(10%);
+        }
+
+        .text-column p {
+            margin: 0;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .text-column:nth-child(1) p:nth-child(1) { animation-delay: 0.1s; }
+        .text-column:nth-child(1) p:nth-child(2) { animation-delay: 0.2s; }
+        .text-column:nth-child(1) .contact-link { animation-delay: 0.35s; }
+        .text-column:nth-child(2) p:nth-child(1) { animation-delay: 0.2s; }
+        .text-column:nth-child(2) p:nth-child(2) { animation-delay: 0.3s; }
+        .text-column:nth-child(2) p:nth-child(3) { animation-delay: 0.4s; }
+        .text-column:nth-child(2) .contact-link { animation-delay: 0.5s; }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media screen and (max-width: 1024px) {
+            .about-content {
+                flex-wrap: wrap;
+                gap: 50px;
+            }
+            .text-column {
+                min-width: 250px;
+                min-height: auto;
+            }
+            .image-column {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-links { display: none; }
+            .text-column { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="corner top-left logo-container">
+        <a href="index.html"><img src="logo2.svg" alt="Lukas Kubiena Logo"></a>
+    </div>
+
+    <div class="corner top-right nav-links">
+        <a href="about.html">about</a>
+        <a href="./writing/index.html">writing</a>
+        <a href="#">gallery</a>
+        <a href="/cdn-cgi/l/email-protection#deb2abb5bfadb3bfacb7bfb5abbcb7bbb0bf9eb9b3bfb7b2f0bdb1b3">contact</a>
+    </div>
+
+    <div class="about-content">
+        <div class="text-column">
+            <p>I am Lukas - an independent designer & researcher from Vienna. Currently, I work with organisations on refining their creative direction and storytelling in the age of AI.</p>
+            <p>Previously, I worked with the European Union at @Dembrane, using AI to improve how democracies make decisions at scale.</p>
+            <a class="contact-link" href="mailto:lukasmariakubiena@gmail.com">lukasmariakubiena@gmail.com</a>
+        </div>
+        
+        <div class="text-column">
+            <p>Occasionally, you can also find me studying the Brain @AarhusUniversity in Denmark.</p>
+            <p>I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.</p>
+            <p>Feel free to reach out if we care about the same things!</p>
+            <a class="contact-link" href="https://www.linkedin.com/in/lukas-kubiena/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+
+        <div class="image-column">
+            <img src="profile.jpeg" alt="Lukas Kubiena" class="profile-img">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoLink = document.querySelector('.logo-container a');
+            const logoImg = document.querySelector('.logo-container img');
+
+            logoLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = logoLink.getAttribute('href');
+                
+                // Trigger the exit animation on the logo
+                logoImg.classList.add('spin-out');
+                
+                // Fade out the entire page smoothly over the same duration
+                document.body.style.transition = 'opacity 0.8s cubic-bezier(0.5, 0, 0.2, 1)';
+                document.body.style.opacity = '0';
+
+                // Navigate once the animation completes
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 800);
+            });
+        });
+    </script>
+</body>
+</html>

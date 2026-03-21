@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lukas Kubiena</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
+        }
+
+        :root {
+            --row-gap: 2rem;
+        }
+
+        body, body * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: grid;
+            row-gap: var(--row-gap);
+            grid-template-columns: 1fr 1fr 1fr 1fr 1.3fr 1.3fr 1.5fr 1.5fr 1fr 1.5fr 1.5fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto auto;
+            column-gap: 1.5rem;
+            padding-top: calc(64px + 11vh);
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav-bar.visible {
+            opacity: 1;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .nav-link:hover {
+            color: #000;
+        }
+
+        .right-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .hey-container {
+            grid-column: 4 / 6;
+            grid-row: 2 / 3;
+            align-self: start;
+            margin-left: 2rem;
+            margin-top: -0.2em;
+        }
+
+        .hey {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            font-size: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        .hey-text {
+            display: inline-block;
+        }
+
+        .comma {
+            display: inline-block;
+            transform-origin: center;
+        }
+
+        @keyframes popOut {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bellJingle {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-8deg); }
+            75% { transform: rotate(6deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .hey.animate {
+            animation: popOut 0.3s ease-out;
+        }
+
+        .hey.animate .comma {
+            animation: bellJingle 0.8s ease-in-out 0.3s;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 1px;
+            height: 1em;
+            background-color: black;
+            animation: blink 0.7s infinite;
+            margin-left: 2px;
+            vertical-align: baseline;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Content */
+        .content {
+            color: #000000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.45;
+            text-align: justify;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .content.visible {
+            opacity: 1;
+        }
+
+        .content-1 {
+            grid-column: 7 / 9;
+            grid-row: 2 / 4;
+            align-self: start;
+        }
+
+        .content-2 {
+            grid-column: 7 / 9;
+            grid-row: 4 / 6;
+            margin-bottom: 12rem;
+        }
+
+        .profile-image {
+            grid-column: 10 / 12;
+            grid-row: 2 / 4;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .profile-image.visible {
+            opacity: 1;
+        }
+
+        .content-group {
+            grid-column: 10 / 12;
+            grid-row: 4 / 6;
+            display: flex;
+            flex-direction: column;
+            gap: var(--row-gap);
+        }
+
+        .content-3 {
+            text-align: justify;
+            font-size: 15px;
+            line-height: 1.45;
+        }
+
+        .writing-link,
+        .send-mail {
+            margin-bottom: -1rem;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .writing-link.visible,
+        .send-mail.visible {
+            opacity: 1;
+        }
+
+        .writing-link a,
+        .send-mail a {
+            color: #000000;
+            text-decoration: underline;
+            font-size: 15px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .at-link {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+        }
+
+        .at-link::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #BFD4EA;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .at-link:hover::before {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Umlaut animation */
+        .animated-umlaut {
+            position: relative;
+            display: inline-block;
+        }
+
+        .umlaut-dots {
+            position: absolute;
+            top: -2.5px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 1px;
+        }
+
+        .umlaut-dot {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(3px);
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+            font-size: 0.8em;
+            line-height: 1;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            height: 2px;
+        }
+
+        .nav-link:hover .umlaut-dot {
+            opacity: 1 !important;
+            color: inherit !important;
+        }
+
+        .umlaut-dot.appear {
+            opacity: 0.75;
+            transform: translateY(0);
+            animation: dotBounce 0.4s ease-in-out 0.1s;
+        }
+
+        @keyframes dotBounce {
+            0% { transform: translateY(0); }
+            40% { transform: translateY(-1px); }
+            60% { transform: translateY(0.5px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Mail Mode Styles */
+        .mail-mode .nav-bar,
+        .mail-mode .content,
+        .mail-mode .content-group,
+        .mail-mode .profile-image {
+            display: none;
+        }
+
+        .mail-mode .hey-container {
+            position: absolute;
+            left: 260px;
+            top: 180px;
+            grid-column: auto;
+            grid-row: auto;
+            margin: 0;
+        }
+
+        .mail-mode body {
+            display: block;
+            padding-top: 0;
+        }
+
+        .mail-mode .prompt-text {
+            position: absolute;
+            left: 260px;
+            top: 150px;
+            font-size: 14px;
+            color: #888;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .mail-mode .hey {
+            font-size: 40px;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: calc(100vw - 520px - 260px);
+        }
+
+        .mail-mode .hey[contenteditable="true"]:empty:before,
+        .mail-mode .hey.empty-placeholder:before {
+            content: 'Your subject';
+            color: #ccc;
+            pointer-events: none;
+        }
+
+        .mail-input {
+            position: absolute;
+            left: 260px;
+            top: 240px;
+            right: 260px;
+            bottom: 160px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            border: none;
+            outline: none;
+            resize: none;
+            background: transparent;
+            padding: 0;
+            overflow-y: auto;
+            color: #000;
+        }
+
+        .mail-input::placeholder {
+            color: #ccc;
+        }
+
+        .mail-mode a {
+            color: #000 !important;
+        }
+
+        .send-button {
+            position: absolute;
+            right: 260px;
+            bottom: 100px;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 16px;
+            color: #ccc;
+            pointer-events: none;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .send-button.active {
+            color: #000;
+            pointer-events: auto;
+        }
+
+        .char-count {
+            position: absolute;
+            right: 260px;
+            top: 180px;
+            font-size: 16px;
+            font-style: italic;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        .location-info {
+            position: absolute;
+            left: 260px;
+            bottom: 100px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #000;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+        }
+
+        @media screen and (max-width: 1024px) {
+            body {
+                display: flex;
+                flex-direction: column;
+                padding: 24px;
+                margin-top: 8vh;
+                padding-top: calc(56px + 24px);
+            }
+
+            .nav-bar {
+                height: 56px;
+                opacity: 1;
+            }
+
+            .nav-content {
+                padding: 0 24px;
+            }
+
+            .hey-container {
+                position: static;
+                margin: 0 0 32px 0;
+            }
+
+            .hey {
+                font-size: 36px;
+                margin-left: 0;
+            }
+
+            .content,
+            .content-group {
+                width: 100%;
+                margin-bottom: 24px;
+            }
+
+            .content {
+                font-size: 16px;
+                line-height: 1.6;
+                text-align: left;
+                opacity: 1 !important;
+            }
+
+            .profile-image {
+                width: 100%;
+                height: auto;
+                margin: 2rem 0;
+                opacity: 1 !important;
+                border-radius: 4px;
+            }
+
+            .writing-link,
+            .send-mail {
+                opacity: 1 !important;
+                font-size: 16px;
+            }
+
+            .content-group {
+                gap: 1rem;
+            }
+
+            /* Mobile Mail Mode */
+            .mail-mode {
+                padding: 24px;
+                padding-top: calc(56px + 24px);
+            }
+
+            .mail-mode .nav-bar {
+                display: block;
+            }
+
+            .mail-mode .hey-container {
+                position: static;
+                margin: 0 0 24px 0;
+            }
+
+            .mail-mode .prompt-text {
+                position: static;
+                left: auto;
+                top: auto;
+                font-size: 14px;
+                color: #888;
+                margin-bottom: 16px;
+                display: block;
+            }
+
+            .mail-mode .hey {
+                font-size: 32px;
+                white-space: normal;
+                overflow: visible;
+                max-width: 100%;
+                width: 100%;
+                min-height: 40px;
+                display: block;
+            }
+
+            .mail-input {
+                position: static;
+                left: auto;
+                top: auto;
+                right: auto;
+                bottom: auto;
+                width: 100%;
+                min-height: 200px;
+                margin: 24px 0;
+                font-size: 16px;
+            }
+
+            .char-count {
+                position: static;
+                right: auto;
+                top: auto;
+                font-size: 14px;
+                text-align: right;
+                margin-bottom: 16px;
+            }
+
+            .send-button {
+                position: static;
+                right: auto;
+                bottom: auto;
+                display: block;
+                text-align: right;
+                margin-bottom: 16px;
+            }
+
+            .location-info {
+                position: static;
+                left: auto;
+                bottom: auto;
+                margin-top: 24px;
+            }
+
+            .at-link::before {
+                display: none;
+            }
+
+            .typing-cursor {
+                height: 0.9em;
+            }
+
+            .right-links {
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <a href="#" class="nav-link">Lukas Kubiena</a>
+            <div class="right-links">
+                <!-- <a href="./story.html" class="nav-link">a story of change</a> -->
+                <a href="./work.html" class="nav-link">work</a>
+                <a href="./writing/index.html" class="nav-link">blog</a>
+                <a href="/cdn-cgi/l/email-protection#deb2abb5bfadb3bfacb7bfb5abbcb7bbb0bf9eb9b3bfb7b2f0bdb1b3" class="nav-link">contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hey-container">
+        <div class="hey">
+            <span class="hey-text"></span><span class="comma" style="opacity: 0;">,</span>
+        </div>
+    </div>
+
+    <div class="content content-1">
+        I'm Lukas. I study technological change and what that means for the people and organisations navigating it. Currently, I translate these insights into brand, strategy, and creative direction. Alongside this, I co-founded <a href="https://c-fund.org/" class="at-link">@c</a> and <a href="https://from-c.com" class="at-link">@from-c</a> - a creative collective and production company based in Vienna.
+    </div>
+
+    <img src="profile.jpeg" alt="Lukas Kubiena" class="profile-image">
+
+    <div class="content content-2">
+        Previously, I worked with the European Union at <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>, using AI to improve how democracies make decisions at scale.
+        Occasionally, you can also find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
+    </div>
+
+    <div class="content-group">
+        <div class="content content-3">
+            Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation, as a medium to express myself in ways I can't get across otherwise. Feel free to reach out if we care about the same things!
+        </div>
+        <div class="writing-link">
+            <a href="./writing/index.html">writing</a>
+        </div>
+        <div class="send-mail">
+            <a href="#" id="send-mail-link">send me a mail</a>
+        </div>
+    </div>
+
+    <script>
+        let inMailMode = false;
+        let hey, heyText, comma;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            hey = document.querySelector('.hey');
+            heyText = hey.querySelector('.hey-text');
+            comma = hey.querySelector('.comma');
+            const content = document.querySelectorAll('.content, .send-mail, .writing-link, .profile-image');
+            const navBar = document.querySelector('.nav-bar');
+            
+            // Check if user has seen animation before
+            const hasSeenAnimation = sessionStorage.getItem('hasSeenAnimation');
+            
+            if (hasSeenAnimation) {
+                // Skip animation, show everything immediately
+                heyText.textContent = 'Hey';
+                comma.style.opacity = '1';
+                content.forEach(el => {
+                    el.classList.add('visible');
+                });
+                navBar.classList.add('visible');
+            } else {
+                // Type "Hey" on load
+                setTimeout(() => {
+                    typeHey();
+                }, 1000);
+                
+                // Show content after Hey animation completes
+                setTimeout(() => {
+                    content.forEach(el => {
+                        el.classList.add('visible');
+                    });
+                    navBar.classList.add('visible');
+                    sessionStorage.setItem('hasSeenAnimation', 'true');
+                }, 2200);
+            }
+
+            // Add hover animation
+            hey.addEventListener('mouseenter', playAnimation);
+            
+            // Add click for mail mode
+            hey.addEventListener('click', handleHeyClick);
+            
+            // Add click handler for send mail link
+            const sendMailLink = document.getElementById('send-mail-link');
+            if (sendMailLink) {
+                sendMailLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleHeyClick();
+                });
+            }
+        });
+
+        function typeHey() {
+            const text = 'Hey';
+            let index = 0;
+            heyText.textContent = '';
+            
+            const cursor = document.createElement('span');
+            cursor.className = 'typing-cursor';
+            hey.appendChild(cursor);
+            
+            function typeChar() {
+                if (index < text.length) {
+                    heyText.textContent += text[index];
+                    index++;
+                    setTimeout(typeChar, 150);
+                } else {
+                    // Show comma
+                    comma.style.opacity = '1';
+                    setTimeout(() => {
+                        cursor.remove();
+                        playAnimation();
+                    }, 100);
+                }
+            }
+
+            typeChar();
+        }
+
+        function playAnimation() {
+            if (!inMailMode) {
+                hey.classList.remove('animate');
+                void hey.offsetWidth;
+                hey.classList.add('animate');
+            }
+        }
+
+        // Mail Mode
+        function handleHeyClick() {
+            if (inMailMode) return;
+            
+            inMailMode = true;
+            document.body.classList.add('mail-mode');
+            
+            const isMobile = window.innerWidth <= 1024;
+            
+            // Store original content
+            const originalHeyContent = hey.innerHTML;
+            
+            // Add prompt text
+            const promptText = document.createElement('div');
+            promptText.className = 'prompt-text';
+            promptText.textContent = 'Add your email at the end so I can contact you!';
+            
+            if (isMobile) {
+                // On mobile, insert before hey container
+                hey.parentNode.parentNode.insertBefore(promptText, hey.parentNode);
+            } else {
+                document.body.appendChild(promptText);
+            }
+            
+            // Transform hey to subject input
+            hey.textContent = '';
+            hey.style.color = '#ccc';
+            hey.contentEditable = 'true';
+            hey.style.cursor = 'text';
+            hey.style.outline = 'none';
+            hey.classList.add('empty-placeholder');
+            
+            // Create mail input
+            const mailInput = document.createElement('textarea');
+            mailInput.className = 'mail-input';
+            mailInput.placeholder = 'Text...';
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(mailInput);
+            } else {
+                document.body.appendChild(mailInput);
+            }
+            
+            // Create character count
+            const charCount = document.createElement('div');
+            charCount.className = 'char-count';
+            charCount.textContent = '0';
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(charCount);
+            } else {
+                document.body.appendChild(charCount);
+            }
+            
+            // Create send button
+            const sendButton = document.createElement('a');
+            sendButton.className = 'send-button';
+            sendButton.textContent = 'send';
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(sendButton);
+            } else {
+                document.body.appendChild(sendButton);
+            }
+            
+            // Create back button
+            const locationInfo = document.createElement('div');
+            locationInfo.className = 'location-info';
+            locationInfo.innerHTML = '<a href="#" style="text-decoration: underline; cursor: pointer;">back</a>';
+            
+            if (isMobile) {
+                hey.parentNode.parentNode.appendChild(locationInfo);
+            } else {
+                document.body.appendChild(locationInfo);
+            }
+            
+            locationInfo.querySelector('a').addEventListener('click', function(e) {
+                e.preventDefault();
+                resetMailMode();
+            });
+            
+            // Email validation
+            function validateEmail(text) {
+                const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+                return emailRegex.test(text);
+            }
+            
+            // Handle subject input
+            hey.addEventListener('focus', function() {
+                hey.style.color = '#000';
+            });
+            
+            hey.addEventListener('input', function() {
+                hey.style.color = '#000';
+                hey.classList.remove('empty-placeholder');
+                
+                // Prevent overflow on desktop only
+                if (!isMobile) {
+                    if (hey.scrollWidth > hey.clientWidth) {
+                        const text = hey.textContent;
+                        hey.textContent = text.slice(0, -1);
+                        
+                        const range = document.createRange();
+                        const sel = window.getSelection();
+                        range.selectNodeContents(hey);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+            });
+            
+            hey.addEventListener('blur', function() {
+                if (hey.textContent.trim() === '') {
+                    hey.style.color = '#ccc';
+                    hey.classList.add('empty-placeholder');
+                }
+            });
+            
+            hey.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    hey.style.color = '#000';
+                    mailInput.focus();
+                }
+            });
+            
+            mailInput.addEventListener('input', function() {
+                const text = this.value;
+                charCount.textContent = text.length;
+                
+                if (validateEmail(text)) {
+                    sendButton.classList.add('active');
+                } else {
+                    sendButton.classList.remove('active');
+                }
+            });
+            
+            sendButton.addEventListener('click', function() {
+                if (this.classList.contains('active')) {
+                    const subject = hey.textContent.trim() || 'No subject';
+                    const message = mailInput.value;
+                    sendMail(subject, message);
+                }
+            });
+            
+            function resetMailMode() {
+                mailInput.remove();
+                charCount.remove();
+                sendButton.remove();
+                locationInfo.remove();
+                promptText.remove();
+                
+                hey.contentEditable = 'false';
+                hey.innerHTML = originalHeyContent;
+                hey.style.color = '#000';
+                hey.style.cursor = 'pointer';
+                hey.classList.remove('empty-placeholder');
+                
+                heyText = hey.querySelector('.hey-text');
+                comma = hey.querySelector('.comma');
+                
+                document.body.classList.remove('mail-mode');
+                inMailMode = false;
+            }
+            
+            setTimeout(() => {
+                hey.focus();
+            }, 100);
+        }
+        
+        async function sendMail(subject, message) {
+            alert('Message sent! Thank you.');
+            location.reload();
+        }
+
+        // Escape key to exit mail mode
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && inMailMode) {
+                location.reload();
+            }
+        });
+
+        // Umlaut hover effect on navbar name
+        document.addEventListener('DOMContentLoaded', function() {
+            const nameLink = document.querySelector('.nav-link:first-child');
+            
+            if (nameLink) {
+                const originalText = nameLink.textContent;
+                
+                nameLink.addEventListener('mouseenter', function() {
+                    nameLink.innerHTML = 'Lukas Kubi<span class="animated-umlaut">e</span>na';
+                    
+                    const eElement = nameLink.querySelector('.animated-umlaut');
+                    
+                    const dotContainer = document.createElement('span');
+                    dotContainer.className = 'umlaut-dots';
+                    
+                    const leftDot = document.createElement('span');
+                    leftDot.className = 'umlaut-dot left-dot';
+                    leftDot.textContent = '·';
+                    
+                    const rightDot = document.createElement('span');
+                    rightDot.className = 'umlaut-dot right-dot';
+                    rightDot.textContent = '·';
+                    
+                    dotContainer.appendChild(leftDot);
+                    dotContainer.appendChild(rightDot);
+                    
+                    eElement.appendChild(dotContainer);
+                    
+                    setTimeout(() => {
+                        leftDot.classList.add('appear');
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        rightDot.classList.add('appear');
+                    }, 300);
+                });
+                
+                nameLink.addEventListener('mouseleave', function() {
+                    nameLink.textContent = originalText;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

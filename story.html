@@ -34,6 +34,13 @@
             line-height: 1.6;
             color: #1a1a1a;
             overflow-x: hidden;
+            opacity: 1;
+            transition: opacity 0.45s cubic-bezier(0.5, 0, 0.2, 1);
+        }
+
+        body.is-leaving {
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* Navigation */
@@ -868,6 +875,31 @@
         // Prevent scroll when overlay is visible
         document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = 'hidden';
+        });
+
+        // Smooth home navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            const homeLink = document.querySelector('a.home-link[href="./index.html"], a.home-link[href="index.html"]');
+            if (!homeLink) return;
+
+            homeLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = homeLink.getAttribute('href');
+
+                const prefersReducedMotion = window.matchMedia &&
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (prefersReducedMotion) {
+                    window.location.href = targetUrl;
+                    return;
+                }
+
+                dismissOverlay();
+                document.body.classList.add('is-leaving');
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 420);
+            });
         });
 
         // ESC to dismiss

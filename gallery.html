@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Lukas Kubiena</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
+            font-display: swap;
+        }
+
+        :root {
+            --pad-y: 28px;
+            --pad-x: 28px;
+            --card-w: 210px;
+            --card-h: 320px;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #f8f8f7;
+            color: #111;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            opacity: 1;
+            transition: opacity 0.42s cubic-bezier(0.5, 0, 0.2, 1);
+        }
+
+        body.is-leaving {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .home-logo {
+            position: fixed;
+            top: var(--pad-y);
+            left: var(--pad-x);
+            width: 24px;
+            height: 24px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-logo img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transform: rotate(-45deg);
+            opacity: 0;
+            animation: logoSpinIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards;
+        }
+
+        .home-logo img.spin-out {
+            animation: logoSpinOut 0.65s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+        }
+
+        .gallery-stage {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            cursor: grab;
+        }
+
+        .gallery-stage.dragging {
+            cursor: grabbing;
+        }
+
+        .gallery-surface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            will-change: transform;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .gallery-body {
+            position: absolute;
+            display: grid;
+            grid-template-columns: repeat(6, var(--card-w));
+            gap: 56px 56px;
+            padding: 24px;
+            width: max-content;
+            height: max-content;
+        }
+
+        .gallery-item {
+            width: var(--card-w);
+            height: var(--card-h);
+            overflow: hidden;
+            border-radius: 2px;
+            background: #e3e3e3;
+            transform: scale(0.3);
+            opacity: 0;
+            animation: itemIn 1.4s cubic-bezier(0.18, 0.71, 0.11, 1) forwards;
+        }
+
+        .gallery-item:nth-child(even) {
+            margin-top: 60%;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        @keyframes itemIn {
+            from { opacity: 0; transform: scale(0.3); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes logoSpinIn {
+            0% {
+                transform: rotate(-45deg);
+                opacity: 0;
+            }
+            100% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes logoSpinOut {
+            0% {
+                transform: rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            :root {
+                --card-w: 150px;
+                --card-h: 220px;
+                --pad-y: 20px;
+                --pad-x: 20px;
+            }
+            .gallery-body {
+                grid-template-columns: repeat(6, var(--card-w));
+                gap: 36px 36px;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-logo" id="homeLogo" aria-label="Back to home">
+        <img src="logo2.svg" alt="Home">
+    </a>
+
+    <div class="gallery-stage" id="galleryStage">
+        <div class="gallery-surface" id="gallerySurface">
+            <div class="gallery-body" id="body-a"></div>
+            <div class="gallery-body" id="body-b"></div>
+            <div class="gallery-body" id="body-c"></div>
+            <div class="gallery-body" id="body-d"></div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const images = [
+        { src: 'writing/ban13.png', alt: 'To our neighbours' },
+        { src: 'writing/ban12.png', alt: 'Constraints shape Possibilities' },
+        { src: 'writing/ban11.png', alt: 'The Redukt' },
+        { src: 'writing/ban9.png', alt: 'Form follows function' },
+        { src: 'writing/ban8.png', alt: 'Maximum delight' },
+        { src: 'writing/ban7.png', alt: 'Build a lightbulb' },
+        { src: 'writing/ban6.png', alt: 'Excellence vs Greatness' },
+        { src: 'writing/ban5.png', alt: 'Polarised' },
+        { src: 'writing/ban4.png', alt: 'Why' },
+        { src: 'writing/ban3.png', alt: 'Being a piece of it all' },
+        { src: 'writing/ban2.png', alt: 'Care' },
+        { src: 'writing/ban1.png', alt: 'Action' },
+        { src: 'co_built.png', alt: 'Project image' },
+        { src: 'ban_2.jpeg', alt: 'Project image 2' },
+        { src: 'ban_3.jpeg', alt: 'Project image 3' },
+        { src: 'banner_home.png', alt: 'Home banner' }
+    ];
+
+    const stage = document.getElementById('galleryStage');
+    const surface = document.getElementById('gallerySurface');
+    const bodies = [
+        document.getElementById('body-a'),
+        document.getElementById('body-b'),
+        document.getElementById('body-c'),
+        document.getElementById('body-d')
+    ];
+
+    function renderBody(el) {
+        el.innerHTML = images.map((image, i) => {
+            const delay = (Math.random() * 0.9 + 0.25).toFixed(2);
+            return `
+                <div class="gallery-item" style="animation-delay:${delay}s">
+                    <img src="${image.src}" alt="${image.alt}">
+                </div>
+            `;
+        }).join('');
+    }
+
+    bodies.forEach(renderBody);
+
+    let bodyW = 0;
+    let bodyH = 0;
+    let x = -120;
+    let y = -80;
+    let vx = 0;
+    let vy = 0;
+    let dragging = false;
+    let lastPx = 0;
+    let lastPy = 0;
+    let rafId = null;
+
+    function wrap(value, min, max) {
+        const range = max - min;
+        if (!range) return min;
+        return ((((value - min) % range) + range) % range) + min;
+    }
+
+    function applyLayout() {
+        bodyW = bodies[0].offsetWidth;
+        bodyH = bodies[0].offsetHeight;
+        if (!bodyW || !bodyH) return;
+
+        bodies[0].style.left = '0px';
+        bodies[0].style.top = '0px';
+        bodies[1].style.left = bodyW + 'px';
+        bodies[1].style.top = '0px';
+        bodies[2].style.left = '0px';
+        bodies[2].style.top = bodyH + 'px';
+        bodies[3].style.left = bodyW + 'px';
+        bodies[3].style.top = bodyH + 'px';
+    }
+
+    function draw() {
+        if (!bodyW || !bodyH) return;
+        x = wrap(x, -bodyW, 0);
+        y = wrap(y, -bodyH, 0);
+        surface.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    }
+
+    function tick() {
+        if (!dragging) {
+            y += vy;
+            x += vx;
+            vx *= 0.92;
+            vy *= 0.9;
+            // Safety clamp so momentum never explodes.
+            vx = Math.max(-28, Math.min(28, vx));
+            vy = Math.max(-32, Math.min(32, vy));
+            if (Math.abs(vx) < 0.01) vx = 0;
+            if (Math.abs(vy) < 0.01) vy = 0;
+        }
+        draw();
+        rafId = requestAnimationFrame(tick);
+    }
+
+    function onPointerDown(e) {
+        dragging = true;
+        stage.classList.add('dragging');
+        lastPx = e.clientX;
+        lastPy = e.clientY;
+        vx = 0;
+        vy = 0;
+        stage.setPointerCapture(e.pointerId);
+    }
+
+    function onPointerMove(e) {
+        if (!dragging) return;
+        const dx = e.clientX - lastPx;
+        const dy = e.clientY - lastPy;
+        x += dx;
+        y += dy;
+        vx = dx * 0.42;
+        vy = dy * 0.42;
+        lastPx = e.clientX;
+        lastPy = e.clientY;
+        draw();
+    }
+
+    function onPointerUp(e) {
+        dragging = false;
+        stage.classList.remove('dragging');
+        if (stage.hasPointerCapture(e.pointerId)) {
+            stage.releasePointerCapture(e.pointerId);
+        }
+    }
+
+    stage.addEventListener('pointerdown', onPointerDown);
+    stage.addEventListener('pointermove', onPointerMove);
+    stage.addEventListener('pointerup', onPointerUp);
+    stage.addEventListener('pointercancel', onPointerUp);
+
+    window.addEventListener('wheel', (event) => {
+        if (dragging) return;
+        event.preventDefault();
+        // Normalize wheel delta across mouse/trackpad modes.
+        const unit = event.deltaMode === 1 ? 16 : (event.deltaMode === 2 ? window.innerHeight : 1);
+        const normalizedDeltaY = event.deltaY * unit;
+        const impulse = Math.max(-18, Math.min(18, -normalizedDeltaY * 0.018));
+        vy += impulse;
+        vy = Math.max(-32, Math.min(32, vy));
+    }, { passive: false });
+
+    window.addEventListener('resize', () => {
+        applyLayout();
+        draw();
+    });
+
+    window.addEventListener('load', () => {
+        applyLayout();
+        draw();
+    });
+    applyLayout();
+    draw();
+    if (!rafId) tick();
+
+    const homeLogo = document.getElementById('homeLogo');
+    const homeLogoImg = homeLogo.querySelector('img');
+    homeLogo.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetUrl = homeLogo.getAttribute('href');
+        const prefersReducedMotion = window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            window.location.href = targetUrl;
+            return;
+        }
+        if (homeLogoImg) {
+            homeLogoImg.classList.add('spin-out');
+        }
+        document.body.classList.add('is-leaving');
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 650);
+    });
+});
+</script>
+</body>
+</html>

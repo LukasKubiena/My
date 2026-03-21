@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lukas Kubiena</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="NeueHaasDisplay-Mediu.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        @font-face {
+            font-family: 'NeueHaasDisplay-Light';
+            src: url('NeueHaasDisplay-Light.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'NeueHaasDisplay-Medium';
+            src: url('NeueHaasDisplay-Mediu.woff2') format('woff2');
+        }
+
+        :root {
+            --padding-y: 15vh;
+            --padding-x: 12vw;
+        }
+
+        @media screen and (max-width: 1024px) {
+            :root {
+                --padding-y: 10vh;
+                --padding-x: 8vw;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            :root {
+                --padding-y: 40px;
+                --padding-x: 30px;
+            }
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            overflow: hidden; 
+            color: #000;
+        }
+
+        .slides-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* 
+         * Base slide properties
+         */
+        .slide {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%;
+            height: 100%;
+            /* Keep slides visible so slide-bg opacity can crossfade smoothly. */
+            visibility: visible;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1; 
+            transform: translateY(0);
+        }
+
+        .slide-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide-content {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        
+        .slide-content > * {
+            pointer-events: auto;
+            opacity: 0;
+            transform: scale(0.985);
+            filter: blur(2px);
+            transition:
+                opacity 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.42s cubic-bezier(0.22, 0.61, 0.36, 1),
+                filter 0.42s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .slide.active {
+            z-index: 2;
+            pointer-events: auto;
+        }
+        
+        .slide.active .slide-bg {
+            opacity: 1;
+        }
+
+        .slide.active .slide-content {
+            opacity: 1;
+        }
+
+        /* Dedicated vertical snap transition for home <-> first project. */
+        .slide.snap-moving .slide-bg,
+        .slide.snap-moving .slide-content {
+            transition: none !important;
+        }
+
+        .slide.active .slide-content > * {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        /* Small stagger so text/UI appears direct but alive. */
+        .slide.active .slide-content .top-left { transition-delay: 0.02s; }
+        .slide.active .slide-content .top-right { transition-delay: 0.06s; }
+        .slide.active .slide-content .bottom-left { transition-delay: 0.1s; }
+        .slide.active .slide-content .bottom-right { transition-delay: 0.14s; }
+
+        .slide:not(.active) .slide-content > * {
+            transition-delay: 0s;
+        }
+
+        /* 
+         * Project slide specific container for horizontal overflow
+         */
+        .project-scroll-container {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+        .project-slide.horizontal-active .project-scroll-container {
+            overflow-x: auto;
+        }
+        .project-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .project-panel {
+            height: 100vh;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .cover-panel {
+            width: 100vw;
+            cursor: pointer;
+        }
+
+        .flowing-panel {
+            display: flex;
+            align-items: center;
+            background-color: #f7f7f7;
+            padding: var(--padding-y) calc(var(--padding-x) * 1.5);
+            box-sizing: border-box;
+            color: #000;
+        }
+
+        .flowing-content {
+            display: flex;
+            gap: 8vw;
+            align-items: center;
+            height: 100%;
+        }
+
+        .flowing-text {
+            width: 320px;
+            font-family: 'NeueHaasDisplay-Light', sans-serif;
+            font-size: 15px;
+            line-height: 1.45;
+            white-space: normal;
+        }
+        
+        .flowing-text h4 {
+            font-family: 'NeueHaasDisplay-Medium', sans-serif;
+            margin-bottom: 24px;
+            font-size: 18px;
+            letter-spacing: -0.01em;
+            font-weight: 600;
+        }
+
+        .flowing-img {
+            height: 50vh;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* Quadrat fixed overlay */
+        .quadrat-wrapper {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        #quadratOuter {
+            position: absolute;
+            top: calc(var(--padding-y) + 6px);
+            right: var(--padding-x);
+            width: 12px;
+            height: 12px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        #quadratSpin {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            box-sizing: border-box;
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), background-color 0.4s ease;
+        }
+
+        #quadratFill {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            height: 0%;
+            background-color: transparent;
+            /* height has no CSS transition so it updates instantly with the scrollbar */
+        }
+
+        /* Common corner positioning */
+        .corner {
+            position: absolute;
+        }
+        
+        .top-left { top: var(--padding-y); left: var(--padding-x); }
+        .top-right { top: var(--padding-y); right: var(--padding-x); }
+        .bottom-left { bottom: var(--padding-y); left: var(--padding-x); }
+        .bottom-right { bottom: var(--padding-y); right: var(--padding-x); }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        a:hover {
+            opacity: 0.7;
+        }
+        
+        .underline { 
+            text-decoration: underline; 
+            text-underline-offset: 4px; 
+            text-decoration-thickness: 1px;
+        }
+        .underline a:hover {
+            text-decoration: none;
+        }
+
+        /* Typography */
+        .bold { font-family: 'NeueHaasDisplay-Medium', sans-serif; font-weight: 600; }
+        .light { font-family: 'NeueHaasDisplay-Light', sans-serif; font-weight: 300; }
+        
+        .nav-links { display: flex; gap: 24px; }
+
+        .title-text { font-size: 20px; letter-spacing: -0.01em; }
+        .subtitle-text { font-size: 15px; color: inherit; opacity: 0.7; margin-top: 4px;}
+        .footer-text { font-size: 15px; letter-spacing: -0.01em; }
+
+        .slide.theme-dark { color: #ffffff; }
+        .slide.theme-light { color: #000000; }
+        
+        .to-container {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.01em;
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 1.5px;
+            height: 0.9em;
+            background-color: currentColor;
+            animation: blink 0.7s infinite;
+            margin-left: 4px;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @media screen and (max-width: 768px) {
+            .nav-links { display: none; }
+            .to-container { font-size: 20px; }
+            .flowing-content { gap: 15vw; }
+            .flowing-img { height: 40vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quadrat-wrapper">
+        <div id="quadratOuter">
+            <div id="quadratSpin"></div>
+            <div id="quadratFill"></div>
+        </div>
+    </div>
+
+    <div class="slides-container" id="slidesContainer">
+        
+        <!-- SECTION 0: HOMEPAGE -->
+        <div class="slide active theme-dark" id="sect0" data-has-quadrat="false" data-quadrat-color="#ffffff">
+            <div class="slide-bg" style="background-image: url('banner_home.png');"></div>
+            <div class="slide-content">
+                <div class="corner top-left bold title-text">Lukas Kubiena</div>
+                
+                <div class="corner top-right nav-links footer-text">
+                    <a href="about.html">about</a>
+                    <a href="./writing/index.html">writing</a>
+                    <a href="gallery.html">gallery</a>
+                    <a href="/cdn-cgi/l/email-protection#deb2abb5bfadb3bfacb7bfb5abbcb7bbb0bf9eb9b3bfb7b2f0bdb1b3">contact</a>
+                </div>
+
+                <div class="corner bottom-left footer-text">Vienna, 2026</div>
+                <div class="corner bottom-right footer-text underline">
+                    <a class="nav-trigger" data-target="1">explore</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 1: PROJECT 1 -->
+        <div class="slide project-slide theme-dark" id="sect1" data-has-quadrat="true" data-quadrat-color="#ffffff" data-flowing-quadrat-color="#000000">
+            <div class="project-scroll-container">
+                <!-- Cover starts full width -->
+                <div class="project-panel cover-panel">
+                    <div class="slide-bg" style="background-image: url('co_built.png');"></div>
+                    <div class="slide-content">
+                        <div class="corner top-left">
+                            <div class="bold title-text">For co.built</div>
+                            <div class="subtitle-text light">Logo Design</div>
+                        </div>
+                        
+                        <div class="corner bottom-left footer-text">Vienna, 2026</div>
+                        <div class="corner bottom-right footer-text underline">
+                            <!-- Always Explore on bottoms right of projects -->
+                            <a class="explore-btn">explore</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content opens horizontally -->
+                <div class="project-panel flowing-panel">
+                    <div class="flowing-content">
+                        <div class="flowing-text">
+                            <h4>design —</h4>
+                            <p>We translated co.built's vision into a meaningful visual identity. Our collaborative process focused on uncovering the core values behind their architectural mission, embedding it functionally inside standard scalable vectors.</p>
+                        </div>
+                        <img src="profile.jpeg" class="flowing-img" />
+                        <div class="flowing-text">
+                            <h4>our films</h4>
+                            <p>Behind the scenes footage of our large production for the brand reveal, focusing purely on authentic capture methodologies that tell the raw story of iteration.</p>
+                        </div>
+                        <img src="image.webp" class="flowing-img" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PROJECT 2 -->
+        <div class="slide project-slide theme-dark" id="sect2" data-has-quadrat="true" data-quadrat-color="#ffffff" data-flowing-quadrat-color="#000000">
+            <div class="project-scroll-container">
+                <div class="project-panel cover-panel">
+                    <div class="slide-bg" style="background-image: url('ban_2.jpeg');"></div>
+                    <div class="slide-content">
+                        <div class="corner top-left">
+                            <div class="bold title-text">For Mindstash</div>
+                            <div class="subtitle-text light">Brand & Product Design</div>
+                        </div>
+                        
+                        <div class="corner bottom-left footer-text">Amsterdam, 2025/26</div>
+                        <div class="corner bottom-right footer-text underline">
+                            <a class="explore-btn">explore</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-panel flowing-panel">
+                    <div class="flowing-content">
+                        <div class="flowing-text">
+                            <h4>overview —</h4>
+                            <p>Building scalable solutions for communities that care about the exact same deeply systemic challenges require patience.</p>
+                        </div>
+                        <img src="image.webp" class="flowing-img" style="filter: grayscale(100%);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: PROJECT 3 -->
+        <div class="slide project-slide theme-dark" id="sect3" data-has-quadrat="true" data-quadrat-color="#ffffff" data-flowing-quadrat-color="#000000">
+            <div class="project-scroll-container">
+                <div class="project-panel cover-panel">
+                    <div class="slide-bg" style="background-image: url('ban_3.jpeg');"></div>
+                    <div class="slide-content">
+                        <div class="corner top-left">
+                            <div class="bold title-text">For Dembrane</div>
+                            <div class="subtitle-text light">Research, Brand & Product Design</div>
+                        </div>
+                        
+                        <div class="corner bottom-left footer-text">Eindhoven, 2024/26</div>
+                        <div class="corner bottom-right footer-text underline">
+                            <a class="explore-btn">explore</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-panel flowing-panel">
+                    <div class="flowing-content">
+                        <div class="flowing-text">
+                            <h4>overview —</h4>
+                            <p>Building scalable solutions for communities that care about the exact same deeply systemic challenges require patience.</p>
+                        </div>
+                        <img src="image.webp" class="flowing-img" style="filter: grayscale(100%);" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: TO? -->
+        <div class="slide theme-light" id="sect4" data-has-quadrat="true" data-quadrat-color="#000000">
+            <div class="slide-bg" style="background-color: #f7f7f7;"></div>
+            <div class="slide-content">
+                <div class="corner top-left to-container bold">
+                    To?<span class="typing-cursor"></span>
+                </div>
+                
+                <div class="corner bottom-right footer-text underline">
+                    <a href="/cdn-cgi/l/email-protection#deb2abb5bfadb3bfacb7bfb5abbcb7bbb0bf9eb9b3bfb7b2f0bdb1b3">contact me</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const quadratOuter = document.getElementById('quadratOuter');
+            const quadratSpin = document.getElementById('quadratSpin');
+            const quadratFill = document.getElementById('quadratFill');
+            const slides = document.querySelectorAll('.slide');
+            
+            let currentSlideIndex = 0;
+            let currentRotation = 0;
+            let isAnimating = false;
+            
+            const totalSlides = slides.length;
+
+            function goToSlide(index) {
+                if (isAnimating || index < 0 || index >= totalSlides || index === currentSlideIndex) return;
+                
+                isAnimating = true;
+                const previousSlideIndex = currentSlideIndex;
+                const isSpecialSnap = true;
+
+                if (index > currentSlideIndex) {
+                    currentRotation += 90;
+                } else if (index < currentSlideIndex) {
+                    currentRotation -= 90;
+                }
+
+                if (isSpecialSnap) {
+                    const fromSlide = slides[previousSlideIndex];
+                    const toSlide = slides[index];
+                    const directionDown = index > previousSlideIndex;
+                    const fromTarget = directionDown ? '-100%' : '100%';
+                    const toStart = directionDown ? '100%' : '-100%';
+
+                    currentSlideIndex = index;
+                    toSlide.classList.add('active', 'snap-moving');
+                    fromSlide.classList.add('snap-moving');
+                    toSlide.style.zIndex = '3';
+                    fromSlide.style.zIndex = '2';
+                    toSlide.style.transform = `translateY(${toStart})`;
+                    fromSlide.style.transform = 'translateY(0)';
+
+                    // Force style flush before animating.
+                    void toSlide.offsetHeight;
+
+                    const snapEase = 'cubic-bezier(0.22, 0.61, 0.36, 1)';
+                    fromSlide.style.transition = `transform 0.68s ${snapEase}`;
+                    toSlide.style.transition = `transform 0.68s ${snapEase}`;
+
+                    requestAnimationFrame(() => {
+                        fromSlide.style.transform = `translateY(${fromTarget})`;
+                        toSlide.style.transform = 'translateY(0)';
+                    });
+
+                    updateQuadratColor();
+
+                    setTimeout(() => {
+                        fromSlide.classList.remove('active', 'snap-moving');
+                        toSlide.classList.remove('snap-moving');
+                        fromSlide.style.transition = '';
+                        toSlide.style.transition = '';
+                        fromSlide.style.transform = '';
+                        toSlide.style.transform = '';
+                        fromSlide.style.zIndex = '';
+                        toSlide.style.zIndex = '';
+                        isAnimating = false;
+                    }, 700);
+                } else {
+                    slides[currentSlideIndex].classList.remove('active');
+                    currentSlideIndex = index;
+                    const targetSlide = slides[currentSlideIndex];
+                    targetSlide.classList.add('active');
+
+                    updateQuadratColor();
+
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 1000);
+                }
+            }
+
+            function updateQuadratColor() {
+                const targetSlide = slides[currentSlideIndex];
+                let color = targetSlide.getAttribute('data-quadrat-color');
+                const isHorizontal = targetSlide.classList.contains('horizontal-active');
+                
+                if (isHorizontal) {
+                    // Turn it solid and fill it
+                    const flowingColor = targetSlide.getAttribute('data-flowing-quadrat-color');
+                    quadratSpin.style.backgroundColor = flowingColor ? flowingColor : '#000000';
+                    quadratFill.style.backgroundColor = '#ffffff'; // Fills with white
+                } else {
+                    // Normal full solid quadrat
+                    quadratSpin.style.backgroundColor = color;
+                    quadratFill.style.backgroundColor = 'transparent';
+                    quadratFill.style.height = '0%';
+                }
+
+                const hasQuadrat = targetSlide.getAttribute('data-has-quadrat') === 'true';
+
+                quadratSpin.style.transform = `rotate(${currentRotation}deg)`;
+                quadratOuter.style.opacity = hasQuadrat ? '1' : '0';
+            }
+
+            // Central Vertical Wheel Navigation
+            window.addEventListener('wheel', (e) => {
+                const activeSlide = slides[currentSlideIndex];
+                // Ignore global crossfade wheel if we are currently scrolling horizontally
+                if (activeSlide.classList.contains('horizontal-active')) {
+                    return; 
+                }
+
+                const threshold = 40; 
+                if (Math.abs(e.deltaY) < threshold) return;
+
+                if (e.deltaY > 0) {
+                    goToSlide(currentSlideIndex + 1);
+                } else {
+                    goToSlide(currentSlideIndex - 1);
+                }
+            }, { passive: false });
+
+            // Keyboard support (vertical)
+            window.addEventListener('keydown', (e) => {
+                const activeSlide = slides[currentSlideIndex];
+                if (activeSlide.classList.contains('horizontal-active')) return;
+
+                if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+                    if (e.key === ' ') e.preventDefault();
+                    goToSlide(currentSlideIndex + 1);
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    goToSlide(currentSlideIndex - 1);
+                }
+            });
+
+            // Project Slide Interactions
+            document.querySelectorAll('.project-slide').forEach(slide => {
+                const scrollContainer = slide.querySelector('.project-scroll-container');
+                const coverPanel = slide.querySelector('.cover-panel');
+                
+                const enterHorizontal = () => {
+                    if (!slide.classList.contains('horizontal-active')) {
+                        slide.classList.add('horizontal-active');
+                        scrollContainer.style.scrollBehavior = 'smooth';
+                        scrollContainer.scrollLeft = window.innerWidth * 0.25; 
+                        
+                        setTimeout(() => {
+                            scrollContainer.style.scrollBehavior = 'auto'; 
+                        }, 500);
+                        
+                        setTimeout(updateQuadratColor, 300); // Check quadrat color as we jump
+                    }
+                };
+
+                // Click anywhere on cover panel logic
+                coverPanel.addEventListener('click', (e) => {
+                    if (e.target.tagName.toLowerCase() === 'a') return;
+                    enterHorizontal();
+                });
+
+                // Explore button logic specifically
+                const exploreBtn = slide.querySelector('.explore-btn');
+                if (exploreBtn) {
+                    exploreBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        enterHorizontal();
+                    });
+                }
+
+                // Internal Wheel handling
+                scrollContainer.addEventListener('wheel', (e) => {
+                    if (slide.classList.contains('horizontal-active')) {
+                        e.stopPropagation(); // Shield global listener
+                        
+                        // Trackpad gives true deltaX for swiping horizontally, 
+                        // Mouse gives deltaY. We map deltaY to scrollLeft.
+                        if (Math.abs(e.deltaY) > 0 && Math.abs(e.deltaX) === 0) {
+                            e.preventDefault(); 
+                            scrollContainer.scrollLeft += e.deltaY;
+                        }
+
+                        // Use request frame to check the native result
+                        requestAnimationFrame(() => {
+                            if (scrollContainer.scrollLeft <= 0) {
+                                slide.classList.remove('horizontal-active');
+                                scrollContainer.style.scrollBehavior = 'smooth';
+                                scrollContainer.scrollLeft = 0; // Lock to exact 0
+                                setTimeout(() => {
+                                    scrollContainer.style.scrollBehavior = 'auto'; 
+                                }, 300);
+                                updateQuadratColor(); // Reset to vertical color
+                            }
+                        });
+                    }
+                }, { passive: false });
+                
+                // Keep the quadrat fill height strictly mapped to the scroll position 
+                scrollContainer.addEventListener('scroll', () => {
+                    if (slide.classList.contains('horizontal-active')) {
+                        const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+                        if (maxScroll > 0) {
+                            let percentage = (scrollContainer.scrollLeft / maxScroll) * 100;
+                            percentage = Math.max(0, Math.min(100, percentage));
+                            document.getElementById('quadratFill').style.height = percentage + '%';
+                        }
+                    }
+                }, { passive: true });
+                
+                // Watch for touch events removing horizontal mode via swipe back
+                scrollContainer.addEventListener('touchend', () => {
+                    requestAnimationFrame(() => {
+                        if (slide.classList.contains('horizontal-active') && scrollContainer.scrollLeft <= 0) {
+                            slide.classList.remove('horizontal-active');
+                        }
+                        updateQuadratColor();
+                    });
+                });
+            });
+
+            // Standard explicit nav markers (e.g. from To?)
+            document.querySelectorAll('.nav-trigger').forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetIdx = parseInt(trigger.getAttribute('data-target'), 10);
+                    goToSlide(targetIdx);
+                });
+            });
+            
+            // Initial call
+            updateQuadratColor();
+        });
+    </script>
+</body>
+</html>
