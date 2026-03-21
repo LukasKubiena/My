@@ -6,6 +6,8 @@
     <title>Lukas Kubiena</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- First hero bg: fetch early so cover paints sooner -->
+    <link rel="preload" href="co_built.png" as="image" fetchpriority="high">
     <style>
         @font-face {
             font-family: 'NeueHaasDisplay-Light';
@@ -402,9 +404,11 @@
     let rotation = 0;
     const CYCLE_MS = 9000;
 
+    /* Black UI only when corner samples are clearly light (bias toward white on mid-tones) */
+    var LUM_BLACK_THRESHOLD = 0.7;
+
     function setUiFromLuminance(lum) {
-        /* Bright corners → dark UI; any dark corner → light UI (text sits in corners) */
-        const bright = lum > 0.52;
+        const bright = lum > LUM_BLACK_THRESHOLD;
         const ui = bright ? '#000000' : '#ffffff';
         document.documentElement.style.setProperty('--ui', ui);
         document.documentElement.style.setProperty('--ui-rgb', bright ? '0, 0, 0' : '255, 255, 255');
@@ -412,48 +416,58 @@
 
     function sampleLuminance(src, callback) {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
+        /* Same-origin: omit crossOrigin so canvas isn’t blocked; remote CDNs need CORS */
+        if (/^https?:\/\//i.test(src) && src.indexOf(location.host) === -1) {
+            img.crossOrigin = 'anonymous';
+        }
         img.onload = function () {
-            try {
-                const w = 48;
-                const h = 48;
-                const canvas = document.createElement('canvas');
-                canvas.width = w;
-                canvas.height = h;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, w, h);
-                const data = ctx.getImageData(0, 0, w, h).data;
+            function measure() {
+                try {
+                    const w = 48;
+                    const h = 48;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    const data = ctx.getImageData(0, 0, w, h).data;
 
-                function regionLum(x0, y0, x1, y1) {
-                    let sum = 0;
-                    let n = 0;
-                    for (let y = y0; y < y1; y++) {
-                        for (let x = x0; x < x1; x++) {
-                            const i = (y * w + x) * 4;
-                            const r = data[i] / 255;
-                            const g = data[i + 1] / 255;
-                            const b = data[i + 2] / 255;
-                            sum += 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                            n++;
+                    function regionLum(x0, y0, x1, y1) {
+                        let sum = 0;
+                        let n = 0;
+                        for (let y = y0; y < y1; y++) {
+                            for (let x = x0; x < x1; x++) {
+                                const i = (y * w + x) * 4;
+                                const r = data[i] / 255;
+                                const g = data[i + 1] / 255;
+                                const b = data[i + 2] / 255;
+                                sum += 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                                n++;
+                            }
                         }
+                        return n ? sum / n : 0;
                     }
-                    return n ? sum / n : 0;
+
+                    /* Tiny edge patches at viewport corners (where text sits) */
+                    var edge = 10;
+                    var lumTL = regionLum(0, 0, edge, edge);
+                    var lumTR = regionLum(w - edge, 0, w, edge);
+                    var lumBL = regionLum(0, h - edge, edge, h);
+                    var lumBR = regionLum(w - edge, h - edge, w, h);
+                    var lumMin = Math.min(lumTL, lumTR, lumBL, lumBR);
+
+                    callback(lumMin);
+                } catch (e) {
+                    callback(0.28);
                 }
-
-                const half = w / 2;
-                /* Corners only — same places as the grid text; avoids a bright center skewing the average */
-                const lumTL = regionLum(0, 0, half, half);
-                const lumTR = regionLum(half, 0, w, half);
-                const lumBL = regionLum(0, half, half, h);
-                const lumBR = regionLum(half, half, w, h);
-                const lumMin = Math.min(lumTL, lumTR, lumBL, lumBR);
-
-                callback(lumMin);
-            } catch (e) {
-                callback(0.35);
+            }
+            if (img.decode) {
+                img.decode().then(measure).catch(measure);
+            } else {
+                measure();
             }
         };
-        img.onerror = function () { callback(0.35); };
+        img.onerror = function () { callback(0.28); };
         img.src = src;
     }
 
