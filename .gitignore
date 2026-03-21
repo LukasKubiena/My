@@ -1,0 +1,4 @@
+# Local Claude / AI worktrees (never deploy these)
+.claude/
+
+.DS_Store
