@@ -117,8 +117,10 @@
             overflow-x: auto;
             overflow-y: hidden;
             display: flex;
-            align-items: flex-start;
-            padding-top: calc(var(--padding-y) + var(--writing-top-gap));
+            align-items: flex-end;
+            /* Clears fixed “Writing / close”; cards sit low (see mobile override too) */
+            padding-top: calc(var(--padding-y) + 48px);
+            padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
             box-sizing: border-box;
             scrollbar-width: none;
         }
