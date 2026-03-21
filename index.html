@@ -403,7 +403,7 @@
     const CYCLE_MS = 9000;
 
     function setUiFromLuminance(lum) {
-        /* Bright image → dark UI; dark image → light UI */
+        /* Bright corners → dark UI; any dark corner → light UI (text sits in corners) */
         const bright = lum > 0.52;
         const ui = bright ? '#000000' : '#ffffff';
         document.documentElement.style.setProperty('--ui', ui);
@@ -423,15 +423,32 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, w, h);
                 const data = ctx.getImageData(0, 0, w, h).data;
-                let sum = 0;
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i] / 255;
-                    const g = data[i + 1] / 255;
-                    const b = data[i + 2] / 255;
-                    sum += 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+                function regionLum(x0, y0, x1, y1) {
+                    let sum = 0;
+                    let n = 0;
+                    for (let y = y0; y < y1; y++) {
+                        for (let x = x0; x < x1; x++) {
+                            const i = (y * w + x) * 4;
+                            const r = data[i] / 255;
+                            const g = data[i + 1] / 255;
+                            const b = data[i + 2] / 255;
+                            sum += 0.2126 * r + 0.7152 * g + 0.0722 * b;
+                            n++;
+                        }
+                    }
+                    return n ? sum / n : 0;
                 }
-                const n = data.length / 4;
-                callback(sum / n);
+
+                const half = w / 2;
+                /* Corners only — same places as the grid text; avoids a bright center skewing the average */
+                const lumTL = regionLum(0, 0, half, half);
+                const lumTR = regionLum(half, 0, w, half);
+                const lumBL = regionLum(0, half, half, h);
+                const lumBR = regionLum(half, half, w, h);
+                const lumMin = Math.min(lumTL, lumTR, lumBL, lumBR);
+
+                callback(lumMin);
             } catch (e) {
                 callback(0.35);
             }
