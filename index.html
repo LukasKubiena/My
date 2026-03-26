@@ -218,7 +218,7 @@
             animation: none !important;
         }
 
-        /* Original staggered layout */
+        /* Waterfall-like staggered layout */
         .gallery-item:nth-child(even) { margin-top: 60%; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; border-radius: inherit; }
 
@@ -241,8 +241,9 @@
             }
             .col-a { grid-column: 1; grid-row: 1; width: 100%; } .col-b { grid-column: 2; grid-row: 1; width: 100%; }
             .col-c { grid-column: 1; grid-row: 3; width: 100%; align-self: start; } .col-d { grid-column: 2; grid-row: 3; width: 100%; align-self: start; }
-            .right-edge { grid-column: 1 / -1; grid-row: 4; flex-direction: row; min-height: 0; align-self: end; }
-            .right-edge .vienna { order: 1; margin: 0; padding: 0; margin-right: auto; text-align: left; } .right-edge a.quad-area { order: 2; }
+            .right-edge { grid-column: 1 / -1; grid-row: 4; flex-direction: row; min-height: 0; align-self: end; justify-self: stretch; justify-content: flex-start; align-items: center; gap: 10px; width: 100%; }
+            .right-edge .vienna { order: 1; margin: 0; padding: 0; margin-right: auto; text-align: left; }
+            .right-edge a.quad-area { order: 2; }
             .inline-links { display: flex; flex-direction: column; align-items: flex-start; gap: 0.4em; margin-top: 0.65em; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -950,6 +951,8 @@
     let lastSwap = 0;
     const HOME_WHEEL_THRESHOLD = 120;
     const HOME_WHEEL_COOLDOWN_MS = 520;
+    let homeWheelGestureLocked = false;
+    let homeWheelGestureTimer = null;
     window.addEventListener('wheel', e => {
         if (inGallery) {
             if(transitioning || dragging) return;
@@ -961,6 +964,11 @@
         }
         
         if (e.target.closest('a') || e.target.closest('.hey')) return;
+        if (homeWheelGestureLocked) {
+            clearTimeout(homeWheelGestureTimer);
+            homeWheelGestureTimer = setTimeout(() => { homeWheelGestureLocked = false; }, 150);
+            return;
+        }
         if (Date.now() - lastSwap < HOME_WHEEL_COOLDOWN_MS) return;
 
         // Signed accumulation keeps up/down behavior equally responsive.
@@ -978,6 +986,9 @@
         const dir = wheelDelta > 0 ? 1 : -1; // scroll down -> next, scroll up -> previous
         wheelDelta = 0;
         lastSwap = Date.now();
+        homeWheelGestureLocked = true;
+        clearTimeout(homeWheelGestureTimer);
+        homeWheelGestureTimer = setTimeout(() => { homeWheelGestureLocked = false; }, 150);
         swapBy(dir);
         resetHomeSwapTimer();
     }, { passive: false });
