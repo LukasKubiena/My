@@ -97,6 +97,7 @@
             grid-template-columns: repeat(6, var(--card-w));
             gap: 56px 56px;
             padding: 24px;
+            padding-bottom: calc(24px + var(--card-h) * 0.6);
             width: max-content;
             height: max-content;
         }
@@ -112,9 +113,8 @@
             animation: itemIn 1.4s cubic-bezier(0.18, 0.71, 0.11, 1) forwards;
         }
 
-        .gallery-item:nth-child(even) {
-            margin-top: 60%;
-        }
+        /* Original staggered layout */
+        .gallery-item:nth-child(even) { margin-top: 60%; }
 
         .gallery-item img {
             width: 100%;
@@ -162,6 +162,7 @@
                 grid-template-columns: repeat(6, var(--card-w));
                 gap: 36px 36px;
                 padding: 16px;
+                padding-bottom: calc(16px + var(--card-h) * 0.6);
             }
         }
     </style>

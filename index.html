@@ -175,6 +175,7 @@
             pointer-events: auto;
         }
         .home-logo.active { opacity: 1; visibility: visible; }
+        .home-logo.fading { opacity: 0 !important; transition: opacity 0.18s ease; }
         .home-logo img { width: 100%; height: 100%; display: block; transform: rotate(-45deg); cursor: pointer; pointer-events: auto; }
         .home-logo.active img { animation: logoSpinIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards; }
         .home-logo.closing img { animation: logoSpinOut 0.65s cubic-bezier(0.5, 0, 0.2, 1) forwards; }
@@ -185,6 +186,7 @@
             z-index: 50;
         }
         .gallery-stage.active { opacity: 1; visibility: visible; }
+        .gallery-stage.opening { opacity: 0.001; }
         .gallery-stage.dragging { cursor: grabbing; }
 
         .gallery-surface {
@@ -193,7 +195,7 @@
 
         .gallery-body {
             /* Now 10 columns wide to ensure the grid completely overlaps and eradicates any whitespace! */
-            position: absolute; display: grid; grid-template-columns: repeat(10, var(--card-w)); gap: 56px 56px; padding: 24px;
+            position: absolute; display: grid; grid-template-columns: repeat(var(--gallery-cols, 10), var(--card-w)); gap: 56px 56px; padding: 24px;
             width: max-content; height: max-content;
         }
 
@@ -216,6 +218,7 @@
             animation: none !important;
         }
 
+        /* Original staggered layout */
         .gallery-item:nth-child(even) { margin-top: 60%; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; border-radius: inherit; }
 
@@ -224,7 +227,7 @@
         @keyframes logoSpinOut { 0% { transform: rotate(0deg); opacity: 1; } 100% { transform: rotate(45deg); opacity: 0; } }
 
         @media (max-width: 900px) {
-            .gallery-body { grid-template-columns: repeat(6, var(--card-w)); gap: 36px 36px; padding: 16px; }
+            .gallery-body { grid-template-columns: repeat(var(--gallery-cols, 6), var(--card-w)); gap: 36px 36px; padding: 16px; }
         }
 
         @media (max-width: 768px) {
@@ -309,19 +312,18 @@
 
     <script>
 (function () {
-    const BG_IMAGES = [
-        'bg/bg1-w.png', 'bg/bg2-w.png', 'bg/bg5-w.png', 'bg/bg6-b.png',
-        'bg/bg7-w.png', 'bg/bg8-w.png', 'bg/bg9-w.png', 'bg/bg10-w.png', 'bg/bg11-w.png', 'bg/bg12-w.png',
-        'bg/bg13-b.png', 'bg/bg14-b.png', 'bg/bg15-w.png', 'bg/bg16-w.png', 'bg/bg17-b.png', 'bg/bg18-w.png',
-        'bg/bg19-b.png'
-    ];
+    // Auto-discovers bg assets following `bg/bg<N>-w.png` and `bg/bg<N>-b.png`.
+    // This way you can add/remove images without manually editing lists.
+    const BG_MAX = 60;
+    const BG_CANDIDATES = [];
+    for (let i = 1; i <= BG_MAX; i++) {
+        BG_CANDIDATES.push(`bg/bg${i}-w.png`);
+        BG_CANDIDATES.push(`bg/bg${i}-b.png`);
+    }
+    let BG_IMAGES = [];
     
-    // We heavily multiply the core images to generate an extremely vast 10-column grid array
-    // This entirely eradicates whitespace boundaries at the bottom or edges!
+    // Built after we know BG_IMAGES + columns
     let galleryImages = [];
-    for (let i = 0; i < 6; i++) {
-        galleryImages = galleryImages.concat([...BG_IMAGES]);
-    } 
 
     const bgA = document.getElementById('bgA');
     const bgB = document.getElementById('bgB');
@@ -359,6 +361,44 @@
     }
     function warmImageCache(url) {
         const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = url;
+    }
+
+    function assetExists(url) {
+        return new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+        });
+    }
+
+    async function discoverBgImages() {
+        const checks = await Promise.all(BG_CANDIDATES.map(assetExists));
+        BG_IMAGES = BG_CANDIDATES.filter((_, i) => checks[i]);
+        if (!BG_IMAGES.length) BG_IMAGES = ['bg/bg1-w.png'];
+    }
+
+    function buildGalleryImages() {
+        const isMobile = window.matchMedia('(max-width: 900px)').matches;
+        const rootStyle = getComputedStyle(document.documentElement);
+        const cardW = parseFloat(rootStyle.getPropertyValue('--card-w')) || (isMobile ? 150 : 210);
+        const cardH = parseFloat(rootStyle.getPropertyValue('--card-h')) || (isMobile ? 220 : 320);
+        const gap = isMobile ? 36 : 56;
+        const pad = isMobile ? 16 : 24;
+
+        // Compute how many columns/rows we need so that ONE body is always larger than the viewport.
+        // Then the 2x2 pane wrap can never reveal background voids, even on ultra-wide screens.
+        const cols = Math.max(6, Math.ceil((window.innerWidth + pad * 2) / (cardW + gap)) + 2);
+        // Account for the staggered (margin-top) layout needing more rows to avoid visible voids.
+        const rows = Math.max(10, Math.ceil((window.innerHeight + pad * 2) / (cardH + gap)) + 8);
+
+        document.documentElement.style.setProperty('--gallery-cols', String(cols));
+
+        const targetCount = Math.max(cols * rows, BG_IMAGES.length);
+        // Over-duplicate a bit so there are always enough tiles to cover the staggered pattern.
+        const reps = Math.max(6, Math.ceil(targetCount / BG_IMAGES.length) + 2);
+        galleryImages = [];
+        for (let r = 0; r < reps; r++) galleryImages = galleryImages.concat(BG_IMAGES);
     }
 
     function parseUiHint(url) {
@@ -463,14 +503,30 @@
     let downX = 0, downY = 0, lastPx = 0, lastPy = 0;
     let rafId = null;
 
+    const TRANSPARENT_PIXEL =
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+
+    function fileKey(url) {
+        return String(url || '').split('?')[0].split('#')[0].split('/').pop() || '';
+    }
+
     function renderBody(el, heroUrl) {
+        const heroKey = fileKey(heroUrl);
         el.innerHTML = galleryImages.map((src, i) => {
             const delay = (Math.random() * 0.9 + 0.25).toFixed(2);
             // Strict exact match uniquely identifies the 1st hero globally per body
             const isHero = heroUrl && src.endsWith(heroUrl) && i === 0;
+            const isDuplicateOfHero = !!heroKey && fileKey(src) === heroKey;
+            // Important: during the shrink-in, duplicates of the current hero can "flash" behind the overlay.
+            // We render duplicates (except the centered hero tile) as placeholders, and swap in the real src after.
+            const shouldDefer = isDuplicateOfHero && !isHero;
             return `
                 <div class="gallery-item ${isHero ? 'is-hero' : ''}" style="animation-delay:${delay}s" data-src="${src}">
-                    <img src="${src}" draggable="false" alt="" loading="lazy" decoding="async">
+                    <img ${shouldDefer ? `src="${TRANSPARENT_PIXEL}" data-deferred-src="${src}"` : `src="${src}"`}
+                         draggable="false"
+                         alt=""
+                         ${isHero ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}
+                         decoding="async">
                 </div>
             `;
         }).join('');
@@ -542,31 +598,68 @@
     // GSAP Physical dimension scaler for flawless object-fit dynamic tracking without layout bugs
     function animateSharedImagePerfect(src, fromRect, toRect, opts) {
         return new Promise(resolve => {
-            const overlay = document.createElement('img');
-            overlay.src = src; 
+            const dpr = window.devicePixelRatio || 1;
+            const snap = (v) => Math.round(v * dpr) / dpr;
+            const snapRect = (r) => ({
+                left: snap(r.left),
+                top: snap(r.top),
+                width: Math.max(0, snap(r.width)),
+                height: Math.max(0, snap(r.height))
+            });
+
+            const from = snapRect(fromRect);
+            const to = snapRect(toRect);
+
+            const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
             overlay.style.zIndex = '9999';
-            overlay.style.objectFit = 'cover';
+            overlay.style.backgroundPosition = 'center';
+            overlay.style.backgroundRepeat = 'no-repeat';
+            overlay.style.backgroundSize = 'cover';
+            overlay.style.backgroundColor = '#e3e3e3';
             overlay.style.margin = '0';
             overlay.style.border = 'none';
             overlay.style.borderRadius = opts.fromRadius + 'px';
-            
-            overlay.style.left = fromRect.left + 'px';
-            overlay.style.top = fromRect.top + 'px';
-            overlay.style.width = fromRect.width + 'px';
-            overlay.style.height = fromRect.height + 'px';
+            overlay.style.pointerEvents = 'none';
+            overlay.style.transform = 'translateZ(0)';
+            overlay.style.willChange = 'left, top, width, height, border-radius';
+
+            // Apply start rect before first paint to avoid "tiny" flicker.
+            overlay.style.left = from.left + 'px';
+            overlay.style.top = from.top + 'px';
+            overlay.style.width = from.width + 'px';
+            overlay.style.height = from.height + 'px';
+
+            // Set immediately; if decode is pending, the existing bg stays visible underneath.
+            overlay.style.backgroundImage = `url("${src}")`;
             document.body.appendChild(overlay);
 
-            gsap.to(overlay, {
-                left: toRect.left,
-                top: toRect.top,
-                width: toRect.width,
-                height: toRect.height,
-                borderRadius: opts.toRadius,
-                duration: opts.duration / 1000,
-                ease: "power3.inOut",
-                onComplete: () => resolve(overlay) // Resolves overlay to guarantee 0 double flashes organically
-            });
+            const startAnim = () => {
+                requestAnimationFrame(() => {
+                    if (typeof opts.beforeStart === 'function') {
+                        try { opts.beforeStart(); } catch (e) {}
+                    }
+                    gsap.to(overlay, {
+                        left: to.left,
+                        top: to.top,
+                        width: to.width,
+                        height: to.height,
+                        borderRadius: opts.toRadius,
+                        duration: opts.duration / 1000,
+                        ease: "power3.inOut",
+                        onComplete: () => resolve(overlay)
+                    });
+                });
+            };
+
+            const pre = new Image();
+            pre.decoding = 'async';
+            pre.src = src;
+            const afterLoad = () => {
+                startAnim();
+            };
+            if (pre.decode) pre.decode().then(afterLoad).catch(afterLoad);
+            else pre.onload = afterLoad;
         });
     }
 
@@ -574,74 +667,129 @@
         if (inGallery || transitioning) return;
         inGallery = true; transitioning = true;
         clearInterval(homeSwapInterval);
+        homeLogo.classList.remove('fading');
+        gvx = 0; gvy = 0;
 
         const url = getCurrentBgUrl();
-        
+
+        buildGalleryImages();
+        // Ensure the clicked/current image is the actual hero tile at index 0 (stable).
         const idx = galleryImages.findIndex(src => src.endsWith(url));
         if (idx > -1) { galleryImages.splice(idx, 1); galleryImages.unshift(url); }
-
         bodies.forEach(b => renderBody(b, url));
+        // Hide hero clones immediately so no grid-sized hero can flash
+        // before the shared-image overlay fully takes over.
+        const earlyHeroes = Array.from(galleryStage.querySelectorAll('.gallery-item.is-hero'));
+        earlyHeroes.forEach(el => { el.style.visibility = 'hidden'; });
         homeShell.classList.add('hidden');
         galleryStage.classList.remove('closing');
+        galleryStage.classList.add('opening');
         galleryStage.classList.add('active');
+        galleryStage.style.opacity = '0';
         homeLogo.classList.add('active');
         homeLogo.classList.remove('closing');
 
-        requestAnimationFrame(() => {
+        const getCardFallbackRect = () => {
+            const rootStyle = getComputedStyle(document.documentElement);
+            const w = parseFloat(rootStyle.getPropertyValue('--card-w')) || 210;
+            const h = parseFloat(rootStyle.getPropertyValue('--card-h')) || 320;
+            return { left: window.innerWidth / 2 - w / 2, top: window.innerHeight / 2 - h / 2, width: w, height: h };
+        };
+
+        const centerBaseHero = () => {
             applyGalleryLayout();
-            
-            // Mathematically zero coordinate system offsets to trace the naked geometrical footprint of the base hero
             const pureHeroTile = bodies[0].querySelector('.is-hero');
-            if (pureHeroTile && bodyW) {
-                gx = 0; gy = 0; 
-                gallerySurface.style.transform = `translate3d(0px, 0px, 0)`;
-                const rect = pureHeroTile.getBoundingClientRect();
-                
-                // Offset perfectly
-                gx = (window.innerWidth / 2) - (rect.left + rect.width / 2);
-                gy = (window.innerHeight / 2) - (rect.top + rect.height / 2);
-                drawGallery(); // Imposes modulo boundary wrap natively
-            }
+            if (!pureHeroTile || !bodyW) return;
+            gx = 0; gy = 0;
+            gallerySurface.style.transform = `translate3d(0px, 0px, 0)`;
+            const rect = pureHeroTile.getBoundingClientRect();
+            gx = (window.innerWidth / 2) - (rect.left + rect.width / 2);
+            gy = (window.innerHeight / 2) - (rect.top + rect.height / 2);
+            drawGallery();
+        };
 
+        const findCenteredHeroTile = () => {
+            const allHeroes = Array.from(document.querySelectorAll('.gallery-item.is-hero'));
+            let targetTile = null;
+            let minDist = Infinity;
+            allHeroes.forEach(el => {
+                const r = el.getBoundingClientRect();
+                const cx = r.left + r.width / 2;
+                const cy = r.top + r.height / 2;
+                const dist = Math.hypot(cx - window.innerWidth / 2, cy - window.innerHeight / 2);
+                if (dist < minDist) { minDist = dist; targetTile = el; }
+            });
+            return { allHeroes, targetTile };
+        };
+
+        // Wait for DOM to paint, then lock layout/centering, then measure the final landing rect.
+        requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                let targetTile = null;
-                const allHeroes = Array.from(document.querySelectorAll('.gallery-item.is-hero'));
-                let minDist = Infinity;
-                
-                // Track down the single exact cloned tile mathematically placed dead center
-                allHeroes.forEach(el => {
-                    const r = el.getBoundingClientRect();
-                    const cx = r.left + r.width / 2;
-                    const cy = r.top + r.height / 2;
-                    const dist = Math.hypot(cx - window.innerWidth / 2, cy - window.innerHeight / 2);
-                    if (dist < minDist) {
-                        minDist = dist;
-                        targetTile = el;
-                    }
+                centerBaseHero();
+                requestAnimationFrame(() => {
+                    // Re-apply once more to avoid any last-moment layout shifts before measuring.
+                    centerBaseHero();
+
+                    const { allHeroes, targetTile } = findCenteredHeroTile();
+                    const toRect = targetTile ? targetTile.getBoundingClientRect() : getCardFallbackRect();
+
+                    allHeroes.forEach(el => el.style.visibility = 'hidden');
+
+                    const fromRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+
+                    animateSharedImagePerfect(url, fromRect, toRect, {
+                        duration: 900,
+                        fromRadius: 0,
+                        toRadius: 4,
+                        beforeStart: () => {
+                            // Only hide home BG layers once the overlay is ready to animate.
+                            bgA.style.transition = 'none';
+                            bgB.style.transition = 'none';
+                            bgA.style.opacity = '0';
+                            bgB.style.opacity = '0';
+                            // Fade the gallery in earlier and longer so surrounding tiles
+                            // ramp up smoothly while the hero overlay protects the center.
+                            gsap.killTweensOf(galleryStage);
+                            gsap.to(galleryStage, {
+                                opacity: 1,
+                                duration: 0.62,
+                                delay: 0.12,
+                                ease: "sine.out"
+                            });
+                            void bgA.offsetWidth;
+                            setTimeout(() => {
+                                bgA.style.transition = '';
+                                bgB.style.transition = '';
+                            }, 50);
+                        }
+                    })
+                        .then((overlay) => {
+                            const heroImg = targetTile ? targetTile.querySelector('img') : null;
+                            const reveal = () => {
+                                allHeroes.forEach(el => el.style.visibility = '');
+                                // Swap in deferred duplicates only after the shrink completes.
+                                const deferred = Array.from(document.querySelectorAll('img[data-deferred-src]'));
+                                deferred.forEach(img => {
+                                    const real = img.getAttribute('data-deferred-src');
+                                    if (real) img.src = real;
+                                    img.removeAttribute('data-deferred-src');
+                                });
+                                // Reveal gallery first, then remove overlay on next frame
+                                // so the handoff never exposes an intermediate paint.
+                                galleryStage.classList.remove('opening');
+                                galleryStage.style.opacity = '';
+                                requestAnimationFrame(() => {
+                                    overlay.remove();
+                                    transitioning = false;
+                                });
+                            };
+                            if (heroImg && heroImg.decode) {
+                                heroImg.decode().then(reveal).catch(reveal);
+                            } else {
+                                reveal();
+                            }
+                        });
                 });
-
-                const toRect = targetTile ? targetTile.getBoundingClientRect() : {left:window.innerWidth/2, top:window.innerHeight/2, width:210, height:320};
-                
-                allHeroes.forEach(el => el.style.visibility = 'hidden');
-
-                bgA.style.transition = 'none';
-                bgB.style.transition = 'none';
-                bgA.style.opacity = '0';
-                bgB.style.opacity = '0';
-                void bgA.offsetWidth;
-                setTimeout(() => {
-                    bgA.style.transition = '';
-                    bgB.style.transition = '';
-                }, 50);
-                
-                const fromRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-                
-                animateSharedImagePerfect(url, fromRect, toRect, { duration: 900, fromRadius: 0, toRadius: 4 })
-                    .then((overlay) => {
-                        allHeroes.forEach(el => el.style.visibility = '');
-                        overlay.remove(); 
-                        transitioning = false;
-                    });
             });
         });
     }
@@ -652,6 +800,8 @@
         gvx = 0; gvy = 0;
         // Set UI immediately so the return transition never "flashes" the wrong color.
         setUiForUrl(src);
+        // Hide the flower immediately so it never overlays the expanding image.
+        homeLogo.classList.add('fading');
 
         const fromRect = tileEl ? tileEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width:210, height:320 };
         
@@ -701,7 +851,7 @@
                         homeShell.classList.remove('hidden');
                         // Let logo exit overlap the text fade-in for a smoother handoff.
                         setTimeout(() => {
-                            homeLogo.classList.remove('active', 'closing');
+                            homeLogo.classList.remove('active', 'closing', 'fading');
                         }, 260);
 
                         setTimeout(() => {
@@ -752,28 +902,31 @@
             window.addEventListener('load', triggerEntrance);
         }
 
-        shuffleInPlace(BG_IMAGES);
+        (async () => {
+            await discoverBgImages();
+            shuffleInPlace(BG_IMAGES);
 
-        const params = new URLSearchParams(window.location.search);
-        let startHero = params.get('hero');
-        if (startHero) {
-            const idx = BG_IMAGES.findIndex(src => src.includes(startHero));
-            if (idx > -1) index = idx;
-            else startHero = BG_IMAGES[0];
-        } else {
-            startHero = BG_IMAGES[0];
-        }
+            const params = new URLSearchParams(window.location.search);
+            let startHero = params.get('hero');
+            if (startHero) {
+                const idx = BG_IMAGES.findIndex(src => src.includes(startHero));
+                if (idx > -1) index = idx;
+                else startHero = BG_IMAGES[0];
+            } else {
+                startHero = BG_IMAGES[0];
+            }
 
-        applyBackgroundUrl(bgA, startHero); bgA.style.opacity = '1';
-        applyBackgroundUrl(bgB, BG_IMAGES[(index + 1) % BG_IMAGES.length]); bgB.style.opacity = '0';
-        setUiForUrl(startHero); warmImageCache(BG_IMAGES[(index + 1) % BG_IMAGES.length]);
+            applyBackgroundUrl(bgA, startHero); bgA.style.opacity = '1';
+            applyBackgroundUrl(bgB, BG_IMAGES[(index + 1) % BG_IMAGES.length]); bgB.style.opacity = '0';
+            setUiForUrl(startHero); warmImageCache(BG_IMAGES[(index + 1) % BG_IMAGES.length]);
 
-        if (!reduced && BG_IMAGES.length > 1) {
-            homeSwapInterval = setInterval(swap, CYCLE_MS);
-        }
+            if (!reduced && BG_IMAGES.length > 1) {
+                homeSwapInterval = setInterval(swap, CYCLE_MS);
+            }
 
-        if (!rafId) tickGallery();
-        if (params.get('gallery') === '1') openGallerySPA();
+            if (!rafId) tickGallery();
+            if (params.get('gallery') === '1') openGallerySPA();
+        })();
     }
 
     document.addEventListener('click', e => {
@@ -795,6 +948,8 @@
 
     let wheelDelta = 0;
     let lastSwap = 0;
+    const HOME_WHEEL_THRESHOLD = 120;
+    const HOME_WHEEL_COOLDOWN_MS = 520;
     window.addEventListener('wheel', e => {
         if (inGallery) {
             if(transitioning || dragging) return;
@@ -806,22 +961,21 @@
         }
         
         if (e.target.closest('a') || e.target.closest('.hey')) return;
-        if (Date.now() - lastSwap < 1500) return; 
-        
-        const dir = e.deltaY < 0 ? 1 : -1; // scroll up -> next, scroll down -> previous
-        let normalizedDelta = Math.abs(e.deltaY);
+        if (Date.now() - lastSwap < HOME_WHEEL_COOLDOWN_MS) return;
+
+        // Signed accumulation keeps up/down behavior equally responsive.
+        let normalizedDelta = e.deltaY;
         if (e.deltaMode === 1) normalizedDelta *= 16;
         else if (e.deltaMode === 2) normalizedDelta *= window.innerHeight;
-        
         wheelDelta += normalizedDelta;
         
         clearTimeout(window.wheelResetTimeout);
-        window.wheelResetTimeout = setTimeout(() => { wheelDelta = 0; }, 300);
-        
-        // Requires highly deliberate scrolling threshold tracking exclusively
-        if (wheelDelta < 400) return; 
+        window.wheelResetTimeout = setTimeout(() => { wheelDelta = 0; }, 240);
+
+        if (Math.abs(wheelDelta) < HOME_WHEEL_THRESHOLD) return;
         
         e.preventDefault();
+        const dir = wheelDelta > 0 ? 1 : -1; // scroll down -> next, scroll up -> previous
         wheelDelta = 0;
         lastSwap = Date.now();
         swapBy(dir);
