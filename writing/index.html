@@ -59,19 +59,24 @@
 
         body {
             opacity: 0;
-            transform: translateY(6px);
-            transition: opacity 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
-                        transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+            transform: translateY(6px) scale(0.995); filter: blur(1.5px);
+            transition: opacity 0.85s cubic-bezier(0.18, 0.71, 0.11, 1),
+                        transform 0.85s cubic-bezier(0.18, 0.71, 0.11, 1),
+                        filter 0.85s cubic-bezier(0.18, 0.71, 0.11, 1);
         }
 
         body.is-ready {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1); filter: blur(0);
         }
 
         body.is-leaving {
             opacity: 0;
+            transform: translateY(-4px) scale(0.995); filter: blur(1.5px);
             pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.5, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.5, 0, 0.2, 1),
+                        filter 0.6s cubic-bezier(0.5, 0, 0.2, 1);
         }
 
         .corner {
@@ -322,7 +327,7 @@
             };
 
             let currentTitle = 'Writing';
-            const LEAVE_ANIM_MS = 420;
+            const LEAVE_ANIM_MS = 800;
 
             function updateTitle(newTitle) {
                 if (newTitle === currentTitle) return;
@@ -330,25 +335,31 @@
                 titleEl.textContent = currentTitle;
             }
 
-            const closeLink = document.querySelector('a.home-close[href="../index.html"]');
-            if (closeLink) {
-                closeLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetUrl = closeLink.getAttribute('href');
-                    const prefersReducedMotion = window.matchMedia &&
-                        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const closeLink = document.querySelector('a.home-close');
+            function handlePageExit(e) {
+                const targetUrl = this.getAttribute('href');
+                const prefersReducedMotion = window.matchMedia &&
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-                    if (prefersReducedMotion) {
-                        window.location.href = targetUrl;
-                        return;
-                    }
+                if (prefersReducedMotion || e.metaKey || e.ctrlKey) {
+                    return; // let native handle it
+                }
 
-                    document.body.classList.add('is-leaving');
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, LEAVE_ANIM_MS);
-                });
+                e.preventDefault();
+                document.body.classList.remove('is-ready');
+                document.body.classList.add('is-leaving');
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, LEAVE_ANIM_MS);
             }
+
+            if (closeLink) {
+                closeLink.addEventListener('click', handlePageExit);
+            }
+
+            cards.forEach(card => {
+                card.addEventListener('click', handlePageExit);
+            });
 
             scrollContainer.addEventListener('wheel', (e) => {
                 if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {

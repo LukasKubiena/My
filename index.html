@@ -7,8 +7,11 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
     <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
-    <!-- First hero bg: fetch early so cover paints sooner -->
-    <link rel="preload" href="co_built.png" as="image" fetchpriority="high">
+    <link rel="preload" href="bg/bg1-w.png" as="image" fetchpriority="high">
+    
+    <!-- GSAP for robust transition masking to prevent flickers -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+
     <style>
         @font-face {
             font-family: 'NeueHaasDisplay-Light';
@@ -17,7 +20,6 @@
         }
 
         :root {
-            /* Tight to viewport edges */
             --padding-y: clamp(14px, 2vh, 28px);
             --padding-x: clamp(14px, 2vw, 28px);
             --ui: #ffffff;
@@ -28,6 +30,8 @@
             --line-height: 1.37;
             --block-gap: 0.45em;
             --quad-size: 9px;
+            --card-w: 222px;
+            --card-h: 320px;
         }
 
         @media (max-width: 900px) {
@@ -35,6 +39,8 @@
                 --padding-y: 12px;
                 --padding-x: 12px;
                 --col-width: min(42ch, 100%);
+                --card-w: 158px;
+                --card-h: 220px;
             }
         }
 
@@ -53,310 +59,212 @@
             letter-spacing: -0.02em;
             color: var(--ui);
             background: #111;
+            transition: color 1.1s ease;
         }
 
-        /* Stacked backgrounds for subtle crossfade */
-        .bg-layer {
-            position: fixed;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 0;
+        /* First-visit landing */
+        body.is-entering .home-shell > .col-a,
+        body.is-entering .home-shell > .col-b,
+        body.is-entering .home-shell > .right-edge,
+        body.is-entering .home-shell > .col-c,
+        body.is-entering .home-shell > .col-d {
+            opacity: 0; transform: translateY(5px); filter: blur(0.25px); will-change: opacity, transform, filter;
         }
 
-        .bg-layer.is-front { z-index: 1; }
-        .bg-layer.is-back { z-index: 0; }
-
-        .home-shell {
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: grid;
-            /* Left: two fixed narrow columns + right edge rail */
-            grid-template-columns: var(--col-width) var(--col-width) auto;
-            /* Top copy | empty middle (image breathes) | bottom copy */
-            grid-template-rows: auto 1fr auto;
-            column-gap: var(--column-gutter);
-            row-gap: 0;
-            padding: var(--padding-y) var(--padding-x);
-            align-items: start;
-            justify-items: start;
+        body.has-entered .home-shell > .col-a,
+        body.has-entered .home-shell > .col-b,
+        body.has-entered .home-shell > .right-edge,
+        body.has-entered .home-shell > .col-c,
+        body.has-entered .home-shell > .col-d {
+            opacity: 1; transform: translateY(0); filter: blur(0);
+            transition: opacity 0.92s cubic-bezier(0.22, 1, 0.36, 1), transform 0.92s cubic-bezier(0.22, 1, 0.36, 1), filter 0.92s cubic-bezier(0.22, 1, 0.36, 1);
         }
+        body.has-entered .home-shell > .col-a { transition-delay: 0.05s; }
+        body.has-entered .home-shell > .col-b { transition-delay: 0.11s; }
+        body.has-entered .home-shell > .right-edge { transition-delay: 0.14s; }
+        body.has-entered .home-shell > .col-c { transition-delay: 0.18s; }
+        body.has-entered .home-shell > .col-d { transition-delay: 0.24s; }
 
-        .home-shell p {
-            margin: 0;
-            max-width: none;
-            text-align: justify;
-            text-align-last: left;
-            text-justify: inter-word;
-            hyphens: auto;
-            -webkit-hyphens: auto;
-        }
-
-        .col-a { grid-column: 1; grid-row: 1; width: 100%; }
-        .col-b { grid-column: 2; grid-row: 1; width: 100%; }
-        /* Top-align both bottom columns so first lines line up (was align-self:end) */
-        .col-c { grid-column: 1; grid-row: 3; align-self: start; width: 100%; }
-        .col-d { grid-column: 2; grid-row: 3; align-self: start; width: 100%; }
-
-        /* Square + Vienna share one vertical rail, top & bottom corners */
-        .right-edge {
-            grid-column: 3;
-            grid-row: 1 / -1;
-            justify-self: end;
-            align-self: stretch;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: space-between;
-            width: min-content;
-            min-height: calc(100vh - 2 * var(--padding-y));
-            min-height: calc(100dvh - 2 * var(--padding-y));
+        body.is-leaving {
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
             pointer-events: none;
         }
 
+        body.is-entering .bg-layer { opacity: 0; }
+        body.has-entered .bg-layer { transition: opacity 1.1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+        /* Native IMG backgrounds to prevent double loads entirely */
+        .bg-layer {
+            position: fixed; inset: 0;
+            width: 100vw; height: 100vh;
+            object-fit: cover; object-position: center; border-radius: 0px;
+            transition: opacity 1.1s ease; z-index: 0; will-change: opacity;
+        }
+        .bg-layer.is-front { z-index: 1; opacity: 1; }
+        .bg-layer.is-back { z-index: 0; opacity: 0; pointer-events: none; }
+
+        .home-shell {
+            position: relative; z-index: 2;
+            min-height: 100vh; min-height: 100dvh;
+            display: grid;
+            grid-template-columns: var(--col-width) var(--col-width) auto;
+            grid-template-rows: auto 1fr auto;
+            column-gap: var(--column-gutter); row-gap: 0;
+            padding: var(--padding-y) var(--padding-x);
+            align-items: start; justify-items: start;
+            transition: color 1.1s ease, opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .home-shell.hidden { opacity: 0; pointer-events: none; }
+        .home-shell p { margin: 0; max-width: none; text-align: justify; text-align-last: left; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto; }
+
+        .col-a { grid-column: 1; grid-row: 1; width: 100%; }
+        .col-b { grid-column: 2; grid-row: 1; width: 100%; }
+        .col-c { grid-column: 1; grid-row: 3; align-self: start; width: 100%; }
+        .col-d { grid-column: 2; grid-row: 3; align-self: start; width: 100%; }
+
+        .right-edge {
+            grid-column: 3; grid-row: 1 / -1; justify-self: end; align-self: stretch; display: flex; flex-direction: column;
+            align-items: flex-end; justify-content: space-between; width: min-content; min-height: calc(100vh - 2 * var(--padding-y)); pointer-events: none;
+        }
+
         a.quad-area {
-            display: block;
-            width: var(--quad-size);
-            height: var(--quad-size);
-            flex-shrink: 0;
-            text-decoration: none;
-            color: inherit;
-            pointer-events: auto;
+            display: block; width: var(--quad-size); height: var(--quad-size); flex-shrink: 0; text-decoration: none; color: inherit; pointer-events: auto;
         }
 
-        .vienna {
-            font-size: var(--font-size);
-            font-weight: 300;
-            line-height: var(--line-height);
-            white-space: nowrap;
-            flex-shrink: 0;
-            pointer-events: auto;
-        }
-
-        .inline-links {
-            margin-top: var(--block-gap);
-            text-align: left;
-        }
-
+        .vienna { font-size: var(--font-size); font-weight: 300; line-height: var(--line-height); white-space: nowrap; flex-shrink: 0; pointer-events: auto; }
+        .inline-links { margin-top: var(--block-gap); text-align: left; }
         .inline-links a:last-child { margin-right: 0; }
-
-        /* writing / mail — always underlined, white (no sweep) */
-        .inline-links a {
-            color: #ffffff;
-            text-decoration: underline;
-            text-underline-offset: 2px;
-            text-decoration-thickness: 1px;
-            margin-right: 0.9em;
-            pointer-events: auto;
+        
+        .home-shell .inline-links a:any-link {
+            color: var(--ui);
+            text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; text-decoration-color: currentColor;
+            margin-right: 0.9em; pointer-events: auto;
+            transition: color 1.1s ease, text-decoration-color 1.1s ease;
         }
-
-        .inline-links a:hover,
-        .inline-links a:focus-visible {
-            color: #ffffff;
+        .home-shell .inline-links a:hover, .home-shell .inline-links a:focus-visible {
             text-decoration: underline;
         }
 
-        /* @ links: sweep (white fill) + black label on hover */
-        .home-shell a.at-link {
-            color: inherit;
-            text-decoration: none;
-            position: relative;
-            display: inline-block;
-            z-index: 1;
-            pointer-events: auto;
-            transition: color 0.3s ease;
-        }
-
+        .home-shell a.at-link { color: var(--ui); text-decoration: none; position: relative; display: inline-block; z-index: 1; pointer-events: auto; transition: color 0.25s ease; }
+        body.theme-transitioning .home-shell a.at-link, body.theme-transitioning .home-shell .inline-links a:any-link { transition: color 1.1s ease, text-decoration-color 1.1s ease; }
+        
         .home-shell a.at-link::before {
-            content: "";
-            position: absolute;
-            z-index: -1;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #ffffff;
-            transform: scaleX(0);
-            transform-origin: bottom right;
-            transition: transform 0.3s ease;
+            content: ""; position: absolute; z-index: -1; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--ui, #fff); transform: scaleX(0); transform-origin: bottom right; transition: transform 0.4s cubic-bezier(0.18, 0.71, 0.11, 1), background-color 1.1s ease;
+        }
+        .home-shell a.at-link:hover, .home-shell a.at-link:focus-visible { color: var(--ui-inverse, #000000); }
+        .home-shell a.at-link:hover::before, .home-shell a.at-link:focus-visible::before { transform: scaleX(1); transform-origin: bottom left; }
+
+        .hey { cursor: pointer; display: inline-block; transform-origin: center; color: inherit; font: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: inherit; vertical-align: baseline; }
+        .hey-text { display: inline-block; }
+        .hey .comma { display: inline-block; transform-origin: center; }
+
+        @keyframes commaBellJingle { 0% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 50% { transform: rotate(-8deg); } 75% { transform: rotate(6deg); } 100% { transform: rotate(0deg); } }
+        .hey.animate .comma { animation: commaBellJingle 0.8s ease-in-out; }
+        .hey:focus-visible { outline: 1px solid var(--ui); outline-offset: 3px; }
+
+        #quadratSpin { width: var(--quad-size); height: var(--quad-size); background-color: var(--ui); transition: transform 0.85s cubic-bezier(0.65, 0, 0.35, 1), background-color 1.1s ease; }
+
+        /* SPA / GALLERY */
+        .home-logo {
+            position: fixed; top: var(--padding-y); left: var(--padding-x); width: 24px; height: 24px;
+            z-index: 100; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.5s;
+            pointer-events: auto;
+        }
+        .home-logo.active { opacity: 1; visibility: visible; }
+        .home-logo img { width: 100%; height: 100%; display: block; transform: rotate(-45deg); cursor: pointer; pointer-events: auto; }
+        .home-logo.active img { animation: logoSpinIn 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s forwards; }
+        .home-logo.closing img { animation: logoSpinOut 0.65s cubic-bezier(0.5, 0, 0.2, 1) forwards; }
+
+        .gallery-stage {
+            position: fixed; inset: 0; overflow: hidden; cursor: grab; background: #f8f8f7;
+            opacity: 0; visibility: hidden; transition: opacity 0.45s ease, visibility 0.45s; 
+            z-index: 50;
+        }
+        .gallery-stage.active { opacity: 1; visibility: visible; }
+        .gallery-stage.dragging { cursor: grabbing; }
+
+        .gallery-surface {
+            position: absolute; top: 0; left: 0; will-change: transform; user-select: none; -webkit-user-select: none; touch-action: none;
         }
 
-        .home-shell a.at-link:hover,
-        .home-shell a.at-link:focus-visible {
-            color: #000000;
+        .gallery-body {
+            /* Now 10 columns wide to ensure the grid completely overlaps and eradicates any whitespace! */
+            position: absolute; display: grid; grid-template-columns: repeat(10, var(--card-w)); gap: 56px 56px; padding: 24px;
+            width: max-content; height: max-content;
         }
 
-        .home-shell a.at-link:hover::before,
-        .home-shell a.at-link:focus-visible::before {
-            transform: scaleX(1);
-            transform-origin: bottom left;
+        .gallery-item {
+            width: var(--card-w); height: var(--card-h); overflow: hidden; border-radius: 4px;
+            background: #e3e3e3; transform: scale(0.3); opacity: 0; cursor: pointer;
+        }
+        
+        .gallery-stage.active .gallery-item {
+            animation: itemIn 1.2s cubic-bezier(0.18, 0.71, 0.11, 1) forwards;
         }
 
-        /* “Hey” + comma — parked home animation; inherits grid/body type */
-        .hey {
-            cursor: pointer;
-            display: inline-block;
-            transform-origin: center;
-            color: inherit;
-            font: inherit;
-            font-size: inherit;
-            font-weight: inherit;
-            line-height: inherit;
-            letter-spacing: inherit;
-            vertical-align: baseline;
+        .gallery-item.is-hero {
+            transform: scale(1); opacity: 1; animation: none !important;
+        }
+        .gallery-stage.closing .gallery-item {
+            /* smooth exit for non active tiles so they drop visually fast */
+            transition: opacity 0.3s;
+            opacity: 0 !important;
+            animation: none !important;
         }
 
-        .hey-text {
-            display: inline-block;
-        }
+        .gallery-item:nth-child(even) { margin-top: 60%; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; border-radius: inherit; }
 
-        .hey .comma {
-            display: inline-block;
-            transform-origin: center;
-        }
+        @keyframes itemIn { from { opacity: 0; transform: scale(0.3); } to { opacity: 1; transform: scale(1); } }
+        @keyframes logoSpinIn { 0% { transform: rotate(-45deg); opacity: 0; } 100% { transform: rotate(0deg); opacity: 1; } }
+        @keyframes logoSpinOut { 0% { transform: rotate(0deg); opacity: 1; } 100% { transform: rotate(45deg); opacity: 0; } }
 
-        @keyframes commaBellJingle {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(10deg); }
-            50% { transform: rotate(-8deg); }
-            75% { transform: rotate(6deg); }
-            100% { transform: rotate(0deg); }
-        }
-
-        .hey.animate .comma {
-            animation: commaBellJingle 0.8s ease-in-out;
-        }
-
-        .hey:focus-visible {
-            outline: 1px solid var(--ui);
-            outline-offset: 3px;
-        }
-
-        #quadratSpin {
-            width: var(--quad-size);
-            height: var(--quad-size);
-            background-color: var(--ui);
-            transition: transform 0.85s cubic-bezier(0.65, 0, 0.35, 1), background-color 0.45s ease;
+        @media (max-width: 900px) {
+            .gallery-body { grid-template-columns: repeat(6, var(--card-w)); gap: 36px 36px; padding: 16px; }
         }
 
         @media (max-width: 768px) {
             :root {
-                --padding-y: clamp(16px, 4.5vw, 24px);
-                --padding-x: clamp(14px, 4vw, 20px);
-                --column-gutter-mobile: clamp(10px, 3vw, 16px);
-                --font-size: 14.5px;
-                --line-height: 1.51;
-                --quad-size: 10px;
+                --padding-y: clamp(16px, 4.5vw, 24px); --padding-x: clamp(14px, 4vw, 20px);
+                --column-gutter-mobile: clamp(10px, 3vw, 16px); --font-size: 14.5px; --line-height: 1.51; --quad-size: 10px;
             }
-
-            html, body {
-                overflow-x: hidden;
-                overflow-y: auto;
-                height: auto;
-                min-height: 100dvh;
-            }
-
             .home-shell {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                /* top text | center (hero / bg) | bottom text | vienna + square */
-                grid-template-rows: auto minmax(104px, 1.25fr) auto auto;
-                column-gap: var(--column-gutter-mobile);
-                row-gap: clamp(14px, 3vh, 26px);
-                min-height: 100dvh;
-                width: 100%;
-                max-width: 100%;
-                padding: var(--padding-y) var(--padding-x);
-                padding-bottom: calc(var(--padding-y) + 4px);
-                align-items: start;
-                justify-items: stretch;
+                display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto minmax(104px, 1.25fr) auto auto;
+                column-gap: var(--column-gutter-mobile); row-gap: clamp(14px, 3vh, 26px); padding-bottom: calc(var(--padding-y) + 4px);
             }
-
-            .col-a {
-                grid-column: 1;
-                grid-row: 1;
-                width: 100%;
-            }
-
-            .col-b {
-                grid-column: 2;
-                grid-row: 1;
-                width: 100%;
-            }
-
-            /* Middle row: lets background / co.built read as the “hero” band */
-            .col-c {
-                grid-column: 1;
-                grid-row: 3;
-                width: 100%;
-                align-self: start;
-            }
-
-            .col-d {
-                grid-column: 2;
-                grid-row: 3;
-                width: 100%;
-                align-self: start;
-            }
-
-            .right-edge {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-end;
-                grid-column: 1 / -1;
-                grid-row: 4;
-                width: 100%;
-                min-height: 0;
-                align-self: end;
-                pointer-events: none;
-            }
-
-            .right-edge .vienna {
-                order: 1;
-                margin: 0;
-                padding: 0;
-            }
-
-            .right-edge a.quad-area {
-                order: 2;
-            }
-
-            .inline-links {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.4em;
-                margin-top: 0.65em;
-            }
-
-            .inline-links a {
-                margin-right: 0;
-            }
+            .col-a { grid-column: 1; grid-row: 1; width: 100%; } .col-b { grid-column: 2; grid-row: 1; width: 100%; }
+            .col-c { grid-column: 1; grid-row: 3; width: 100%; align-self: start; } .col-d { grid-column: 2; grid-row: 3; width: 100%; align-self: start; }
+            .right-edge { grid-column: 1 / -1; grid-row: 4; flex-direction: row; min-height: 0; align-self: end; }
+            .right-edge .vienna { order: 1; margin: 0; padding: 0; margin-right: auto; text-align: left; } .right-edge a.quad-area { order: 2; }
+            .inline-links { display: flex; flex-direction: column; align-items: flex-start; gap: 0.4em; margin-top: 0.65em; }
         }
-
         @media (prefers-reduced-motion: reduce) {
-            .bg-layer { transition: opacity 0.01s; }
+            .bg-layer { transition: opacity 0.01s; color: inherit; }
             #quadratSpin { transition: transform 0.01s, background-color 0.01s; }
-            .home-shell a.at-link { transition: color 0.01s; }
-            .home-shell a.at-link::before { transition: transform 0.01s; }
             .hey.animate .comma { animation: none !important; }
+            .gallery-stage.active .gallery-item { animation: none !important; opacity: 1; transform: scale(1); }
+            body.is-entering .home-shell > .col-a, body.is-entering .home-shell > .col-b, body.is-entering .home-shell > .right-edge,
+            body.is-entering .home-shell > .col-c, body.is-entering .home-shell > .col-d, body.has-entered .home-shell > .col-a,
+            body.has-entered .home-shell > .col-b, body.has-entered .home-shell > .right-edge, body.has-entered .home-shell > .col-c,
+            body.has-entered .home-shell > .col-d {
+                opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important;
+            }
         }
     </style>
 </head>
-<body>
+<body class="is-entering">
 
-    <div id="bgA" class="bg-layer is-front" aria-hidden="true"></div>
-    <div id="bgB" class="bg-layer is-back" aria-hidden="true"></div>
+    <img id="bgA" class="bg-layer is-front" src="bg/bg1-w.png" alt="" draggable="false" decoding="async" fetchpriority="high" />
+    <img id="bgB" class="bg-layer is-back" src="bg/bg1-w.png" alt="" draggable="false" decoding="async" />
 
-    <main class="home-shell">
+    <main class="home-shell" id="homeShell">
         <div class="col-a">
             <p>
-                <span class="hey" id="hey-lead" tabindex="0"><span class="hey-text">Hey</span><span class="comma">,</span></span> I'm Lukas — an independent designer &amp; researcher from Vienna. Currently, I work with organisations on refining their creative direction and storytelling in the age of AI. Previously, I worked with the European Union at <a href="https://www.dembrane.com" class="at-link">@Dembrane</a>, using AI to improve how democracies make decisions at scale.
+                <span class="hey" id="hey-lead" tabindex="0"><span class="hey-text">Hey</span><span class="comma">,</span></span> I’m Lukas - an independent designer, researcher &amp; visual artist from Vienna. Currently, I work with organisations on refining their creative direction and storytelling in the age of AI. Previously, I worked with the European Union at <a href="#" class="at-link">@Dembrane</a>, using AI to improve how democracies make decisions at scale.
             </p>
         </div>
         <div class="col-b">
@@ -364,14 +272,12 @@
                 Occasionally, you can also find me studying the Brain <a href="https://bachelor.au.dk/en/cognitivescience" class="at-link">@AarhusUniversity</a> in Denmark. I care quite a lot about solving complex problems affecting many people. I hope to do so by creating beautiful and meaningful things along the way.
             </p>
         </div>
-
         <div class="right-edge">
-            <a href="gallery.html" class="quad-area" aria-label="Gallery">
+            <a href="#" class="quad-area" aria-label="Gallery" id="navToGallery">
                 <div id="quadratSpin"></div>
             </a>
             <div class="vienna">Vienna, 2026</div>
         </div>
-
         <div class="col-c">
             <p>
                 Outside my studies, I like to think about the future of AI and Art. I'm also fascinated by animation as a medium to express myself in ways I can't get across otherwise.
@@ -386,176 +292,595 @@
         </div>
     </main>
 
+    <a href="#" class="home-logo" id="homeLogo" aria-label="Back to home">
+        <img src="logo2.svg" alt="Home">
+    </a>
+    
+    <div class="gallery-stage" id="galleryStage">
+        <div class="gallery-surface" id="gallerySurface">
+            <!-- 4 infinite-pane grid clones ensure seamless scrolling wrap -->
+            <!-- 10 columns * 6 copies of BG images each guarantees 0 whitespace bounds horizontally and vertically! -->
+            <div class="gallery-body" id="body-a"></div>
+            <div class="gallery-body" id="body-b"></div>
+            <div class="gallery-body" id="body-c"></div>
+            <div class="gallery-body" id="body-d"></div>
+        </div>
+    </div>
+
     <script>
 (function () {
-    /* Only one image for now; add more strings here to re-enable rotation & click-advance */
     const BG_IMAGES = [
-        'co_built.png',
-        // 'banner_home.png',
-        // 'ban_2.jpeg',
-        // 'ban_3.jpeg',
-        // 'profile.jpeg',
+        'bg/bg1-w.png', 'bg/bg2-w.png', 'bg/bg3-w.png', 'bg/bg4-w.png', 'bg/bg5-w.png', 'bg/bg6-b.png',
+        'bg/bg7-w.png', 'bg/bg8-w.png', 'bg/bg9-w.png', 'bg/bg10-w.png', 'bg/bg11-w.png', 'bg/bg12-w.png',
+        'bg/bg13-b.png', 'bg/bg14-b.png', 'bg/bg15-w.png'
     ];
+    
+    // We heavily multiply the core images to generate an extremely vast 10-column grid array
+    // This entirely eradicates whitespace boundaries at the bottom or edges!
+    let galleryImages = [];
+    for (let i = 0; i < 6; i++) {
+        galleryImages = galleryImages.concat([...BG_IMAGES]);
+    } 
 
     const bgA = document.getElementById('bgA');
     const bgB = document.getElementById('bgB');
     const quadrat = document.getElementById('quadratSpin');
+    const homeShell = document.getElementById('homeShell');
+    const galleryStage = document.getElementById('galleryStage');
+    const gallerySurface = document.getElementById('gallerySurface');
+    const homeLogo = document.getElementById('homeLogo');
+
+    const bodies = [
+        document.getElementById('body-a'), document.getElementById('body-b'),
+        document.getElementById('body-c'), document.getElementById('body-d')
+    ];
+
     let frontIsA = true;
     let index = 0;
     let rotation = 0;
-    const CYCLE_MS = 9000;
+    let homeSwapInterval = null;
+    let inGallery = false;
+    let transitioning = false;
+    let prefersReducedMotion = false;
+    let uiRequestId = 0;
 
-    /* Black UI only when corner samples are clearly light (bias toward white on mid-tones) */
-    var LUM_BLACK_THRESHOLD = 0.7;
+    const TRANSITION_DURATION_MS = 1100;
+    const TRANSITION_TIMEOUT_MS = 6000;
+    const CYCLE_MS = TRANSITION_DURATION_MS + TRANSITION_TIMEOUT_MS;
 
-    function setUiFromLuminance(lum) {
-        const bright = lum > LUM_BLACK_THRESHOLD;
-        const ui = bright ? '#000000' : '#ffffff';
-        document.documentElement.style.setProperty('--ui', ui);
-        document.documentElement.style.setProperty('--ui-rgb', bright ? '0, 0, 0' : '255, 255, 255');
-    }
-
-    function sampleLuminance(src, callback) {
-        const img = new Image();
-        /* Same-origin: omit crossOrigin so canvas isn’t blocked; remote CDNs need CORS */
-        if (/^https?:\/\//i.test(src) && src.indexOf(location.host) === -1) {
-            img.crossOrigin = 'anonymous';
+    function applyBackgroundUrl(el, url) { el.src = url; } 
+    function shuffleInPlace(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
         }
-        img.onload = function () {
-            function measure() {
-                try {
-                    const w = 48;
-                    const h = 48;
-                    const canvas = document.createElement('canvas');
-                    canvas.width = w;
-                    canvas.height = h;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
-                    const data = ctx.getImageData(0, 0, w, h).data;
+        return arr;
+    }
+    function warmImageCache(url) {
+        const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = url;
+    }
 
-                    function regionLum(x0, y0, x1, y1) {
-                        let sum = 0;
-                        let n = 0;
-                        for (let y = y0; y < y1; y++) {
-                            for (let x = x0; x < x1; x++) {
-                                const i = (y * w + x) * 4;
-                                const r = data[i] / 255;
-                                const g = data[i + 1] / 255;
-                                const b = data[i + 2] / 255;
-                                sum += 0.2126 * r + 0.7152 * g + 0.0722 * b;
-                                n++;
-                            }
+    function parseUiHint(url) {
+        const clean = String(url || '').split('#')[0].split('?')[0];
+        if (/(?:-|_)(?:w)\.[a-z0-9]+$/i.test(clean)) return 'white';
+        if (/(?:-|_)(?:b)\.[a-z0-9]+$/i.test(clean)) return 'black';
+        return null;
+    }
+    function setUi(ui) {
+        const isBlack = ui === '#000000';
+        document.documentElement.style.setProperty('--ui', ui);
+        document.documentElement.style.setProperty('--ui-rgb', isBlack ? '0, 0, 0' : '255, 255, 255');
+        document.documentElement.style.setProperty('--ui-inverse', isBlack ? '#ffffff' : '#000000');
+    }
+    function setUiFromLuminance(lum) { setUi(lum > 0.7 ? '#000000' : '#ffffff'); }
+    function setUiForUrl(url) {
+        const requestId = ++uiRequestId;
+        const hint = parseUiHint(url);
+        if (hint === 'white') return setUi('#ffffff');
+        if (hint === 'black') return setUi('#000000');
+        const img = new Image();
+        if (/^https?:\/\//i.test(url) && url.indexOf(location.host) === -1) img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            if (requestId !== uiRequestId) return;
+            try {
+                const w = 48, h = 48, canvas = document.createElement('canvas');
+                canvas.width = w; canvas.height = h;
+                const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+                const data = ctx.getImageData(0, 0, w, h).data;
+                const regionLum = (x0, y0, x1, y1) => {
+                    let sum = 0, n = 0;
+                    for (let y = y0; y < y1; y++) {
+                        for (let x = x0; x < x1; x++) {
+                            const i = (y * w + x) * 4;
+                            sum += 0.2126 * (data[i]/255) + 0.7152 * (data[i+1]/255) + 0.0722 * (data[i+2]/255);
+                            n++;
                         }
-                        return n ? sum / n : 0;
                     }
-
-                    /* Tiny edge patches at viewport corners (where text sits) */
-                    var edge = 10;
-                    var lumTL = regionLum(0, 0, edge, edge);
-                    var lumTR = regionLum(w - edge, 0, w, edge);
-                    var lumBL = regionLum(0, h - edge, edge, h);
-                    var lumBR = regionLum(w - edge, h - edge, w, h);
-                    var lumMin = Math.min(lumTL, lumTR, lumBL, lumBR);
-
-                    callback(lumMin);
-                } catch (e) {
-                    callback(0.28);
-                }
-            }
-            if (img.decode) {
-                img.decode().then(measure).catch(measure);
-            } else {
-                measure();
-            }
+                    return n ? sum / n : 0;
+                };
+                const edge = 10;
+                const lumMin = Math.min(regionLum(0,0,edge,edge), regionLum(w-edge,0,w,edge), regionLum(0,h-edge,edge,h), regionLum(w-edge,h-edge,w,h));
+                setUiFromLuminance(lumMin);
+            } catch (e) { setUiFromLuminance(0.28); }
         };
-        img.onerror = function () { callback(0.28); };
-        img.src = src;
+        img.onerror = () => {
+            if (requestId !== uiRequestId) return;
+            setUiFromLuminance(0.28);
+        };
+        img.src = url;
     }
 
-    function applyBackgroundUrl(el, url) {
-        el.style.backgroundImage = 'url("' + url + '")';
+    function getCurrentBgUrl() {
+        const activeNode = frontIsA ? bgA : bgB;
+        const rawSrc = activeNode.getAttribute('src');
+        return rawSrc || BG_IMAGES[index] || BG_IMAGES[0];
     }
 
-    function swap() {
-        index = (index + 1) % BG_IMAGES.length;
-        const nextUrl = BG_IMAGES[index];
+    function swapBy(dir) {
+        const step = dir >= 0 ? 1 : -1;
+        index = (index + step + BG_IMAGES.length) % BG_IMAGES.length;
+        const url = BG_IMAGES[index];
         const incoming = frontIsA ? bgB : bgA;
         const outgoing = frontIsA ? bgA : bgB;
 
-        applyBackgroundUrl(incoming, nextUrl);
+        applyBackgroundUrl(incoming, url);
         incoming.style.opacity = '0';
-        incoming.classList.remove('is-back');
-        incoming.classList.add('is-front');
-        outgoing.classList.remove('is-front');
-        outgoing.classList.add('is-back');
+        incoming.classList.replace('is-back', 'is-front');
+        outgoing.classList.replace('is-front', 'is-back');
 
         void incoming.offsetWidth;
         incoming.style.opacity = '1';
         outgoing.style.opacity = '0';
 
-        rotation += 90;
-        quadrat.style.transform = 'rotate(' + rotation + 'deg)';
+        rotation += 90 * step;
+        quadrat.style.transform = `rotate(${rotation}deg)`;
+        
+        document.body.classList.add('theme-transitioning');
+        clearTimeout(document.body.themeTransitionTimer);
+        document.body.themeTransitionTimer = setTimeout(() => {
+            document.body.classList.remove('theme-transitioning');
+        }, 1100);
 
-        sampleLuminance(nextUrl, setUiFromLuminance);
-
+        setUiForUrl(url);
         frontIsA = !frontIsA;
+        const warmIdx = (index + (step >= 0 ? 1 : -1) + BG_IMAGES.length) % BG_IMAGES.length;
+        warmImageCache(BG_IMAGES[warmIdx]);
+    }
+    function swap() { swapBy(1); }
+
+    function resetHomeSwapTimer() {
+        if (inGallery) return;
+        if (prefersReducedMotion) return;
+        if (!BG_IMAGES || BG_IMAGES.length <= 1) return;
+        clearInterval(homeSwapInterval);
+        homeSwapInterval = setInterval(swap, CYCLE_MS);
+    }
+
+    let bodyW = 0, bodyH = 0;
+    let gx = -120, gy = -80, gvx = 0, gvy = 0;
+    let dragging = false, maybeDrag = false, didDrag = false;
+    let downX = 0, downY = 0, lastPx = 0, lastPy = 0;
+    let rafId = null;
+
+    function renderBody(el, heroUrl) {
+        el.innerHTML = galleryImages.map((src, i) => {
+            const delay = (Math.random() * 0.9 + 0.25).toFixed(2);
+            // Strict exact match uniquely identifies the 1st hero globally per body
+            const isHero = heroUrl && src.endsWith(heroUrl) && i === 0;
+            return `
+                <div class="gallery-item ${isHero ? 'is-hero' : ''}" style="animation-delay:${delay}s" data-src="${src}">
+                    <img src="${src}" draggable="false" alt="" loading="lazy" decoding="async">
+                </div>
+            `;
+        }).join('');
+    }
+
+    function applyGalleryLayout() {
+        if(!bodies[0]) return;
+        bodyW = bodies[0].offsetWidth; bodyH = bodies[0].offsetHeight;
+        if (!bodyW || !bodyH) return;
+        bodies[0].style.left = '0px';          bodies[0].style.top = '0px';
+        bodies[1].style.left = bodyW + 'px';   bodies[1].style.top = '0px';
+        bodies[2].style.left = '0px';          bodies[2].style.top = bodyH + 'px';
+        bodies[3].style.left = bodyW + 'px';   bodies[3].style.top = bodyH + 'px';
+    }
+
+    function drawGallery() {
+        if (!bodyW || !bodyH) return;
+        gx = (((gx % -bodyW) - bodyW) % -bodyW);
+        gy = (((gy % -bodyH) - bodyH) % -bodyH);
+        gallerySurface.style.transform = `translate3d(${gx}px, ${gy}px, 0)`;
+    }
+
+    function tickGallery() {
+        if (transitioning) { rafId = requestAnimationFrame(tickGallery); return; }
+        if (inGallery && !dragging) {
+            gy += gvy; gx += gvx;
+            gvx *= 0.92; gvy *= 0.9;
+            gvx = Math.max(-28, Math.min(28, gvx));
+            gvy = Math.max(-32, Math.min(32, gvy));
+            if (Math.abs(gvx) < 0.01) gvx = 0;
+            if (Math.abs(gvy) < 0.01) gvy = 0;
+            drawGallery();
+        }
+        rafId = requestAnimationFrame(tickGallery);
+    }
+
+    galleryStage.addEventListener('pointerdown', e => {
+        if (!inGallery || transitioning) return;
+        maybeDrag = true; dragging = false; didDrag = false;
+        lastPx = e.clientX; lastPy = e.clientY;
+        downX = e.clientX; downY = e.clientY;
+        gvx = 0; gvy = 0;
+    });
+    
+    galleryStage.addEventListener('pointermove', e => {
+        if ((!maybeDrag && !dragging) || transitioning) return;
+        const moveX = e.clientX - downX, moveY = e.clientY - downY;
+        if (!dragging) {
+            if ((moveX * moveX + moveY * moveY) < 64) return;
+            dragging = true; didDrag = true;
+            galleryStage.classList.add('dragging');
+            try { galleryStage.setPointerCapture(e.pointerId); } catch(err){}
+        }
+        const dx = e.clientX - lastPx, dy = e.clientY - lastPy;
+        gx += dx; gy += dy;
+        gvx = dx * 0.42; gvy = dy * 0.42;
+        lastPx = e.clientX; lastPy = e.clientY;
+        drawGallery();
+    });
+    
+    galleryStage.addEventListener('pointerup', e => {
+        maybeDrag = false; dragging = false;
+        galleryStage.classList.remove('dragging');
+        if (galleryStage.hasPointerCapture(e.pointerId)) galleryStage.releasePointerCapture(e.pointerId);
+    });
+
+    window.addEventListener('resize', () => { if(inGallery) { applyGalleryLayout(); drawGallery(); } });
+
+    // GSAP Physical dimension scaler for flawless object-fit dynamic tracking without layout bugs
+    function animateSharedImagePerfect(src, fromRect, toRect, opts) {
+        return new Promise(resolve => {
+            const overlay = document.createElement('img');
+            overlay.src = src; 
+            overlay.style.position = 'fixed';
+            overlay.style.zIndex = '9999';
+            overlay.style.objectFit = 'cover';
+            overlay.style.margin = '0';
+            overlay.style.border = 'none';
+            overlay.style.borderRadius = opts.fromRadius + 'px';
+            
+            overlay.style.left = fromRect.left + 'px';
+            overlay.style.top = fromRect.top + 'px';
+            overlay.style.width = fromRect.width + 'px';
+            overlay.style.height = fromRect.height + 'px';
+            document.body.appendChild(overlay);
+
+            gsap.to(overlay, {
+                left: toRect.left,
+                top: toRect.top,
+                width: toRect.width,
+                height: toRect.height,
+                borderRadius: opts.toRadius,
+                duration: opts.duration / 1000,
+                ease: "power3.inOut",
+                onComplete: () => resolve(overlay) // Resolves overlay to guarantee 0 double flashes organically
+            });
+        });
+    }
+
+    function openGallerySPA() {
+        if (inGallery || transitioning) return;
+        inGallery = true; transitioning = true;
+        clearInterval(homeSwapInterval);
+
+        const url = getCurrentBgUrl();
+        
+        const idx = galleryImages.findIndex(src => src.endsWith(url));
+        if (idx > -1) { galleryImages.splice(idx, 1); galleryImages.unshift(url); }
+
+        bodies.forEach(b => renderBody(b, url));
+        homeShell.classList.add('hidden');
+        galleryStage.classList.remove('closing');
+        galleryStage.classList.add('active');
+        homeLogo.classList.add('active');
+        homeLogo.classList.remove('closing');
+
+        requestAnimationFrame(() => {
+            applyGalleryLayout();
+            
+            // Mathematically zero coordinate system offsets to trace the naked geometrical footprint of the base hero
+            const pureHeroTile = bodies[0].querySelector('.is-hero');
+            if (pureHeroTile && bodyW) {
+                gx = 0; gy = 0; 
+                gallerySurface.style.transform = `translate3d(0px, 0px, 0)`;
+                const rect = pureHeroTile.getBoundingClientRect();
+                
+                // Offset perfectly
+                gx = (window.innerWidth / 2) - (rect.left + rect.width / 2);
+                gy = (window.innerHeight / 2) - (rect.top + rect.height / 2);
+                drawGallery(); // Imposes modulo boundary wrap natively
+            }
+
+            requestAnimationFrame(() => {
+                let targetTile = null;
+                const allHeroes = Array.from(document.querySelectorAll('.gallery-item.is-hero'));
+                let minDist = Infinity;
+                
+                // Track down the single exact cloned tile mathematically placed dead center
+                allHeroes.forEach(el => {
+                    const r = el.getBoundingClientRect();
+                    const cx = r.left + r.width / 2;
+                    const cy = r.top + r.height / 2;
+                    const dist = Math.hypot(cx - window.innerWidth / 2, cy - window.innerHeight / 2);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        targetTile = el;
+                    }
+                });
+
+                const toRect = targetTile ? targetTile.getBoundingClientRect() : {left:window.innerWidth/2, top:window.innerHeight/2, width:210, height:320};
+                
+                allHeroes.forEach(el => el.style.visibility = 'hidden');
+
+                bgA.style.transition = 'none';
+                bgB.style.transition = 'none';
+                bgA.style.opacity = '0';
+                bgB.style.opacity = '0';
+                void bgA.offsetWidth;
+                setTimeout(() => {
+                    bgA.style.transition = '';
+                    bgB.style.transition = '';
+                }, 50);
+                
+                const fromRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+                
+                animateSharedImagePerfect(url, fromRect, toRect, { duration: 900, fromRadius: 0, toRadius: 4 })
+                    .then((overlay) => {
+                        allHeroes.forEach(el => el.style.visibility = '');
+                        overlay.remove(); 
+                        transitioning = false;
+                    });
+            });
+        });
+    }
+
+    function closeGallerySPA(src, tileEl) {
+        if (!inGallery || transitioning) return;
+        transitioning = true;
+        gvx = 0; gvy = 0;
+        // Set UI immediately so the return transition never "flashes" the wrong color.
+        setUiForUrl(src);
+
+        const fromRect = tileEl ? tileEl.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width:210, height:320 };
+        
+        const allMatchingTiles = Array.from(document.querySelectorAll('.gallery-item')).filter(el => {
+           return el.getAttribute('data-src') === src || el.querySelector('img').src.endsWith(src); 
+        });
+        
+        allMatchingTiles.forEach(el => el.style.visibility = 'hidden');
+        
+        galleryStage.classList.replace('active', 'closing');
+        homeLogo.classList.add('closing');
+
+        const toRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+        
+        animateSharedImagePerfect(src, fromRect, toRect, { duration: 850, fromRadius: 4, toRadius: 0 })
+            .then((overlay) => {
+                inGallery = false; transitioning = false;
+                galleryStage.classList.remove('closing');
+                allMatchingTiles.forEach(el => el.style.visibility = '');
+
+                const incoming = frontIsA ? bgA : bgB;
+                const outgoing = frontIsA ? bgB : bgA;
+
+                const newIndx = BG_IMAGES.findIndex(imgSrc => src.endsWith(imgSrc));
+                if (newIndx > -1) index = newIndx;
+
+                incoming.src = src; 
+                
+                // Anti-Flicker Architecture Engine: wait for browser to load and paint natively OR just strictly mask any loading delay with fading overlay
+                const finalizePaint = () => {
+                    requestAnimationFrame(() => {
+                        incoming.style.transition = 'none';
+                        outgoing.style.transition = 'none';
+
+                        incoming.style.opacity = '1';
+                        incoming.classList.replace('is-back', 'is-front');
+                        outgoing.style.opacity = '0';
+                        outgoing.classList.replace('is-front', 'is-back');
+                        
+                        document.body.classList.add('theme-transitioning');
+                        clearTimeout(document.body.themeTransitionTimer);
+                        document.body.themeTransitionTimer = setTimeout(() => {
+                            document.body.classList.remove('theme-transitioning');
+                        }, 1100);
+
+                        setUiForUrl(src);
+                        homeShell.classList.remove('hidden');
+                        // Let logo exit overlap the text fade-in for a smoother handoff.
+                        setTimeout(() => {
+                            homeLogo.classList.remove('active', 'closing');
+                        }, 260);
+
+                        setTimeout(() => {
+                            incoming.style.transition = '';
+                            outgoing.style.transition = '';
+                        }, 50);
+                        
+                        // Mild internal fade out mathematically erases any stutter traces of the underlying DOM decoding frame!
+                        gsap.to(overlay, { 
+                            opacity: 0, 
+                            duration: 0.15, 
+                            ease: "power2.inOut", 
+                            onComplete: () => overlay.remove() 
+                        });
+                    });
+                };
+                
+                if (incoming.decode) { incoming.decode().then(finalizePaint).catch(finalizePaint); } 
+                else { finalizePaint(); }
+                
+                homeSwapInterval = setInterval(swap, CYCLE_MS);
+            });
     }
 
     function init() {
-        const first = BG_IMAGES[0];
-        applyBackgroundUrl(bgA, first);
-        bgA.style.opacity = '1';
-        applyBackgroundUrl(bgB, BG_IMAGES[1 % BG_IMAGES.length]);
-        bgB.style.opacity = '0';
-        sampleLuminance(first, setUiFromLuminance);
-
         const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!reduced && BG_IMAGES.length > 1) {
-            setInterval(swap, CYCLE_MS);
+        prefersReducedMotion = !!reduced;
+        
+        function triggerEntrance() {
+            try {
+                if (!reduced) {
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            document.body.classList.replace('is-entering', 'has-entered');
+                        });
+                    });
+                } else {
+                    document.body.classList.replace('is-entering', 'has-entered');
+                }
+            } catch (e) {
+                document.body.classList.replace('is-entering', 'has-entered');
+            }
         }
 
-        /* Click anywhere (except links / “Hey”) → advance to next image */
-        if (BG_IMAGES.length > 1) {
-            document.addEventListener('click', function (e) {
-                if (e.target.closest('a')) return;
-                if (e.target.closest('.hey')) return;
-                swap();
-            });
+        if (document.readyState === 'complete') {
+            triggerEntrance();
+        } else {
+            window.addEventListener('load', triggerEntrance);
         }
+
+        shuffleInPlace(BG_IMAGES);
+
+        const params = new URLSearchParams(window.location.search);
+        let startHero = params.get('hero');
+        if (startHero) {
+            const idx = BG_IMAGES.findIndex(src => src.includes(startHero));
+            if (idx > -1) index = idx;
+            else startHero = BG_IMAGES[0];
+        } else {
+            startHero = BG_IMAGES[0];
+        }
+
+        applyBackgroundUrl(bgA, startHero); bgA.style.opacity = '1';
+        applyBackgroundUrl(bgB, BG_IMAGES[(index + 1) % BG_IMAGES.length]); bgB.style.opacity = '0';
+        setUiForUrl(startHero); warmImageCache(BG_IMAGES[(index + 1) % BG_IMAGES.length]);
+
+        if (!reduced && BG_IMAGES.length > 1) {
+            homeSwapInterval = setInterval(swap, CYCLE_MS);
+        }
+
+        if (!rafId) tickGallery();
+        if (params.get('gallery') === '1') openGallerySPA();
     }
+
+    document.addEventListener('click', e => {
+        if (inGallery || transitioning) return;
+        const link = e.target.closest('a');
+        if (link && link.getAttribute('href') === './writing/index.html') {
+            e.preventDefault();
+            const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (reduced) { window.location.href = link.href; return; }
+            document.body.classList.remove('has-entered');
+            document.body.classList.add('is-leaving');
+            setTimeout(() => { window.location.href = link.href; }, 800);
+            return;
+        }
+        if (link && link.id !== 'navToGallery' && !e.target.closest('a.quad-area')) return;
+        if (e.target.closest('.hey')) return;
+        e.preventDefault(); openGallerySPA();
+    }, { capture: true });
+
+    let wheelDelta = 0;
+    let lastSwap = 0;
+    window.addEventListener('wheel', e => {
+        if (inGallery) {
+            if(transitioning || dragging) return;
+            e.preventDefault();
+            const unit = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? window.innerHeight : 1);
+            gvy += Math.max(-18, Math.min(18, -(e.deltaY * unit) * 0.018));
+            gvy = Math.max(-32, Math.min(32, gvy));
+            return;
+        }
+        
+        if (e.target.closest('a') || e.target.closest('.hey')) return;
+        if (Date.now() - lastSwap < 1500) return; 
+        
+        const dir = e.deltaY < 0 ? 1 : -1; // scroll up -> next, scroll down -> previous
+        let normalizedDelta = Math.abs(e.deltaY);
+        if (e.deltaMode === 1) normalizedDelta *= 16;
+        else if (e.deltaMode === 2) normalizedDelta *= window.innerHeight;
+        
+        wheelDelta += normalizedDelta;
+        
+        clearTimeout(window.wheelResetTimeout);
+        window.wheelResetTimeout = setTimeout(() => { wheelDelta = 0; }, 300);
+        
+        // Requires highly deliberate scrolling threshold tracking exclusively
+        if (wheelDelta < 400) return; 
+        
+        e.preventDefault();
+        wheelDelta = 0;
+        lastSwap = Date.now();
+        swapBy(dir);
+        resetHomeSwapTimer();
+    }, { passive: false });
+
+    // Uses native DOM click parsing deliberately circumvented from dragging checks
+    galleryStage.addEventListener('click', e => {
+        if (!inGallery || transitioning || didDrag) return;
+        const item = e.target.closest('.gallery-item');
+        if (!item) return;
+        const src = item.getAttribute('data-src');
+        if (src) { e.preventDefault(); closeGallerySPA(src, item); }
+    });
+
+    homeLogo.addEventListener('click', e => {
+        e.preventDefault();
+        if (!inGallery || transitioning) return;
+        
+        let targetTile = null;
+        let minDist = Infinity;
+        const urlToFind = getCurrentBgUrl();
+        const allHeroes = Array.from(document.querySelectorAll('.gallery-item')).filter(el => {
+           return el.getAttribute('data-src') === urlToFind || el.querySelector('img').src.endsWith(urlToFind); 
+        });
+        
+        allHeroes.forEach(el => {
+            const r = el.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const cy = r.top + r.height / 2;
+            const dist = Math.hypot(cx - window.innerWidth / 2, cy - window.innerHeight / 2);
+            if (dist < minDist) {
+                minDist = dist;
+                targetTile = el;
+            }
+        });
+
+        closeGallerySPA(urlToFind, targetTile); 
+    });
+
+    const hey = document.getElementById('hey-lead');
+    if (hey) {
+        let l = 0;
+        const p = () => {
+            if (Date.now() - l < 200) return; l = Date.now();
+            hey.classList.remove('animate'); void hey.offsetWidth; hey.classList.add('animate');
+        };
+        setTimeout(p, 400);
+        hey.addEventListener('mouseenter', p); hey.addEventListener('focus', p);
+    }
+
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) {
+            document.body.classList.remove('is-leaving');
+            document.body.classList.add('is-entering');
+            requestAnimationFrame(() => { document.body.classList.replace('is-entering', 'has-entered'); });
+        }
+    });
 
     init();
-})();
-
-(function () {
-    var hey = document.getElementById('hey-lead');
-    if (!hey) return;
-
-    var lastPlay = 0;
-
-    function playHeyComma() {
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        var now = Date.now();
-        if (now - lastPlay < 200) return;
-        lastPlay = now;
-        hey.classList.remove('animate');
-        void hey.offsetWidth;
-        hey.classList.add('animate');
-    }
-
-    function onReady() {
-        lastPlay = 0;
-        setTimeout(playHeyComma, 400);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', onReady);
-    } else {
-        onReady();
-    }
-
-    hey.addEventListener('mouseenter', playHeyComma);
-    hey.addEventListener('focus', playHeyComma);
 })();
     </script>
 </body>
