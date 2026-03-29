@@ -94,6 +94,36 @@
         body.is-entering .bg-layer { opacity: 0; }
         body.has-entered .bg-layer { transition: opacity 1.1s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.42s ease, visibility 0.42s;
+            pointer-events: all;
+        }
+        .page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .page-loader img {
+            width: 24px;
+            height: 24px;
+            display: block;
+            animation: loaderSpin 1.05s linear infinite;
+            transform-origin: center;
+        }
+        @keyframes loaderSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Native IMG backgrounds to prevent double loads entirely */
         .bg-layer {
             position: fixed; inset: 0;
@@ -261,6 +291,9 @@
     </style>
 </head>
 <body class="is-entering">
+    <div class="page-loader" id="pageLoader" aria-hidden="true">
+        <img src="logo2.svg" alt="">
+    </div>
 
     <img id="bgA" class="bg-layer is-front" src="bg/bg1-w.png" alt="" draggable="false" decoding="async" fetchpriority="high" />
     <img id="bgB" class="bg-layer is-back" src="bg/bg1-w.png" alt="" draggable="false" decoding="async" />
@@ -333,6 +366,7 @@
     const galleryStage = document.getElementById('galleryStage');
     const gallerySurface = document.getElementById('gallerySurface');
     const homeLogo = document.getElementById('homeLogo');
+    const pageLoader = document.getElementById('pageLoader');
 
     const bodies = [
         document.getElementById('body-a'), document.getElementById('body-b'),
@@ -351,6 +385,9 @@
     const TRANSITION_DURATION_MS = 1100;
     const TRANSITION_TIMEOUT_MS = 6000;
     const CYCLE_MS = TRANSITION_DURATION_MS + TRANSITION_TIMEOUT_MS;
+    const LOADER_MIN_VISIBLE_MS = 1800;
+    const LOADER_MAX_WAIT_MS = 9000;
+    const LOADER_PRELOAD_AHEAD = 8;
 
     function applyBackgroundUrl(el, url) { el.src = url; } 
     function shuffleInPlace(arr) {
@@ -362,6 +399,29 @@
     }
     function warmImageCache(url) {
         const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = url;
+    }
+    function preloadImage(url) {
+        return new Promise(resolve => {
+            if (!url) return resolve();
+            const img = new Image();
+            img.decoding = 'async';
+            img.onload = () => {
+                if (img.decode) img.decode().then(resolve).catch(resolve);
+                else resolve();
+            };
+            img.onerror = () => resolve();
+            img.src = url;
+        });
+    }
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    function hidePageLoader() {
+        if (!pageLoader) return;
+        pageLoader.classList.add('hidden');
+        setTimeout(() => {
+            if (pageLoader && pageLoader.parentNode) pageLoader.parentNode.removeChild(pageLoader);
+        }, 500);
     }
 
     function assetExists(url) {
@@ -904,6 +964,7 @@
         }
 
         (async () => {
+            const loaderStart = performance.now();
             await discoverBgImages();
             shuffleInPlace(BG_IMAGES);
 
@@ -917,9 +978,29 @@
                 startHero = BG_IMAGES[0];
             }
 
+            const nextHero = BG_IMAGES[(index + 1) % BG_IMAGES.length];
+            const preloadSet = [];
+            const preloadLimit = Math.min(LOADER_PRELOAD_AHEAD, BG_IMAGES.length);
+            for (let i = 0; i < preloadLimit; i++) {
+                preloadSet.push(BG_IMAGES[(index + i) % BG_IMAGES.length]);
+            }
+            // Ensure explicit first/next are included and decoded.
+            preloadSet.unshift(nextHero);
+            preloadSet.unshift(startHero);
+            const uniquePreloadSet = Array.from(new Set(preloadSet));
+            await Promise.race([
+                Promise.all(uniquePreloadSet.map(preloadImage)),
+                delay(LOADER_MAX_WAIT_MS)
+            ]);
+            const elapsed = performance.now() - loaderStart;
+            if (elapsed < LOADER_MIN_VISIBLE_MS) {
+                await delay(LOADER_MIN_VISIBLE_MS - elapsed);
+            }
+
             applyBackgroundUrl(bgA, startHero); bgA.style.opacity = '1';
-            applyBackgroundUrl(bgB, BG_IMAGES[(index + 1) % BG_IMAGES.length]); bgB.style.opacity = '0';
-            setUiForUrl(startHero); warmImageCache(BG_IMAGES[(index + 1) % BG_IMAGES.length]);
+            applyBackgroundUrl(bgB, nextHero); bgB.style.opacity = '0';
+            setUiForUrl(startHero); warmImageCache(nextHero);
+            hidePageLoader();
 
             if (!reduced && BG_IMAGES.length > 1) {
                 homeSwapInterval = setInterval(swap, CYCLE_MS);
