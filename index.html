@@ -7,10 +7,10 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
     <link rel="preload" href="NeueHaasDisplay-Light.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="bg/bg1-w.png" as="image" fetchpriority="high">
+    <link rel="preload" href="bg/bg1-w.webp" as="image" type="image/webp" fetchpriority="high">
     
     <!-- GSAP for robust transition masking to prevent flickers -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js" defer></script>
 
     <style>
         @font-face {
@@ -295,8 +295,8 @@
         <img src="logo2.svg" alt="">
     </div>
 
-    <img id="bgA" class="bg-layer is-front" src="bg/bg1-w.png" alt="" draggable="false" decoding="async" fetchpriority="high" />
-    <img id="bgB" class="bg-layer is-back" src="bg/bg1-w.png" alt="" draggable="false" decoding="async" />
+    <img id="bgA" class="bg-layer is-front" src="bg/bg1-w.webp" alt="" draggable="false" decoding="async" fetchpriority="high" />
+    <img id="bgB" class="bg-layer is-back" src="bg/bg1-w.webp" alt="" draggable="false" decoding="async" />
 
     <main class="home-shell" id="homeShell">
         <div class="col-a">
@@ -346,15 +346,13 @@
 
     <script>
 (function () {
-    // Auto-discovers bg assets following `bg/bg<N>-w.png` and `bg/bg<N>-b.png`.
-    // This way you can add/remove images without manually editing lists.
-    const BG_MAX = 60;
-    const BG_CANDIDATES = [];
-    for (let i = 1; i <= BG_MAX; i++) {
-        BG_CANDIDATES.push(`bg/bg${i}-w.png`);
-        BG_CANDIDATES.push(`bg/bg${i}-b.png`);
-    }
-    let BG_IMAGES = [];
+    let BG_IMAGES = [
+        'bg/bg1-w.webp','bg/bg2-w.webp','bg/bg5-w.webp','bg/bg6-b.webp',
+        'bg/bg7-w.webp','bg/bg8-w.webp','bg/bg9-w.webp','bg/bg10-w.webp',
+        'bg/bg11-w.webp','bg/bg12-w.webp','bg/bg13-b.webp','bg/bg14-b.webp',
+        'bg/bg15-w.webp','bg/bg16-w.webp','bg/bg17-b.webp','bg/bg18-w.webp',
+        'bg/bg19-b.webp'
+    ];
     
     // Built after we know BG_IMAGES + columns
     let galleryImages = [];
@@ -385,9 +383,9 @@
     const TRANSITION_DURATION_MS = 1100;
     const TRANSITION_TIMEOUT_MS = 6000;
     const CYCLE_MS = TRANSITION_DURATION_MS + TRANSITION_TIMEOUT_MS;
-    const LOADER_MIN_VISIBLE_MS = 1800;
-    const LOADER_MAX_WAIT_MS = 9000;
-    const LOADER_PRELOAD_AHEAD = 8;
+    const LOADER_MIN_VISIBLE_MS = 500;
+    const LOADER_MAX_WAIT_MS = 5000;
+    const LOADER_PRELOAD_AHEAD = 2;
 
     function applyBackgroundUrl(el, url) { el.src = url; } 
     function shuffleInPlace(arr) {
@@ -424,20 +422,6 @@
         }, 500);
     }
 
-    function assetExists(url) {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
-        });
-    }
-
-    async function discoverBgImages() {
-        const checks = await Promise.all(BG_CANDIDATES.map(assetExists));
-        BG_IMAGES = BG_CANDIDATES.filter((_, i) => checks[i]);
-        if (!BG_IMAGES.length) BG_IMAGES = ['bg/bg1-w.png'];
-    }
 
     function buildGalleryImages() {
         const isMobile = window.matchMedia('(max-width: 900px)').matches;
@@ -965,7 +949,6 @@
 
         (async () => {
             const loaderStart = performance.now();
-            await discoverBgImages();
             shuffleInPlace(BG_IMAGES);
 
             const params = new URLSearchParams(window.location.search);
