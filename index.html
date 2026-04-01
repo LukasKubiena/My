@@ -26,7 +26,7 @@
             --ui-rgb: 255, 255, 255;
             --col-width: min(20ch, 16vw);
             --column-gutter: clamp(10px, 1.4vw, 22px);
-            --font-size: 12.5px;
+            --font-size: 13.5px;
             --line-height: 1.37;
             --block-gap: 0.45em;
             --quad-size: 9px;
@@ -347,11 +347,9 @@
     <script>
 (function () {
     let BG_IMAGES = [
-        'bg/bg1-w.webp','bg/bg2-w.webp','bg/bg5-w.webp','bg/bg6-b.webp',
-        'bg/bg7-w.webp','bg/bg8-w.webp','bg/bg9-w.webp','bg/bg10-w.webp',
-        'bg/bg11-w.webp','bg/bg12-w.webp','bg/bg13-b.webp','bg/bg14-b.webp',
-        'bg/bg15-w.webp','bg/bg16-w.webp','bg/bg17-b.webp','bg/bg18-w.webp',
-        'bg/bg19-b.webp'
+        'bg/bg1-w.webp','bg/bg5-w.webp','bg/bg7-w.webp','bg/bg8-w.webp',
+        'bg/bg10-w.webp','bg/bg11-w.webp','bg/bg12-w.webp','bg/bg13-b.webp',
+        'bg/bg14-b.webp','bg/bg15-w.webp','bg/bg16-w.webp','bg/bg17-b.webp'
     ];
     
     // Built after we know BG_IMAGES + columns
@@ -1011,51 +1009,59 @@
         e.preventDefault(); openGallerySPA();
     }, { capture: true });
 
-    let wheelDelta = 0;
-    let lastSwap = 0;
-    const HOME_WHEEL_THRESHOLD = 120;
-    const HOME_WHEEL_COOLDOWN_MS = 520;
-    let homeWheelGestureLocked = false;
-    let homeWheelGestureTimer = null;
+    let lastSwapTime = 0;
+    const SWAP_COOLDOWN_MS = 900;
+    let wheelAccum = 0;
+    let wheelIdleTimer = null;
+    const WHEEL_THRESHOLD = 60;
+
+    function trySwap(dir) {
+        if (inGallery || transitioning) return;
+        if (Date.now() - lastSwapTime < SWAP_COOLDOWN_MS) return;
+        lastSwapTime = Date.now();
+        swapBy(dir);
+        resetHomeSwapTimer();
+    }
+
     window.addEventListener('wheel', e => {
         if (inGallery) {
-            if(transitioning || dragging) return;
+            if (transitioning || dragging) return;
             e.preventDefault();
             const unit = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? window.innerHeight : 1);
             gvy += Math.max(-18, Math.min(18, -(e.deltaY * unit) * 0.018));
             gvy = Math.max(-32, Math.min(32, gvy));
             return;
         }
-        
+
         if (e.target.closest('a') || e.target.closest('.hey')) return;
-        if (homeWheelGestureLocked) {
-            clearTimeout(homeWheelGestureTimer);
-            homeWheelGestureTimer = setTimeout(() => { homeWheelGestureLocked = false; }, 150);
-            return;
-        }
-        if (Date.now() - lastSwap < HOME_WHEEL_COOLDOWN_MS) return;
-
-        // Signed accumulation keeps up/down behavior equally responsive.
-        let normalizedDelta = e.deltaY;
-        if (e.deltaMode === 1) normalizedDelta *= 16;
-        else if (e.deltaMode === 2) normalizedDelta *= window.innerHeight;
-        wheelDelta += normalizedDelta;
-        
-        clearTimeout(window.wheelResetTimeout);
-        window.wheelResetTimeout = setTimeout(() => { wheelDelta = 0; }, 240);
-
-        if (Math.abs(wheelDelta) < HOME_WHEEL_THRESHOLD) return;
-        
         e.preventDefault();
-        const dir = wheelDelta > 0 ? 1 : -1; // scroll down -> next, scroll up -> previous
-        wheelDelta = 0;
-        lastSwap = Date.now();
-        homeWheelGestureLocked = true;
-        clearTimeout(homeWheelGestureTimer);
-        homeWheelGestureTimer = setTimeout(() => { homeWheelGestureLocked = false; }, 150);
-        swapBy(dir);
-        resetHomeSwapTimer();
+
+        let delta = e.deltaY;
+        if (e.deltaMode === 1) delta *= 16;
+        else if (e.deltaMode === 2) delta *= window.innerHeight;
+
+        wheelAccum += delta;
+        clearTimeout(wheelIdleTimer);
+        wheelIdleTimer = setTimeout(() => { wheelAccum = 0; }, 300);
+
+        if (Math.abs(wheelAccum) >= WHEEL_THRESHOLD) {
+            const dir = wheelAccum > 0 ? 1 : -1;
+            wheelAccum = 0;
+            trySwap(dir);
+        }
     }, { passive: false });
+
+    window.addEventListener('keydown', e => {
+        if (inGallery || transitioning) return;
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            trySwap(1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            trySwap(-1);
+        }
+    });
 
     // Uses native DOM click parsing deliberately circumvented from dragging checks
     galleryStage.addEventListener('click', e => {
